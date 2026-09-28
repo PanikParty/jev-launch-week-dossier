@@ -1,9 +1,10 @@
-# The Jev Launch Week Dossier
+# The Jev Papers
 
-**A memorial record of the ten wildest community builds shipped during TypeSafe Jev's launch week, and the 21 design patterns they reveal.**
+**Two companion volumes on TypeSafe Jev — the ten wildest community builds from launch week, and the vendor's official design pattern set.**
 
-[![Patterns](https://img.shields.io/badge/patterns-21-blueviolet)](#the-pattern-catalogue)
-[![Builds](https://img.shields.io/badge/builds-10-orange)](#the-ten-wild-builds)
+[![Volumes](https://img.shields.io/badge/volumes-2-blueviolet)](#read-both-volumes)
+[![Patterns](https://img.shields.io/badge/patterns-30-orange)](#the-pattern-catalogue)
+[![Builds](https://img.shields.io/badge/builds-10-yellow)](#the-ten-wild-builds)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 **🌐 Read it rendered: https://panikparty.github.io/jev-launch-week-dossier/**
@@ -18,19 +19,43 @@ Jev reads your program's state plus a menu of allowed answers, and returns typed
 
 Within **six days**, developers had bolted it onto everything from flight search to Super Mario to an air traffic control tower.
 
-This repository is a systematic teardown of that week: the ten builds, the architectural patterns underneath them, and an honest audit of which vendor claims survived contact with anyone outside the company.
+This repository is a systematic teardown of that week across two volumes: **what developers built**, and **how the vendor says you should build** — plus an honest audit of which vendor claims held up.
 
 **Source presentation:** [Cloud Codes — *10 Wild Things You Can Build With Jev*](https://youtu.be/X4Lqj54sw4I) (14:15, Sep 21 2026)
 
 ---
 
-## Read the dossier
+## Read both volumes
 
-- **[🌐 Rendered online](https://panikparty.github.io/jev-launch-week-dossier/)** — dark-themed, hosted on GitHub Pages
+### 📕 Volume I — The Jev Launch Week Dossier
+
+*What they built.* The ten wildest community builds shipped during Jev's launch week, the architectural patterns underneath them, and an honest audit of which vendor claims survived contact with anyone outside the company.
+
+- **[🌐 Rendered online](https://panikparty.github.io/jev-launch-week-dossier/docs/jev-launch-week-dossier.html)**
 - **[📄 Markdown source](docs/jev-launch-week-dossier.md)** — 4,300 words, 7 parts, 13 tables
-- **[⚡ Quick-reference pattern sheet](patterns/design-patterns-quick-reference.md)** — all 21 patterns, one screen
+- Source: *Cloud Codes — 10 Wild Things You Can Build With Jev*
 
-> The HTML file is fully self-contained — no CDN, no external assets. Open it directly in any browser, or `Ctrl+P` → *Save as PDF* for an archival copy.
+### 📘 Volume II — The Jev Design Pattern Handbook
+
+*How to build.* The vendor's own canonical pattern vocabulary with worked examples — three primitives (Choice, Score, Noul), ten decision shapes, and four official design patterns — plus the measured benchmark that explains why they all take the shape they do.
+
+- **[🌐 Rendered online](https://panikparty.github.io/jev-launch-week-dossier/docs/jev-design-patterns-handbook.html)**
+- **[📄 Markdown source](docs/jev-design-patterns-handbook.md)** — 8 parts, 4 patterns, 13 shapes
+- Sources: *The AI Automators — Master ALL Jev Design Patterns* + primary docs at [docs.typesafe.ai](https://docs.typesafe.ai/patterns)
+
+### Also
+
+- **[⚡ Quick-reference pattern sheet](patterns/design-patterns-quick-reference.md)** — Volume I's 21 patterns, one screen
+
+> Both HTML files are fully self-contained — no CDN, no external assets. Open them directly in any browser, or `Ctrl+P` → *Save as PDF* for an archival copy.
+
+### How the volumes relate
+
+Volume I **reverse-engineers** patterns from observed mechanics — the presentation describes how each build works but never names a pattern. Those names are authored. Volume II documents patterns the vendor **named and defined itself**. Where the vocabularies overlap, Volume II's terms are canonical; Volume II includes a full cross-reference mapping.
+
+They also do different work. Volume II is a fair and complete account of the documented design vocabulary. It is not independent evidence that the vendor's *performance* claims hold — Volume I's audit addresses that separately.
+
+> **Read Volume II to learn how to build. Read Volume I to know what to believe.**
 
 ---
 
@@ -183,13 +208,15 @@ Twenty-one patterns across three families. Full definitions with evidence in [th
 
 ```
 .
-├── index.html                                  ← GitHub Pages landing page (embeds the dossier)
+├── index.html                                  ← Pages hub: both volumes
 ├── README.md                                   ← you are here
 ├── docs/
-│   ├── jev-launch-week-dossier.md              ← full dossier (source of truth)
-│   └── jev-launch-week-dossier.html            ← rendered, self-contained
+│   ├── jev-launch-week-dossier.md              ← Volume I (source of truth)
+│   ├── jev-launch-week-dossier.html            ← Volume I, rendered
+│   ├── jev-design-patterns-handbook.md         ← Volume II (source of truth)
+│   └── jev-design-patterns-handbook.html       ← Volume II, rendered
 ├── patterns/
-│   └── design-patterns-quick-reference.md      ← all 21 patterns, one screen
+│   └── design-patterns-quick-reference.md      ← Volume I's 21 patterns, one screen
 └── scripts/
     └── render.py                               ← markdown → styled HTML
 ```
@@ -199,10 +226,15 @@ Twenty-one patterns across three families. Full definitions with evidence in [th
 The HTML is generated from the Markdown by a dependency-free Python script:
 
 ```bash
+# Volume I (default)
 python3 scripts/render.py
+
+# Volume II, or any other file, by path
+python3 scripts/render.py docs/jev-design-patterns-handbook.md
 ```
 
-Edit `docs/jev-launch-week-dossier.md`, run the script, and the HTML updates in place. Push to `main` and GitHub Pages redeploys automatically.
+Edit the Markdown, run the script, and the sibling `.html` updates in place. Each rendered page gets a
+two-way nav bar between volumes. Push to `main` and GitHub Pages redeploys automatically.
 
 ---
 
@@ -210,7 +242,7 @@ Edit `docs/jev-launch-week-dossier.md`, run the script, and the HTML updates in 
 
 - **All quotes, figures, and caveats** are as reported in the source presentation and are attributed to it.
 - **Company-stated figures are labelled separately from independently-measured ones** throughout the dossier. This distinction is the document's central discipline.
-- **The pattern names are authored, not quoted.** The presentation describes how each build works but never names patterns. The labels — *Two-Tier Policy/Payload Split*, *Structural Compaction*, etc. — were formalized from the described mechanics.
+- **Volume I's pattern names are authored, not quoted.** The presentation describes how each build works but never names patterns. The labels — *Two-Tier Policy/Payload Split*, *Structural Compaction*, etc. — were formalized from the described mechanics. **Volume II's four design patterns are the vendor's own names**, documented at docs.typesafe.ai.
 - **Family C is an abstraction.** The audit findings were refactored into reusable diagnostic patterns rather than left as a list of grievances.
 
 ## Contributing

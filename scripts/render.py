@@ -2,9 +2,14 @@
 """Render the Jev dossier markdown into a self-contained styled HTML document."""
 import html
 import re
+import sys
 from pathlib import Path
 
-SRC = Path(__file__).resolve().parent.parent / "docs" / "jev-launch-week-dossier.md"
+SRC = (
+    Path(sys.argv[1]).resolve()
+    if len(sys.argv) > 1
+    else Path(__file__).resolve().parent.parent / "docs" / "jev-launch-week-dossier.md"
+)
 OUT = SRC.with_suffix(".html")
 
 md = SRC.read_text()
@@ -152,16 +157,55 @@ h1+blockquote{font-size:1.05em}
 h1{-webkit-text-fill-color:#111;background:none;color:#111}
 h2,h3,h4,th{color:#111}.tw{border-color:#ccc}th{background:#eee;color:#111}
 td{border-color:#ddd}blockquote{background:#f7f7f7;color:#222}code{color:#b3540a}}
+nav.vol{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 2.2em;padding-bottom:1.1em;
+border-bottom:1px solid var(--line);font-size:.86rem}
+nav.vol a,nav.vol span{padding:.4em .85em;border-radius:999px;border:1px solid var(--line);
+border-bottom:1px solid var(--line);white-space:nowrap}
+nav.vol a{background:var(--panel);transition:background .15s,border-color .15s}
+nav.vol a:hover{background:#1f6feb22;border-color:var(--acc)}
+nav.vol span.cur{background:linear-gradient(92deg,#1f6feb33,#f0883e22);border-color:var(--acc);
+color:#fff;font-weight:600}
+nav.vol .lbl{color:var(--dim);border:0;background:none;padding-left:0}
+@media print{nav.vol{display:none}}
 """
+
+# Per-document metadata: title + the nav bar shown at the top of the rendered page.
+DOCS = {
+    "jev-launch-week-dossier": {
+        "title": "The Jev Launch Week Dossier — 10 Wild Builds &amp; 21 Design Patterns",
+        "nav": [
+            ("cur", "📕 Launch Week Dossier"),
+            ("a", "jev-design-patterns-handbook.html", "📘 Design Pattern Handbook"),
+            ("a", "../", "🌐 Home"),
+        ],
+    },
+    "jev-design-patterns-handbook": {
+        "title": "The Jev Design Pattern Handbook — 3 Primitives, 10 Shapes, 4 Patterns",
+        "nav": [
+            ("a", "jev-launch-week-dossier.html", "📕 Launch Week Dossier"),
+            ("cur", "📘 Design Pattern Handbook"),
+            ("a", "../", "🌐 Home"),
+        ],
+    },
+}
+
+meta = DOCS.get(SRC.stem, {"title": SRC.stem, "nav": [("a", "../", "🌐 Home")]})
+parts = ['<span class="lbl">Jev volumes:</span>']
+for item in meta["nav"]:
+    if item[0] == "cur":
+        parts.append(f'<span class="cur">{item[1]}</span>')
+    else:
+        parts.append(f'<a href="{item[1]}">{item[2]}</a>')
+nav = '<nav class="vol">' + "".join(parts) + "</nav>"
 
 doc = f"""<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>The Jev Launch Week Dossier — 10 Wild Builds &amp; 21 Design Patterns</title>
+<title>{meta["title"]}</title>
 <style>{CSS}</style></head>
 <body><div class="wrap">
+{nav}
 {body}
 </div></body></html>"""
-
 OUT.write_text(doc)
 print(f"wrote {OUT}  ({len(doc):,} bytes)")

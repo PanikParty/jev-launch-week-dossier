@@ -3,17 +3,171 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>The Jev Launch Week Dossier — 10 Wild Builds &amp; 21 Design Patterns</title>
-<meta name="description" content="A memorial record of the ten wildest community builds from TypeSafe Jev's launch week, and the 21 design patterns they reveal.">
-<meta property="og:title" content="The Jev Launch Week Dossier">
-<meta property="og:description" content="10 wild builds. 21 design patterns. An honest audit of which vendor claims survived contact with anyone outside the company.">
-<meta property="og:type" content="article">
+<title>The Jev Papers — Launch Week Builds &amp; the Official Design Patterns</title>
+<meta name="description" content="Two companion volumes on TypeSafe Jev: the ten wildest community builds from launch week, and the vendor's official pattern set — 3 primitives, 10 decision shapes, 4 design patterns.">
+<meta property="og:title" content="The Jev Papers">
+<meta property="og:description" content="10 wild builds. 4 official design patterns. 30 patterns across two volumes — plus an honest audit of which vendor claims survived contact with anyone outside the company.">
+<meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="The Jev Launch Week Dossier">
-<meta name="twitter:description" content="10 wild builds. 21 design patterns. An honest audit of the vendor claims.">
-<style>html,body{margin:0;height:100%}iframe{border:0;width:100%;height:100vh;display:block}</style>
+<meta name="twitter:title" content="The Jev Papers">
+<meta name="twitter:description" content="10 wild builds. 4 official design patterns. 30 patterns. An honest audit.">
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--panel2:#1c2128;--ink:#e6edf3;--dim:#9198a1;
+--line:#30363d;--acc:#58a6ff;--acc2:#f0883e;--ok:#3fb950;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+font:16px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
+-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:72px 32px 110px}
+.eyebrow{font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;color:var(--acc2);
+font-weight:640;margin:0 0 .9em}
+h1{font-size:3rem;line-height:1.08;letter-spacing:-.025em;margin:0 0 .35em;
+background:linear-gradient(96deg,#79c0ff,#f0883e);-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;background-clip:text}
+.lede{font-size:1.16rem;color:#c9d1d9;margin:0 0 1.6em;max-width:64ch}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 3em;padding-bottom:2em;
+border-bottom:1px solid var(--line)}
+.chip{font-size:.8rem;padding:.35em .8em;border-radius:999px;border:1px solid var(--line);
+background:var(--panel);color:var(--dim)}
+.chip b{color:#fff}
+h2{font-size:1.35rem;margin:0 0 1.1em;letter-spacing:-.01em;color:#79c0ff}
+.card{display:block;text-decoration:none;color:inherit;background:var(--panel);
+border:1px solid var(--line);border-radius:14px;padding:1.7em 1.9em;margin:0 0 1.2em;
+transition:border-color .18s,transform .18s,background .18s}
+.card:hover{border-color:var(--acc);transform:translateY(-2px);background:var(--panel2)}
+.card .tag{font-size:1.02rem;font-weight:660;color:#fff;margin:0 0 .45em;
+display:flex;align-items:center;gap:.5em}
+.card .desc{color:#c9d1d9;margin:0 0 .9em;font-size:.96rem}
+.card .meta{font-size:.85rem;color:var(--dim);margin:0}
+.card .meta code{background:#21262d;padding:.1em .4em;border-radius:4px;
+font-family:ui-monospace,Menlo,monospace;color:#ffa657;font-size:.94em}
+.arrow{color:var(--acc);font-size:.9rem;font-weight:600;display:inline-block;margin-top:.7em}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+margin:1.2em 0 0}
+.mini{background:var(--panel2);border:1px solid var(--line);border-radius:10px;
+padding:.9em 1.1em}
+.mini .n{font-size:1.5rem;font-weight:680;color:#7ee787;line-height:1.1;
+font-variant-numeric:tabular-nums}
+.mini .l{font-size:.78rem;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
+footer{margin-top:3.5em;padding-top:1.6em;border-top:1px solid var(--line);
+color:var(--dim);font-size:.87rem}
+footer a{color:var(--acc)}
+@media print{body{background:#fff;color:#111}.card{background:#fafafa;border-color:#ccc}
+h1{-webkit-text-fill-color:#111;background:none;color:#111}h2,.card .tag{color:#111}
+.card .desc,.lede{color:#333}.mini{background:#f4f4f4}.chip{background:#f4f4f4}}
+</style>
 </head>
 <body>
-<iframe src="docs/jev-launch-week-dossier.html" title="The Jev Launch Week Dossier" loading="eager"></iframe>
+<div class="wrap">
+
+  <p class="eyebrow">Two companion volumes</p>
+  <h1>The Jev Papers</h1>
+  <p class="lede">
+    On <strong>September 15, 2026</strong>, TypeSafe emerged from two years of stealth with one
+    strange idea: a model that <em>cannot write a sentence — by design</em>. Within six days,
+    developers had bolted it onto everything from flight search to air traffic control.
+    These two volumes document what they built, and how the vendor says you should build.
+  </p>
+
+  <div class="stats">
+    <span class="chip"><b>2</b> volumes</span>
+    <span class="chip"><b>30</b> patterns</span>
+    <span class="chip"><b>10</b> wild builds</span>
+    <span class="chip"><b>4</b> official patterns</span>
+    <span class="chip"><b>13</b> tables</span>
+    <span class="chip">MIT licensed</span>
+  </div>
+
+  <h2>Volume I — What they built</h2>
+
+  <a class="card" href="docs/jev-launch-week-dossier.html">
+    <p class="tag">📕 The Jev Launch Week Dossier</p>
+    <p class="desc">
+      A memorial record of the ten wildest community builds shipped during Jev's launch week,
+      the architectural patterns underneath them, and an honest audit of which vendor claims
+      survived contact with anyone outside the company.
+    </p>
+    <p class="meta">
+      Source: <em>Cloud Codes — 10 Wild Things You Can Build With Jev</em> ·
+      7 parts · 21 patterns · 4,300 words
+    </p>
+    <span class="arrow">Read Volume I →</span>
+  </a>
+
+  <div class="grid">
+    <div class="mini"><div class="n">1,092 → 101</div><div class="l">Browser calls</div></div>
+    <div class="mini"><div class="n">9.5s → 7s</div><div class="l">Flight search</div></div>
+    <div class="mini"><div class="n">~25×</div><div class="l">Real speedup (not 200×)</div></div>
+    <div class="mini"><div class="n">0%</div><div class="l">Context dropped, real run</div></div>
+  </div>
+
+  <h2 style="margin-top:2.4em">Volume II — How to build</h2>
+
+  <a class="card" href="docs/jev-design-patterns-handbook.html">
+    <p class="tag">📘 The Jev Design Pattern Handbook</p>
+    <p class="desc">
+      The vendor's own canonical pattern vocabulary, taught with worked examples: the three
+      primitives (Choice, Score, Noul), the ten decision shapes, and the four official design
+      patterns — with the measured benchmark that explains why they all take the shape they do.
+    </p>
+    <p class="meta">
+      Source: <em>The AI Automators — Master ALL Jev Design Patterns</em> +
+      primary docs at docs.typesafe.ai · 8 parts · 4 patterns · 13 shapes
+    </p>
+    <span class="arrow">Read Volume II →</span>
+  </a>
+
+  <div class="grid">
+    <div class="mini"><div class="n">12.2×</div><div class="l">Cheaper batched</div></div>
+    <div class="mini"><div class="n">10.0×</div><div class="l">Faster batched</div></div>
+    <div class="mini"><div class="n">$0.042</div><div class="l">Per 1M input tokens</div></div>
+    <div class="mini"><div class="n">255</div><div class="l">Max Choice options</div></div>
+  </div>
+
+  <h2 style="margin-top:2.4em">How the volumes relate</h2>
+
+  <p style="color:#c9d1d9">
+    Volume I <em>reverse-engineers</em> patterns from observed mechanics — the presentation
+    describes how each build works but never names a pattern. Those names are authored.
+    Volume II documents patterns the vendor <em>named and defined itself</em>.
+    Where the two vocabularies overlap, Volume II's terms are canonical, and Volume II
+    includes a full cross-reference mapping between them.
+  </p>
+
+  <p style="color:#c9d1d9">
+    They also do different work. Volume II is a fair and complete account of the documented
+    design vocabulary. It is not independent evidence that the vendor's <em>performance</em>
+    claims hold — Volume I's audit section addresses that separately, and its five
+    measurement patterns (<em>Format ≠ Judgment</em>, <em>Company Grades Own Homework</em>,
+    <em>Dramatized Mock-Up as Evidence</em>) still apply.
+  </p>
+
+  <blockquote style="margin:1.4em 0;padding:.9em 1.3em;border-left:3px solid var(--acc);
+  background:linear-gradient(90deg,#1f6feb1a,transparent);border-radius:0 8px 8px 0;color:#c9d1d9">
+    <strong>Read Volume II to learn how to build. Read Volume I to know what to believe.</strong>
+  </blockquote>
+
+  <h2 style="margin-top:2.4em">Other formats</h2>
+  <p style="color:#c9d1d9;font-size:.95rem">
+    Both volumes are available as Markdown and as self-contained HTML —
+    no CDN, no external assets. Open any HTML file directly, or <code style="background:#21262d;
+    padding:.1em .4em;border-radius:4px;color:#ffa657">Ctrl+P</code> → <em>Save as PDF</em>
+    for an archival copy.
+  </p>
+  <p style="color:#c9d1d9;font-size:.95rem">
+    <a href="docs/jev-launch-week-dossier.md" style="color:var(--acc)">Volume I markdown</a> ·
+    <a href="docs/jev-design-patterns-handbook.md" style="color:var(--acc)">Volume II markdown</a> ·
+    <a href="https://github.com/PanikParty/jev-launch-week-dossier" style="color:var(--acc)">Repository</a>
+  </p>
+
+  <footer>
+    Compiled from third-party presentations and primary TypeSafe documentation. All quotes,
+    figures, and caveats are attributed; company-stated figures are labelled separately from
+    independently-measured ones throughout both volumes.
+    Source-code and documents are <a href="https://github.com/PanikParty/jev-launch-week-dossier/blob/main/LICENSE">MIT licensed</a>;
+    linked third-party projects retain their own licenses.
+  </footer>
+
+</div>
 </body>
 </html>

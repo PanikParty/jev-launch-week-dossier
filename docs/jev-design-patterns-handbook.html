@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Jev Design Pattern Handbook — 3 Primitives, 10 Shapes, 4 Patterns</title>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--panel2:#1c2128;--ink:#e6edf3;--dim:#9198a1;
+--line:#30363d;--acc:#58a6ff;--acc2:#f0883e;--ok:#3fb950;--warn:#d29922;--bad:#f85149;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+font:16px/1.72 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
+-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:64px 32px 120px}
+h1{font-size:2.5rem;line-height:1.15;letter-spacing:-.02em;margin:0 0 .3em;
+background:linear-gradient(92deg,#79c0ff,#f0883e);-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;background-clip:text}
+h2{font-size:1.65rem;margin:2.6em 0 .7em;padding-bottom:.35em;
+border-bottom:1px solid var(--line);letter-spacing:-.01em}
+h3{font-size:1.22rem;margin:2em 0 .5em;color:#79c0ff}
+h4{font-size:1.02rem;margin:1.5em 0 .4em;color:var(--acc2)}
+p{margin:.85em 0}
+a{color:var(--acc);text-decoration:none;border-bottom:1px solid #1f6feb55}
+a:hover{border-bottom-color:var(--acc)}
+hr{border:0;border-top:1px solid var(--line);margin:2.5em 0}
+strong{color:#fff;font-weight:650}
+em{color:#c9d1d9}
+code{background:#21262d;padding:.15em .42em;border-radius:5px;font-size:.87em;
+font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#ffa657;
+border:1px solid #30363d}
+pre{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+padding:1.1em 1.3em;overflow-x:auto}
+pre code{background:none;border:0;padding:0;color:var(--ink)}
+blockquote{margin:1.3em 0;padding:.85em 1.2em;border-left:3px solid var(--acc);
+background:linear-gradient(90deg,#1f6feb1a,transparent);border-radius:0 8px 8px 0;
+color:#c9d1d9;font-size:1.02em}
+.tw{overflow-x:auto;margin:1.4em 0;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th{background:var(--panel2);text-align:left;padding:11px 14px;font-weight:640;
+color:#79c0ff;border-bottom:1px solid var(--line);white-space:nowrap;
+letter-spacing:.02em;text-transform:uppercase;font-size:.76rem}
+td{padding:10px 14px;border-bottom:1px solid #21262d;vertical-align:top}
+tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#1c212866}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;color:#7ee787}
+ul,ol{margin:.9em 0;padding-left:1.5em}
+li{margin:.38em 0}
+li::marker{color:var(--acc)}
+h1+blockquote{font-size:1.05em}
+@media print{body{background:#fff;color:#111}.wrap{max-width:none;padding:0}
+h1{-webkit-text-fill-color:#111;background:none;color:#111}
+h2,h3,h4,th{color:#111}.tw{border-color:#ccc}th{background:#eee;color:#111}
+td{border-color:#ddd}blockquote{background:#f7f7f7;color:#222}code{color:#b3540a}}
+nav.vol{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 2.2em;padding-bottom:1.1em;
+border-bottom:1px solid var(--line);font-size:.86rem}
+nav.vol a,nav.vol span{padding:.4em .85em;border-radius:999px;border:1px solid var(--line);
+border-bottom:1px solid var(--line);white-space:nowrap}
+nav.vol a{background:var(--panel);transition:background .15s,border-color .15s}
+nav.vol a:hover{background:#1f6feb22;border-color:var(--acc)}
+nav.vol span.cur{background:linear-gradient(92deg,#1f6feb33,#f0883e22);border-color:var(--acc);
+color:#fff;font-weight:600}
+nav.vol .lbl{color:var(--dim);border:0;background:none;padding-left:0}
+@media print{nav.vol{display:none}}
+</style></head>
+<body><div class="wrap">
+<nav class="vol"><span class="lbl">Jev volumes:</span><a href="jev-launch-week-dossier.html">📕 Launch Week Dossier</a><span class="cur">📘 Design Pattern Handbook</span><a href="../">🌐 Home</a></nav>
+<h1>The Jev Design Pattern Handbook</h1>
+<h2>The Official TypeSafe Pattern Set — Three Primitives, Ten Decision Shapes, Four Design Patterns</h2>
+<p><strong>Compiled:</strong> September 28, 2026</p>
+<p><strong>Source presentation:</strong> The AI Automators — <em>Master ALL Jev Design Patterns (With Practical Examples)</em> (14:20, published Sep 25, 2026)</p>
+<p><strong>Source URL:</strong> https://youtu.be/LzweTaOzvVo</p>
+<p><strong>Primary documentation:</strong> docs.typesafe.ai — <a href="https://docs.typesafe.ai/introduction">Introduction</a> · <a href="https://docs.typesafe.ai/primitives">Primitives</a> · <a href="https://docs.typesafe.ai/patterns">Patterns</a> · <a href="https://docs.typesafe.ai/confidence">Confidence</a></p>
+<p><strong>Companion volume:</strong> <a href="jev-launch-week-dossier.md">The Jev Launch Week Dossier</a> — the ten community builds and the 21 patterns they reveal.</p>
+<hr>
+<h2>Preface — What This Volume Is, and How It Differs</h2>
+<p>The Launch Week Dossier documents what developers <strong>built</strong> in six days. This volume documents what TypeSafe <strong>designed</strong> — the vendor's own canonical, documented pattern vocabulary, taught with practical worked examples.</p>
+<p>The two are not the same layer, and neither supersedes the other.</p>
+<div class="tw"><table><thead><tr>
+<th></th>
+<th>Launch Week Dossier</th>
+<th>This Handbook</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Subject</strong></td>
+<td>Community builds</td>
+<td>Vendor's official pattern set</td>
+</tr>
+<tr>
+<td><strong>Authority</strong></td>
+<td>Third-party observation</td>
+<td>Primary documentation</td>
+</tr>
+<tr>
+<td><strong>Unit of analysis</strong></td>
+<td>Whole applications</td>
+<td>Atomic decisions and their composition</td>
+</tr>
+<tr>
+<td><strong>Answer to "what is a pattern?"</strong></td>
+<td>Reverse-engineered from mechanics</td>
+<td>Stated by the vendor, with names</td>
+</tr>
+<tr>
+<td><strong>Tone</strong></td>
+<td>Auditing claims</td>
+<td>Teaching usage</td>
+</tr>
+</tbody></table></div>
+<p><strong>The critical distinction:</strong> the Launch Week Dossier's Family B patterns (State Menu ≠ Screenshot, Daemon-Scale Repetition, Structural Compaction) were <em>authored</em> — reverse-engineered from how builds worked. <strong>Every pattern in this volume is named and defined by TypeSafe itself.</strong> Where the two vocabularies overlap, this volume's terms are the canonical ones.</p>
+<p><strong>The most important thing in this document:</strong> the parallel-questions benchmark. Batching 13 questions into one call is <strong>12.2× cheaper and 10.0× faster</strong> than 13 separate calls — with <em>identical answers</em>. That single result explains why almost every pattern here takes the shape it does.</p>
+<hr>
+<h2>Part I — Where Jev Fits</h2>
+<h3>The category</h3>
+<blockquote><strong>Jev isn't a chat model. It's a decision model.</strong></blockquote>
+<p>You give it context and a question; it returns an answer your software can act on. The judgments are the fuzzy micro-decisions that were previously too expensive or too slow to hand to an LLM:</p>
+<ul>
+<li>Which team should handle an inbound message?</li>
+<li>Is a customer review reporting a defect?</li>
+<li>What product should be recommended for this situation?</li>
+</ul>
+<h3>The five opportunity categories</h3>
+<p>TypeSafe groups the opportunities into five broad areas.</p>
+<div class="tw"><table><thead><tr>
+<th>#</th>
+<th>Category</th>
+<th>What it looks like</th>
+</tr></thead><tbody>
+<tr>
+<td class="num">1</td>
+<td><strong>Automation</strong></td>
+<td>An inbound support message becomes a prioritized task in the right queue; a supplier email is identified as an invoice query and sent to accounts payable.</td>
+</tr>
+<tr>
+<td class="num">2</td>
+<td><strong>Real-time applications</strong></td>
+<td>Frontier intelligence at ~150ms — faster than humans can perceive. Games (Doom, Mario), but also a drawing app where "make something bigger" triggers the action near-instantly.</td>
+</tr>
+<tr>
+<td class="num">3</td>
+<td><strong>Data processing at scale</strong></td>
+<td>Analyze time-series en masse; check product reviews for recurring complaints; scan support transcripts for known problems. Classify once, then total with ordinary code across months, versions, products.</td>
+</tr>
+<tr>
+<td class="num">4</td>
+<td><strong>Verification</strong></td>
+<td>Does a citation actually support the claim beside it? Does a drafted support reply promise a refund the policy doesn't permit? Every one of these used to require another LLM call.</td>
+</tr>
+<tr>
+<td class="num">5</td>
+<td><strong>Harness engineering</strong></td>
+<td>The software around an AI agent (Claude Code, Codex) or a custom piece of software you create.</td>
+</tr>
+</tbody></table></div>
+<h3>The token economics that make it work</h3>
+<div class="tw"><table><thead><tr>
+<th>Metric</th>
+<th>Value</th>
+</tr></thead><tbody>
+<tr>
+<td>Jev list price</td>
+<td><strong>4.2 US cents per million input tokens</strong></td>
+</tr>
+<tr>
+<td>Output tokens</td>
+<td><strong>$0.00</strong> — not charged</td>
+</tr>
+<tr>
+<td>A 1,000-token request</td>
+<td>~$0.000042</td>
+</tr>
+<tr>
+<td><strong>1 million such requests</strong></td>
+<td><strong>~$42</strong></td>
+</tr>
+</tbody></table></div>
+<p>That arithmetic is what makes <em>repeated</em> fuzzy decisions interesting. Once a decision costs effectively nothing, you can consider checks across entire collections of records, or several checks inside a single workflow, at scale.</p>
+<h3>Why this is bigger than one vendor</h3>
+<p>The presentation makes a point worth preserving:</p>
+<blockquote>This isn't specific to Jev. With the success of this model in the space of a week, we are guaranteed to see a wave of new decision models — both proprietary and open source — that we can deploy locally.</blockquote>
+<p><strong>The patterns in this volume are model-agnostic.</strong> They describe how to organize typed decisions into a working system, not how to call one company's API.</p>
+<hr>
+<h2>Part II — The Three Primitives (Decision Types)</h2>
+<h3>The paradigm shift</h3>
+<blockquote>LLMs are designed to produce text for humans to read. When you need a model to make a judgment that your <strong>code</strong> will consume, that creates a mismatch: you are coercing a text-generation system into outputting structured decisions, then <strong>parsing the results back</strong> into something your code can depend on.</blockquote>
+<p>Jev eliminates the parsing step. It evaluates typed <em>questions</em> against a <em>state</em> and returns typed values and probability distributions directly.</p>
+<div class="tw"><table><thead><tr>
+<th>Primitive</th>
+<th>Goal</th>
+<th>Returns</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Choice</strong></td>
+<td>Choose an option from a list</td>
+<td><code>choice</code>, <code>probabilities</code>, <code>confidence</code></td>
+</tr>
+<tr>
+<td><strong>Score</strong></td>
+<td>Score the state on a rubric</td>
+<td><code>score</code>, <code>legend</code>, <code>probabilities</code>, <code>confidence</code></td>
+</tr>
+<tr>
+<td><strong>Noul</strong></td>
+<td>Is this statement true?</td>
+<td><code>noul</code> (0 to 1)</td>
+</tr>
+</tbody></table></div>
+<p>All three can be mixed in a single API call. Every question is evaluated <strong>in parallel and in isolation</strong> against the same state in one go.</p>
+<h3>Type 1 — Choice: pick one option</h3>
+<p><strong>Use when</strong> the answer is one of a fixed set of options with no order between them.</p>
+<pre><code>
+{
+  &quot;department&quot;: {
+    &quot;type&quot;: &quot;choice&quot;,
+    &quot;instructions&quot;: &quot;Which team should handle this?&quot;,
+    &quot;criteria&quot;: {
+      &quot;returns&quot;: &quot;Exchanges, wrong or damaged items&quot;,
+      &quot;shipping&quot;: &quot;Delivery status, delays, lost packages&quot;,
+      &quot;billing&quot;: &quot;Charges, invoices, payment problems&quot;
+    }
+  }
+}
+</code></pre>
+<p><strong>Response:</strong></p>
+<pre><code>
+{
+  &quot;department&quot;: {
+    &quot;type&quot;: &quot;choice&quot;,
+    &quot;choice&quot;: &quot;returns&quot;,
+    &quot;confidence&quot;: 1.0,
+    &quot;probabilities&quot;: { &quot;shipping&quot;: 0.0, &quot;returns&quot;: 1.0, &quot;billing&quot;: 0.0 }
+  }
+}
+</code></pre>
+<div class="tw"><table><thead><tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr></thead><tbody>
+<tr>
+<td><code>choice</code></td>
+<td>The option with the highest probability</td>
+</tr>
+<tr>
+<td><code>probabilities</code></td>
+<td>Full distribution across every option; <strong>sums to 1</strong></td>
+</tr>
+<tr>
+<td><code>confidence</code></td>
+<td>0–1, computed from how peaked the distribution is</td>
+</tr>
+</tbody></table></div>
+<p><strong>Design notes from the docs:</strong></p>
+<ul>
+<li>A Choice accepts <strong>up to 255 options</strong>. Adding options costs a few tokens each, so give the full list rather than a shortlist.</li>
+<li>Add an <code>other</code> or <code>none of the above</code> option when the list might not cover every input.</li>
+<li>Option names <em>and</em> descriptions are both sent to the model — write descriptions that separate the options from each other.</li>
+</ul>
+<h3>Type 2 — Score: rate along ordered levels</h3>
+<p><strong>Use when</strong> the answer is a position on a spectrum you can describe in steps.</p>
+<pre><code>
+{
+  &quot;bug_severity&quot;: {
+    &quot;type&quot;: &quot;score&quot;,
+    &quot;instructions&quot;: &quot;How severe is the reported issue?&quot;,
+    &quot;criteria&quot;: [
+      &quot;Cosmetic; no impact to functionality&quot;,
+      &quot;Broken or degraded feature, but workaround exists&quot;,
+      &quot;Blocking issue; no workaround exists&quot;
+    ]
+  }
+}
+</code></pre>
+<p><strong>Response:</strong></p>
+<pre><code>
+{
+  &quot;bug_severity&quot;: {
+    &quot;type&quot;: &quot;score&quot;,
+    &quot;score&quot;: 1.43,
+    &quot;confidence&quot;: 0.35,
+    &quot;legend&quot;: {
+      &quot;0&quot;: &quot;Cosmetic; no impact to functionality&quot;,
+      &quot;1&quot;: &quot;Broken or degraded feature, but workaround exists&quot;,
+      &quot;2&quot;: &quot;Blocking issue; no workaround exists&quot;
+    },
+    &quot;probabilities&quot;: { &quot;0&quot;: 0.0, &quot;1&quot;: 0.57, &quot;2&quot;: 0.43 }
+  }
+}
+</code></pre>
+<p><strong>How the score is computed:</strong> each level number × its probability, summed.</p>
+<p><code>0 × 0.0 + 1 × 0.57 + 2 × 0.43 = 1.43</code></p>
+<p><strong>The score can land <em>between</em> levels.</strong> 1.43 means the model is split between levels 1 and 2, leaning to 1.</p>
+<p><strong>Writing good levels — the two hard rules:</strong></p>
+<ol>
+<li><strong>Describe situations, not degrees.</strong> "Broken or degraded feature, but workaround exists" gives the model something to match against. "Moderately severe" does not.</li>
+<li><strong>Every level is evaluated separately.</strong> The model does not see a level's number or its neighbors. "Worse than the previous level" means nothing to it, and <strong>numbers in the descriptions do not help</strong>.</li>
+</ol>
+<p>The docs demonstrate the failure mode directly. Given a misaligned-button report:</p>
+<div class="tw"><table><thead><tr>
+<th>Levels</th>
+<th>Result</th>
+</tr></thead><tbody>
+<tr>
+<td><code>["0", "1", "2"]</code> with "Rate severity 0 to 2"</td>
+<td>score <strong>0.55</strong>, confidence <strong>0.33</strong> — split between 0 and 1</td>
+</tr>
+<tr>
+<td>The three descriptive levels above</td>
+<td>score <strong>0.0</strong>, confidence <strong>1.0</strong> — correct</td>
+</tr>
+</tbody></table></div>
+<p><strong>Additional guidance:</strong></p>
+<ul>
+<li>Use as many levels as you can describe distinctly, <strong>up to 10</strong>. Three is fine. Don't add levels you can't describe distinctly.</li>
+<li><strong>Keep each Score to one dimension.</strong> If a description says "punctual and smart and experienced," the question measures three things and can't be placed. Split it and combine in code.</li>
+<li>Give a rare extreme case its own level. A sentiment scale ending at "very angry" should add "abusive or threatening" — otherwise both score near the top and the score alone can't distinguish them.</li>
+<li>If there's no in-between at all, use Choice instead.</li>
+</ul>
+<h3>Type 3 — Noul: is this true?</h3>
+<p><strong>Use when</strong> the answer is yes or no, and the probability itself is the useful signal.</p>
+<pre><code>
+{
+  &quot;is_human_escalation&quot;: {
+    &quot;type&quot;: &quot;noul&quot;,
+    &quot;instructions&quot;: &quot;Is the customer asking for a human agent?&quot;
+  },
+  &quot;is_repeat_contact&quot;: {
+    &quot;type&quot;: &quot;noul&quot;,
+    &quot;instructions&quot;: &quot;Has the customer contacted support about this before?&quot;,
+    &quot;criteria&quot;: {
+      &quot;true&quot;: &quot;Mentions a prior attempt, ticket, or that they have asked before&quot;,
+      &quot;false&quot;: &quot;No sign of any previous contact&quot;
+    }
+  }
+}
+</code></pre>
+<p><strong>A Noul answer is a single number: the probability that the answer is yes.</strong> Near 1 is a strong yes, near 0 a strong no, near 0.5 genuinely uncertain.</p>
+<p><strong>There is no separate <code>confidence</code> for a Noul.</strong> Its distribution has only two outcomes, so the single value describes it completely.</p>
+<p><strong>Recorded <code>jev-1.13.0</code> answers</strong> to <em>"Is the customer asking for a human agent?"</em>:</p>
+<div class="tw"><table><thead><tr>
+<th>State</th>
+<th><code>noul</code></th>
+</tr></thead><tbody>
+<tr>
+<td>Thanks, that fixed it!</td>
+<td class="num">0.02</td>
+</tr>
+<tr>
+<td>How do I reset my password?</td>
+<td class="num">0.07</td>
+</tr>
+<tr>
+<td>I need this sorted today, whatever it takes.</td>
+<td class="num">0.26</td>
+</tr>
+<tr>
+<td>Are you a bot?</td>
+<td class="num">0.40</td>
+</tr>
+<tr>
+<td>Is there any way to speak to someone about my invoice?</td>
+<td class="num">0.84</td>
+</tr>
+<tr>
+<td>I have asked three times now. Can I please just talk to a real person?</td>
+<td class="num">0.99</td>
+</tr>
+</tbody></table></div>
+<p>Note the middle two. "I need this sorted today" is <em>urgent</em> but never asks for a person — 0.26. "Are you a bot?" <em>hints</em> at wanting a human without asking — 0.40, nearly even. <strong>Both are exactly the cases where code needs a threshold.</strong></p>
+<h3>The critical Noul gotcha: it is not a scale</h3>
+<blockquote>A Noul value runs from 0 to 1, but <strong>it's not a scale of the thing you asked about.</strong> It is the probability that the answer is yes. If the question is really about degree, the value does not measure the degree.</blockquote>
+<p>The docs contrast the same four candidates under a Noul and a Score:</p>
+<div class="tw"><table><thead><tr>
+<th>Candidate</th>
+<th>Noul: <em>"Is the candidate strong in Python?"</em></th>
+<th>Score: <em>"How much Python experience?"</em></th>
+</tr></thead><tbody>
+<tr>
+<td>Java and Go, never used Python</td>
+<td class="num">0.03</td>
+<td>0.0 (No experience)</td>
+</tr>
+<tr>
+<td>Occasional small scripts</td>
+<td class="num">0.14</td>
+<td>1.0 (Some familiarity)</td>
+</tr>
+<tr>
+<td>Daily for two years, data pipelines</td>
+<td class="num">0.81</td>
+<td>2.05 (Regular use in a job)</td>
+</tr>
+<tr>
+<td>Daily for eight years, large Django codebase</td>
+<td class="num">0.92</td>
+<td>2.89 (Deep expertise)</td>
+</tr>
+</tbody></table></div>
+<p>The Noul judges one proposition — "strong" — and the values are how likely it is. You <em>could</em> invent levels in the 0–1 range in your code, <strong>but the model never saw them, so nothing was judged against them.</strong> A middle value might mean medium experience or an unclear case; the spacing between candidates is not something you chose.</p>
+<p>The Score judges each level description on its own, so every candidate landed on or near a level you wrote.</p>
+<p><strong>Rule: use Noul for a yes/no judgment and Score to measure a position on a spectrum.</strong></p>
+<p><strong>Other Noul rules:</strong></p>
+<ul>
+<li><strong>One yes/no question per Noul.</strong> "Is the customer angry <em>and</em> asking for a refund?" makes the model judge both at once and the value means less. Ask two Nouls and combine in code.</li>
+<li><strong>Phrase so a high value means yes.</strong> "Does the message contain personal data?" is clear. "Is the message <em>free of</em> personal data?" inverts the meaning and downstream code will get it backwards.</li>
+<li><strong>Make the yes/no boundary unambiguous.</strong> "Does this candidate have <em>any</em> Python experience?" works because "any" leaves no middle ground. When the boundary is subtle, add <code>criteria</code> with <code>true</code>/<code>false</code> descriptions.</li>
+</ul>
+<hr>
+<h2>Part III — The Ten Decision Shapes</h2>
+<p>The <strong>type</strong> tells you what comes back. The <strong>shape</strong> describes the job you're trying to do with it.</p>
+<div class="tw"><table><thead><tr>
+<th>#</th>
+<th>Shape</th>
+<th>Definition</th>
+<th>Preferred type</th>
+</tr></thead><tbody>
+<tr>
+<td class="num">1</td>
+<td><strong>Classification</strong></td>
+<td>Give something a category</td>
+<td>Choice</td>
+</tr>
+<tr>
+<td class="num">2</td>
+<td><strong>Detection</strong></td>
+<td>Ask whether a property is present</td>
+<td>Noul</td>
+</tr>
+<tr>
+<td class="num">3</td>
+<td><strong>Scoring</strong></td>
+<td>Measure along defined levels</td>
+<td>Score</td>
+</tr>
+<tr>
+<td class="num">4</td>
+<td><strong>Routing</strong></td>
+<td>Select what happens next</td>
+<td>Choice (+ confidence)</td>
+</tr>
+<tr>
+<td class="num">5</td>
+<td><strong>Search</strong></td>
+<td>Find matches by meaning</td>
+<td>Choice (+ Noul guard)</td>
+</tr>
+<tr>
+<td class="num">6</td>
+<td><strong>Retrieval</strong></td>
+<td>Get the right evidence into the next step</td>
+<td>Choice / Noul</td>
+</tr>
+<tr>
+<td class="num">7</td>
+<td><strong>Ranking</strong></td>
+<td>Put candidates in order</td>
+<td>Choice / Noul</td>
+</tr>
+<tr>
+<td class="num">8</td>
+<td><strong>Verification</strong></td>
+<td>Check a specific claim or failure mode</td>
+<td>Noul</td>
+</tr>
+<tr>
+<td class="num">9</td>
+<td><strong>Feature extraction</strong></td>
+<td>Turn language into inputs for another model</td>
+<td>Any</td>
+</tr>
+<tr>
+<td class="num">10</td>
+<td><strong>Structured data extraction</strong></td>
+<td>Identify the correct values in raw data</td>
+<td>Noul / Choice</td>
+</tr>
+</tbody></table></div>
+<h3>1. Classification</h3>
+<p>Gives something a category. An upload failure message gets labeled a bug; a shared company inbox gets messages labeled invoices, sales pitches, or delivery updates. <strong>Choice works well because the categories are known and one can be selected.</strong></p>
+<h3>2. Detection</h3>
+<p>Asks whether a particular property is present. A sales reply might ask you to stop contacting the sender. <strong>Noul fits</strong> because it gives the yes/no probability, and your application decides what to do with it.</p>
+<h3>3. Scoring</h3>
+<p>Both a shape and a type. How destructive is this bug? How clear is this help article? <strong>Define the levels so the number has useful meaning</strong>, then use it to prioritize work — engineering or editorial.</p>
+<h3>4. Routing</h3>
+<p>Uses a decision to select what actually happens next. An order status question goes to a database lookup; a product question goes to an assistant with the relevant documentation. Confidence is what makes routing safe (see Pattern 2).</p>
+<h3>5. Search</h3>
+<p>Find matches <strong>by meaning</strong>. The docs' worked recipe scores every line of a document against a query with a Choice question, and uses a Noul to check whether the document contains an answer at all.</p>
+<blockquote>That's not to say you can use a decision model <em>as</em> a search engine — but you can build it <em>into</em> a search engine using the design patterns.</blockquote>
+<h3>6. Retrieval</h3>
+<p>Getting the right evidence into the next step in a process. A support assistant selects the returns-policy passages that apply to a particular customer's region and purchase. <strong>This is a filtering process that improves downstream accuracy.</strong></p>
+<h3>7. Ranking</h3>
+<p>Putting candidates in a particular order. Ten backpacks, and the request is "I want a backpack for my laptop on a rainy bike commute." Jev evaluates the descriptions against those requirements and sorts the candidates.</p>
+<p><strong>The relationship between 5, 6, and 7:</strong> search finds the candidates, <strong>ranking orders them</strong>, and <strong>retrieval uses the results to supply what the next step needs.</strong></p>
+<h3>8. Verification</h3>
+<p>Checking a specific claim or specific failure mode.</p>
+<blockquote><strong>A quote can exist and still be used to make the wrong claim.</strong></blockquote>
+<p>Does a cited passage support the sentence that refers to it? Does a drafted reply promise a refund the policy and the case details don't support? <strong>You're giving the model something concrete to check against.</strong></p>
+<h3>9. Feature extraction</h3>
+<p>Turning language into inputs for another model. Extract buyer intent or product interest, then test whether those signals improve a demand forecast. <strong>This is the bridge to classical ML</strong> — see the composite-scoring docs, which recommend using probabilities as features in a downstream model.</p>
+<h3>10. Structured data extraction</h3>
+<p>LLMs are great at data extraction but slow and expensive. With a decision model you have two options:</p>
+<ul>
+<li><strong>Code finds candidates, Jev identifies which are correct</strong> — cheaper and more controlled.</li>
+<li><strong>Load the raw data and let Jev work through it</strong>, identifying the specific data you're looking for.</li>
+</ul>
+<hr>
+<h2>Part IV — The Four Design Patterns</h2>
+<p>These describe how to organize decisions into a working system. <strong>All four are named and defined by TypeSafe in its public documentation.</strong></p>
+<div class="tw"><table><thead><tr>
+<th>Pattern</th>
+<th>What it does</th>
+<th>Benefits</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Speculative Fan-Out</strong></td>
+<td>Send many questions in a single call, including speculative ones, and let your code decide what's relevant</td>
+<td>Cost, Speed</td>
+</tr>
+<tr>
+<td><strong>Confidence-Gated Routing</strong></td>
+<td>Use confidence as a second decision axis to build safer systems</td>
+<td>Reliability, Safety</td>
+</tr>
+<tr>
+<td><strong>Composite Scoring</strong></td>
+<td>Combine several dimensions of analysis into a single score</td>
+<td>Cost, Reliability, Speed</td>
+</tr>
+<tr>
+<td><strong>Intent Routing</strong></td>
+<td>Classify a user's intent and route to the appropriate handler</td>
+<td>Cost, Speed</td>
+</tr>
+</tbody></table></div>
+<hr>
+<h3>Pattern 1 — Speculative Fan-Out</h3>
+<p><strong>The core claim:</strong> because questions are evaluated in parallel, <strong>the time it takes to ask one question versus ten in a single request is virtually the same.</strong> So you should ask the questions you <em>might</em> need, to avoid a series of round trips.</p>
+<p><strong>Worked example: support ticket triage</strong></p>
+<p>You need the category. <em>If</em> it's a bug report, you also need severity. Instead of asking for category first and severity in a follow-up call — ask for both at once. If the ticket turns out not to be a bug, <strong>your code simply ignores the severity answer.</strong></p>
+<p><strong>One request, five questions, five answers:</strong></p>
+<div class="tw"><table><thead><tr>
+<th>Question ID</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr></thead><tbody>
+<tr>
+<td><code>category</code></td>
+<td>Choice</td>
+<td>bug_report / billing / feature_request / account</td>
+</tr>
+<tr>
+<td><code>bug_severity</code></td>
+<td>Score</td>
+<td><strong>Speculative</strong> — only matters if bug</td>
+</tr>
+<tr>
+<td><code>has_reproducible_steps</code></td>
+<td>Noul</td>
+<td><strong>Speculative</strong> — only matters if bug</td>
+</tr>
+<tr>
+<td><code>refund_requested</code></td>
+<td>Noul</td>
+<td><strong>Speculative</strong> — only matters if billing</td>
+</tr>
+<tr>
+<td><code>frustration</code></td>
+<td>Score</td>
+<td><strong>Useful regardless of category</strong></td>
+</tr>
+</tbody></table></div>
+<p><strong>The routing code, verbatim from the docs:</strong></p>
+<pre><code>
+category = response.answers[&quot;category&quot;]
+bug_severity = response.answers[&quot;bug_severity&quot;]
+bug_repro = response.answers[&quot;has_reproducible_steps&quot;]
+refund = response.answers[&quot;refund_requested&quot;]
+frustration = response.answers[&quot;frustration&quot;]
+
+if category.choice == &quot;bug_report&quot;:
+    if bug_severity.score &gt; 1.5 and bug_repro.noul &gt; 0.6:
+        escalate_to_engineering(ticket_id, severity=&quot;high&quot;)
+    else:
+        add_to_bug_backlog(ticket_id)
+
+elif category.choice == &quot;billing&quot;:
+    if refund.noul &gt; 0.7:
+        route_to_billing_with_flag(ticket_id, refund_likely=True)
+    else:
+        route_to_billing(ticket_id)
+
+elif category.choice == &quot;feature_request&quot;:
+    log_feature_request(ticket_id)
+
+# Frustration is useful regardless of category
+if frustration.score &gt; 1.5:
+    flag_for_priority_response(ticket_id)
+</code></pre>
+<p><strong>Why this works — the measured proof.</strong> The <code>parallel_questions</code> cookbook asked 13 questions (8 Noul, 2 Choice, 3 Score) against a ~54,000-character document, both as one batched call and as 13 separate calls, 5 repetitions each:</p>
+<pre><code>
+batching                 calls        cost  total time
+one call, all 13             1   $0.000497       0.27s
+13 calls, one each          13   $0.006090       2.71s
+
+batching: 12.2x cheaper, 10.0x faster
+</code></pre>
+<p><strong>And the answers did not change.</strong> Per-question means agreed to within noise, and the run-to-run standard deviation was <em>the same size under both strategies</em> — choices and scores and six of the eight Nouls returned <strong>std dev exactly 0.0</strong> either way. Whatever noise a question has, it has under both. <strong>Batching neither shifts the answer nor adds variance.</strong></p>
+<p>The mechanism: <strong>the document dominates every request.</strong> N single-question calls pay for it N times, in N round trips; the batched call pays once. <strong>The bigger the document, the nearer that saving comes to a full Nx.</strong></p>
+<blockquote><strong>Important caveat on the speed figure:</strong> the 10.0× sums the 13 single-call latencies, assuming they run one after another. Fire them concurrently and the gap shrinks — <strong>but the 13× token cost stays.</strong></blockquote>
+<p><strong>When you genuinely need two requests instead of one.</strong> Questions in the same request are independent — one answer is <em>not</em> hidden context for another. A second request is warranted only when <em>code cannot build the second request until it has the first answer</em>: it needs the answer to fetch more data for the state, to decide what the state is made of, or to pick the next question's options. The docs' three legitimate cases:</p>
+<ul>
+<li><strong>Skill suggestion</strong> — rank 182 skills in one request, then fetch the full text of the top three and judge them again against that better evidence.</li>
+<li><strong>Structure recovery</strong> — ask whether each line break split a sentence, merge lines into blocks from those answers, <em>then</em> classify blocks that did not exist until the first request answered.</li>
+<li><strong>Hierarchical classification</strong> — use each Choice answer to decide which options the next request offers.</li>
+</ul>
+<hr>
+<h3>Pattern 2 — Confidence-Gated Routing</h3>
+<p><strong>The idea:</strong> sometimes the best available answer is still too uncertain to act upon. Confidence becomes a <strong>second decision axis</strong>.</p>
+<p><strong>Worked example: voice banking commands</strong></p>
+<p>If someone says <em>"Cancel it"</em> — are they talking about their subscription or an appointment? A clear interpretation goes to the appropriate handler; an ambiguous one triggers clarification.</p>
+<p><strong>The two-tier gating logic:</strong></p>
+<pre><code>
+action = response.answers[&quot;intent&quot;]
+
+# Below 0.6 confidence on any action, route to a human
+if action.confidence &lt; 0.6:
+    route_to_support_agent(account_id)
+
+elif action.choice == &quot;check_balance&quot;:
+    # Low stakes. 0.6 confidence is sufficient.
+    show_balance(account_id)
+
+elif action.choice == &quot;approve_transfer&quot;:
+    if action.confidence &gt; 0.85:
+        # High stakes, but high confidence. Safe to act automatically.
+        approve_transfer(account_id)
+    else:
+        # High stakes, moderate confidence. Verify intent first.
+        ask_user_to_confirm(
+            &quot;Just to confirm: you would like to approve this transfer, is that correct?&quot;
+        )
+
+else:
+    route_to_support_agent(account_id)
+</code></pre>
+<p><strong>Read the structure carefully — it is two thresholds, not one.</strong></p>
+<div class="tw"><table><thead><tr>
+<th>Gate</th>
+<th>Threshold</th>
+<th>Rationale</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Floor</strong> (any action)</td>
+<td><strong>0.6</strong></td>
+<td>Catches anything the model is genuinely uncertain about</td>
+</tr>
+<tr>
+<td><code>check_balance</code></td>
+<td><strong>0.6</strong> is enough</td>
+<td>Worst case: user hears the wrong balance read-out. Recoverable.</td>
+</tr>
+<tr>
+<td><code>approve_transfer</code></td>
+<td><strong>&gt;0.85</strong></td>
+<td>Otherwise <strong>ask the user to confirm</strong></td>
+</tr>
+</tbody></table></div>
+<blockquote>Above that floor, <strong>each action type has its own threshold based on the consequences of acting on a wrong classification.</strong></blockquote>
+<p><strong>The three-range pattern, from the Confidence docs:</strong></p>
+<div class="tw"><table><thead><tr>
+<th>Range</th>
+<th>Behavior</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>High confidence</strong></td>
+<td>Act automatically. The model has a clear read.</td>
+</tr>
+<tr>
+<td><strong>Medium confidence</strong></td>
+<td>Proceed with caution. Whatever fits the context — ask the user to confirm, flag for review, or gather more information.</td>
+</tr>
+<tr>
+<td><strong>Low confidence</strong></td>
+<td><strong>Do not act.</strong> Route to a human, request clarification, or fall back to a different system.</td>
+</tr>
+</tbody></table></div>
+<p><strong>Two absolute rules stated plainly in the docs:</strong></p>
+<ol>
+<li><strong>A confidence threshold is not one number.</strong> Different actions within the same system should be gated at different levels depending on the consequences of getting it wrong.</li>
+<li><strong>You still need permission checks and confirmation rules in your software.</strong></li>
+</ol>
+<blockquote><strong>Don't just trust what the decision model tells you. You still need to properly secure and gauge everything on your own side using your own business logic.</strong></blockquote>
+<p><strong>Calibration is measured across groups of predictions — it does not guarantee that an individual answer is correct.</strong> That's why thresholds are yours to test: <em>start conservative, test with your own data, and adjust as you observe results.</em></p>
+<hr>
+<h3>Pattern 3 — Composite Scoring</h3>
+<p><strong>The idea:</strong> break the judgment into <strong>independent dimensions</strong>, score each separately, and combine them with <strong>weights you control in code</strong>.</p>
+<p><strong>Worked example: resume screening</strong></p>
+<p>Score each candidate on four dimensions, then rank for two different roles with different weights.</p>
+<p><strong>The four Score questions (one request):</strong></p>
+<div class="tw"><table><thead><tr>
+<th>Dimension</th>
+<th>Levels (0 → 4)</th>
+</tr></thead><tbody>
+<tr>
+<td><code>python_depth</code></td>
+<td>No mention → Mentioned, no detail → Used in projects → Primary language → Deep expertise</td>
+</tr>
+<tr>
+<td><code>team_leadership</code></td>
+<td>None → Informal mentorship → Led small team → Direct reports → Multiple teams/org</td>
+</tr>
+<tr>
+<td><code>system_design</code></td>
+<td>No architecture work → Design discussions → Components → Owned significant system → Systems at scale</td>
+</tr>
+<tr>
+<td><code>generalist</code></td>
+<td>One domain → Narrow variety → A few areas → Regularly moved → Ramped in unfamiliar areas</td>
+</tr>
+</tbody></table></div>
+<p><strong>The combination — the whole point of the pattern:</strong></p>
+<pre><code>
+py      = response.answers[&quot;python_depth&quot;].score / 4
+lead    = response.answers[&quot;team_leadership&quot;].score / 4
+arch    = response.answers[&quot;system_design&quot;].score / 4
+general = response.answers[&quot;generalist&quot;].score / 4
+
+# Senior IC
+ic_score = (0.40 * py) + (0.10 * lead) + (0.40 * arch) + (0.10 * general)
+
+# Engineering Manager
+em_score = (0.15 * py) + (0.40 * lead) + (0.20 * arch) + (0.25 * general)
+</code></pre>
+<p><strong>Same four answers. Two completely different rankings.</strong> Engineering Manager flips Python from 40% to 15% and leadership from 10% to 40%.</p>
+<p><strong>Why this is the highest-leverage pattern:</strong></p>
+<blockquote>This gives you the ability to rank candidates. But more importantly, it gives you <strong>visibility into how exactly the final score is being calculated.</strong> If the highest ranking candidates are not matching your expectations, you can adjust the weights to find the right balance.</blockquote>
+<p><strong>The normalization rule.</strong> Scales of different lengths return different maxima — a four-level scale returns 0–3, a three-level scale returns 0–2. <strong>Divide each score by its top level number, <code>len(criteria) - 1</code>, to put every score on 0–1.</strong> Only then do the weights mean what they say: 0.6 on severity counts twice as much as 0.3 on frustration.</p>
+<p>The docs' ticket-priority worked example:</p>
+<pre><code>
+def normalized(answers, question_id: str) -&gt; float:
+    &quot;&quot;&quot;Put a score on 0 to 1 by dividing by its top level number.&quot;&quot;&quot;
+    top_level = len(TRIAGE_QUESTIONS[question_id].criteria) - 1
+    return answers[question_id].score / top_level
+
+# ...
+return 0.6 * severity + 0.3 * frustration + 0.1 * report_quality
+</code></pre>
+<blockquote>0.62 severity, 0.64 frustration, 1.0 report quality →<br><code>0.6 × 0.62 + 0.3 × 0.64 + 0.1 × 1.0 = 0.664</code></blockquote>
+<p><strong>Why weights belong in code, not in a prompt:</strong> <em>When priorities shift, change a coefficient in your code rather than rewriting a prompt.</em></p>
+<p><strong>Extension — dynamic weights:</strong> the presentation notes you could send the situation into the model and have it determine the weights. This is not in the core docs and should be treated as an advanced variant.</p>
+<p><strong>Extension — composite scoring over Nouls.</strong> The same combination works on Noul probabilities:</p>
+<pre><code>
+quality = (
+    0.4 * answers[&quot;answers_request&quot;].noul
+    + 0.4 * answers[&quot;citations_are_supported&quot;].noul
+    + 0.2 * (1 - answers[&quot;contradicts_context&quot;].noul)
+)
+</code></pre>
+<p><strong>And the bridge to classical ML:</strong> <em>For learned composition, use the probabilities as features in a downstream machine-learning model.</em> If you lack labels, the docs suggest using an ensemble of expensive reasoning models to generate them.</p>
+<hr>
+<h3>Pattern 4 — Intent Routing</h3>
+<p><strong>The idea:</strong> not every request needs the same kind of handler. Some can be answered with a database lookup. Some need an LLM with domain context. Some need a human. <strong>A decision model sits in front of all of them as a fast, cheap classifier.</strong></p>
+<p><strong>Worked example: customer service routing</strong></p>
+<p><strong>Two questions in one request:</strong></p>
+<ul>
+<li><code>intent</code> (Choice): <code>order_status</code>, <code>product_question</code>, <code>return_exchange</code>, <code>complaint</code></li>
+<li><code>complexity</code> (Score): Simple lookup → Requires judgment/multi-step → Unusual edge case/escalation</li>
+</ul>
+<p><strong>The routing logic:</strong></p>
+<pre><code>
+def route_ticket(ticket_id, response):
+    intent = response.answers[&quot;intent&quot;]
+    complexity = response.answers[&quot;complexity&quot;]
+
+    if intent.confidence &lt; 0.5:
+        # If we don&#x27;t have enough confidence to classify, route to a human agent
+        return route_to_human_agent(ticket_id)
+
+    if intent.choice == &quot;order_status&quot;:
+        handle_order_status(ticket_id)          # deterministic code, no LLM
+
+    elif intent.choice == &quot;product_question&quot;:
+        handle_with_llm(ticket_id, PRODUCT_SPECIALIST)
+
+    elif intent.choice == &quot;return_exchange&quot;:
+        handle_with_llm(ticket_id, RETURNS_SPECIALIST)
+
+    elif intent.choice == &quot;complaint&quot;:
+        low_confidence = complexity.confidence &lt; 0.5
+        # A higher complexity.score leans toward the &quot;escalation needed&quot; end of the scale.
+        if complexity.score &gt; 1 or low_confidence:
+            # Too complex for safe automation, or we&#x27;re not sure about the complexity;
+            # route to a human.
+            route_to_human_agent(ticket_id)
+        else:
+            handle_with_llm(ticket_id, COMPLAINT_RESOLUTION)
+</code></pre>
+<p><strong>Four intents, four different handler types:</strong></p>
+<div class="tw"><table><thead><tr>
+<th>Intent</th>
+<th>Handler</th>
+<th>Cost</th>
+</tr></thead><tbody>
+<tr>
+<td><code>order_status</code></td>
+<td><strong>Deterministic code</strong></td>
+<td>Zero model cost</td>
+</tr>
+<tr>
+<td><code>product_question</code></td>
+<td>LLM + product docs</td>
+<td>Expensive</td>
+</tr>
+<tr>
+<td><code>return_exchange</code></td>
+<td>LLM + returns docs</td>
+<td>Expensive</td>
+</tr>
+<tr>
+<td><code>complaint</code></td>
+<td>LLM, <strong>or human if complex/uncertain</strong></td>
+<td>Expensive, gated</td>
+</tr>
+</tbody></table></div>
+<p><strong>Two things to notice:</strong></p>
+<ol>
+<li><strong>Faithful to the presentation:</strong> <em>one intent routes to deterministic code with no LLM involved. Two route to different specialist LLMs, each loaded with different context. One uses the complexity score to decide between an LLM and a human.</em></li>
+<li><strong>The union of Patterns 1 and 2.</strong> Intent routing is speculative fan-out (both questions in one call) <em>plus</em> confidence-gated routing (both axes gated). The docs make the second explicit: <em>Note the additional confidence check on the complexity score.</em></li>
+</ol>
+<blockquote>TypeSafe handles the classification all in a single quick call; <strong>the expensive resources only get invoked for the requests that actually need them.</strong></blockquote>
+<hr>
+<h2>Part V — Putting It All Together</h2>
+<p>The presentation closes with a full customer-support application.</p>
+<h3>The flow</h3>
+<ol>
+<li><strong>A ticket arrives</strong> — an upload failure.</li>
+<li><strong>Send it to the decision model</strong> with <strong>several questions together</strong>: the category, a disruption/priority score, and a deadline signal.</li>
+<li><strong>Check whether the answers are clear enough to use</strong> — confidence gates.</li>
+<li><strong>Code selects the appropriate handler and sets the priority.</strong></li>
+<li><strong>Only then is an LLM bundled in</strong> — if the customer needs a written response, it goes to a generative model, <em>which handles that step using the relevant evidence provided.</em></li>
+</ol>
+<h3>The design principle stated</h3>
+<blockquote><strong>Each decision has a defined job and the application controls how the pieces fit together.</strong></blockquote>
+<p>The decision model is not the application. It is a service the application calls for common-sense judgments, and the application retains control flow, deterministic rules, and side effects.</p>
+<h3>The three-question starting framework</h3>
+<p>When you're thinking about using a decision model:</p>
+<ol>
+<li><strong>Pick a workflow you already understand.</strong></li>
+<li><strong>Find a point where the software needs to interpret fuzzy natural language.</strong></li>
+<li><strong>Figure out the smallest useful question.</strong> Does the answer need to be a probability, a choice, or a score? What should happen when the answer is uncertain?</li>
+</ol>
+<h3>The seven-step workflow from the docs</h3>
+<p>The official guide is more prescriptive, and worth having in full:</p>
+<div class="tw"><table><thead><tr>
+<th>Step</th>
+<th>Instruction</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>1</strong></td>
+<td><strong>Use code when you can.</strong> Deterministic work is reliable and cheap. Avoid agent <code>while</code> loops when a software workflow expresses the same behavior.</td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td><strong>Decompose the input state.</strong> Include <em>only</em> the context relevant to the current questions. This helps the model avoid distractions and context rot. Don't rely on model weights when current information can come from your own knowledge base.</td>
+</tr>
+<tr>
+<td><strong>3</strong></td>
+<td><strong>Use structure in the input state.</strong> Point questions at specific values with backticked dot-and-index paths — `<code> </code>support.tickets[0].message<code> </code>` — when that removes ambiguity.</td>
+</tr>
+<tr>
+<td><strong>4</strong></td>
+<td><strong>Decompose the questions.</strong> Ask the most explicit, narrow, specific, atomic questions you can. <em>"This is probably the most important concept in this guide."</em></td>
+</tr>
+<tr>
+<td><strong>5</strong></td>
+<td><strong>Use structure in the questions</strong> when the question needs context/examples, part of it comes from your code, or several questions share similar wording.</td>
+</tr>
+<tr>
+<td><strong>6</strong></td>
+<td><strong>Ask a lot of questions.</strong> Many narrow, independent questions in one request.</td>
+</tr>
+<tr>
+<td><strong>7</strong></td>
+<td><strong>Combine outputs in code</strong> — or feed the probabilities into a classical ML model.</td>
+</tr>
+</tbody></table></div>
+<h3>Step 4, illustrated: the spam-detection decomposition</h3>
+<p>The docs make the argument by contrasting one bad question with six good ones.</p>
+<p><strong>Bad — one broad question hides several judgments:</strong></p>
+<pre><code>
+{ &quot;is_spam&quot;: { &quot;type&quot;: &quot;noul&quot;, &quot;instructions&quot;: &quot;Is `message` spam?&quot; } }
+</code></pre>
+<p><strong>Good — six atomic judgments, combined in code:</strong></p>
+<pre><code>
+{
+  &quot;requests_credentials&quot;:   { &quot;type&quot;: &quot;noul&quot;, &quot;instructions&quot;: &quot;Does `message.body` ask the recipient to provide a password or other login credential?&quot; },
+  &quot;offers_unexpected_reward&quot;: { &quot;type&quot;: &quot;noul&quot;, &quot;instructions&quot;: &quot;Does `message.body` claim the recipient received an unexpected prize, payment, or reward?&quot; },
+  &quot;creates_time_pressure&quot;:  { &quot;type&quot;: &quot;noul&quot;, &quot;instructions&quot;: &quot;Does `message.subject` or `message.body` pressure the recipient to act quickly?&quot; },
+  &quot;sender_identity_mismatch&quot;: { &quot;type&quot;: &quot;noul&quot;, &quot;instructions&quot;: &quot;Does the organization named in `message.sender.display_name` conflict with the domain in `message.sender.email`?&quot; },
+  &quot;link_domain_mismatch&quot;:   { &quot;type&quot;: &quot;noul&quot;, &quot;instructions&quot;: &quot;Does the domain in `message.links[0].url` conflict with the organization named in `message.sender.display_name`?&quot; },
+  &quot;disguises_link_destination&quot;: { &quot;type&quot;: &quot;noul&quot;, &quot;instructions&quot;: &quot;Does `message.links[0].text` conceal or misrepresent the destination in `message.links[0].url`?&quot; }
+}
+</code></pre>
+<blockquote><strong>Why this is better:</strong> broad questions hide several judgments behind one answer. <strong>Atomic questions expose those judgments</strong> so you can inspect, tune, and combine them in code.</blockquote>
+<p>The same decomposition is shown for verifying a tool-call trace — one broad <em>"Is <code>trace.tool_calls</code> correct?"</em> versus nine atomic checks on tool relevance, argument schema conformance, ID matching, and coordinate propagation.</p>
+<h3>What makes System One composable</h3>
+<div class="tw"><table><thead><tr>
+<th>Property</th>
+<th>Meaning</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Structured</strong></td>
+<td>Type-safe by construction. Decisions conform to the JSON schema your code expects, so it never has to recover a value from generated prose.</td>
+</tr>
+<tr>
+<td><strong>Parallel</strong></td>
+<td>Questions are evaluated independently and in parallel. One primitive's result is not hidden context that changes another's.</td>
+</tr>
+<tr>
+<td><strong>Comparable</strong></td>
+<td>Outputs are sortable and can drive smart <code>if</code> statements, thresholds, comparisons.</td>
+</tr>
+<tr>
+<td><strong>Fast</strong></td>
+<td>Most queries complete in about 100 ms — fast enough for real-time request paths and UIs.</td>
+</tr>
+<tr>
+<td><strong>Calibrated confidence</strong></td>
+<td>Communicates uncertainty through calibrated probabilities instead of tending toward overconfidence.</td>
+</tr>
+<tr>
+<td><strong>Self-consistent</strong></td>
+<td>Designed to return stable answers across repeated evaluations.</td>
+</tr>
+</tbody></table></div>
+<hr>
+<h2>Part VI — Three Worked Micro-Patterns from the Docs</h2>
+<h3>A. Structured criteria for confusable options</h3>
+<p>When two options are similar and the model keeps confusing them, give each option an <strong>object</strong> instead of a string — with fields for what it covers, what belongs to a neighbor, and examples. The field names are <strong>yours</strong>; none are reserved.</p>
+<pre><code>
+{
+  &quot;return_policy&quot;: {
+    &quot;what&quot;: &quot;Whether and how an item can be returned&quot;,
+    &quot;not_for&quot;: &quot;Progress of a return already sent&quot;,
+    &quot;examples&quot;: [&quot;Can I return shoes I&#x27;ve worn once?&quot;, &quot;How long do I have to return an order?&quot;]
+  },
+  &quot;return_status&quot;: {
+    &quot;what&quot;: &quot;Progress of a return already sent&quot;,
+    &quot;not_for&quot;: &quot;Whether and how an item can be returned&quot;,
+    &quot;examples&quot;: [&quot;Has my return arrived yet?&quot;, &quot;When will my refund be paid?&quot;]
+  }
+}
+</code></pre>
+<h3>B. Examples on Score levels — and the trap</h3>
+<p>Adding an <code>examples</code> array to a level can concentrate probability dramatically:</p>
+<div class="tw"><table><thead><tr>
+<th>Level description</th>
+<th><code>score</code></th>
+<th><code>confidence</code></th>
+</tr></thead><tbody>
+<tr>
+<td>Plain strings</td>
+<td class="num">1.43</td>
+<td><strong>0.35</strong></td>
+</tr>
+<tr>
+<td>+ relevant example ("export fails in one browser but works in another")</td>
+<td class="num">1.03</td>
+<td><strong>0.96</strong></td>
+</tr>
+<tr>
+<td>+ <strong>unrelated</strong> example ("search fails, but browsing categories still works")</td>
+<td class="num">1.43</td>
+<td><strong>0.35</strong></td>
+</tr>
+</tbody></table></div>
+<blockquote><strong>Examples steer the model, and they only help when they look like your real inputs.</strong> The unrelated example returned <em>exactly the same result</em> as plain strings.</blockquote>
+<p><strong>And the warning that follows: higher confidence does not establish which answer is correct.</strong> Choose examples with known expected levels, then test on separate inputs before keeping them.</p>
+<h3>C. Two questions in one request — the line-by-line search</h3>
+<p>A genuinely elegant recipe, worth preserving in full because it demonstrates <strong>code compensating for a structural property of the primitives.</strong></p>
+<p><strong>The problem:</strong> you want the lines of a document that answer a query, <em>and</em> a way to detect when the document has no answer.</p>
+<p><strong>The trick:</strong> <code>Choice</code> probabilities always sum to 1, so <strong>some line ranks first even when the document doesn't answer the question.</strong> The ranking alone cannot distinguish a real answer from the closest irrelevant line.</p>
+<p><strong>The fix:</strong> tag every line with an ID (<code>L000</code>, <code>L001</code>, …), ask a <code>Choice</code> to rank the line IDs, <strong>and in the same request</strong> ask a <code>Noul</code> whether the document contains an answer at all.</p>
+<pre><code>
+def where_question(query: str) -&gt; Choice:
+    return Choice(
+        instructions=f&#x27;Which line of the document contains the answer to: &quot;{query}&quot;?&#x27;,
+        criteria={line_id(i): None for i in range(len(LINES))},
+    )
+
+def exists_question(query: str) -&gt; Noul:
+    return Noul(
+        instructions=f&#x27;Does any line of the document address or answer: &quot;{query}&quot;?&#x27;,
+        criteria=NoulCriteria(
+            true=&quot;At least one line of the document states or directly implies the answer&quot;,
+            false=&quot;No line of the document addresses this&quot;,
+        ),
+    )
+</code></pre>
+<p><strong>Actual measured results</strong> against GitHub's Terms of Service (218 clauses, 43,980 characters):</p>
+<p><strong>"who owns the code I upload?"</strong></p>
+<pre><code>
+exists 0.98 -&gt; answered in this document
+L052  0.95  ###########   You own Your Content. If you post Content you did not crea
+L046  0.02  #             Short version: You own content you create, but you allow u
+</code></pre>
+<p><strong>"do I have to take disputes to arbitration?"</strong></p>
+<pre><code>
+exists 0.14 -&gt; not in this document
+L205  0.86  ##########    Except to the extent applicable law provides otherwise, th
+</code></pre>
+<p><strong>"can minors use GitHub with parental permission?"</strong></p>
+<pre><code>
+exists 0.46 -&gt; partially addressed
+L029  0.90  ###########   You must be age 13 or older. While we are thrilled to see
+</code></pre>
+<blockquote><strong>The ranking tells you where to look; the <code>exists</code> score tells you whether the result answers the question.</strong></blockquote>
+<p>Note the arbitration case: the ranking gives the closest line <strong>0.86</strong> — a high number that looks like a hit — while <code>exists</code> is only <strong>0.14</strong>. <strong>Without the Noul guard, you would confidently return an irrelevant line.</strong></p>
+<p><strong>Structural limits to know:</strong></p>
+<ul>
+<li>A Choice accepts <strong>up to 255 options</strong> → this recipe searches documents of up to 255 lines in one request.</li>
+<li>Past that, <strong>search in two passes</strong>: one Choice picks a window of lines, a second ranks inside it.</li>
+</ul>
+<hr>
+<h2>Part VII — Cross-Reference: The Two Volumes</h2>
+<h3>Vocabulary mapping</h3>
+<div class="tw"><table><thead><tr>
+<th>Launch Week Dossier term</th>
+<th>This Handbook's canonical term</th>
+<th>Relationship</th>
+</tr></thead><tbody>
+<tr>
+<td>Batch Multi-Question Single-Pass</td>
+<td><strong>Speculative Fan-Out</strong></td>
+<td>Same pattern; the vendor name is canonical</td>
+</tr>
+<tr>
+<td>Parallel Fan-Out, Single Verdict</td>
+<td><strong>Composite Scoring</strong></td>
+<td>Related but distinct — fan-out gathers, composite <em>weights and combines</em></td>
+</tr>
+<tr>
+<td>State Menu ≠ Screenshot</td>
+<td><em>(no vendor equivalent)</em></td>
+<td>Authored from agent-build mechanics</td>
+</tr>
+<tr>
+<td>Two-Tier Policy / Payload Split</td>
+<td><em>(no vendor equivalent)</em></td>
+<td>Authored</td>
+</tr>
+<tr>
+<td>Streaming Per-Unit Evaluation</td>
+<td><em>(no vendor equivalent)</em></td>
+<td>Authored</td>
+</tr>
+<tr>
+<td>Daemon-Scale Repetition</td>
+<td><em>(no vendor equivalent)</em></td>
+<td>Authored</td>
+</tr>
+<tr>
+<td>Compose From Trusted Components</td>
+<td><em>(no vendor equivalent)</em></td>
+<td>Authored</td>
+</tr>
+<tr>
+<td>Structural Compaction</td>
+<td><em>(no vendor equivalent)</em></td>
+<td>Authored</td>
+</tr>
+<tr>
+<td>Simulation as Stress Bench</td>
+<td><em>(no vendor equivalent)</em></td>
+<td>Authored</td>
+</tr>
+<tr>
+<td>Open-Source Local Reimplementation</td>
+<td><em>(no vendor equivalent)</em></td>
+<td>Authored</td>
+</tr>
+<tr>
+<td>Calibrated Decisions</td>
+<td><strong>Calibrated confidence</strong></td>
+<td>Same concept; vendor frames it as a composability property</td>
+</tr>
+<tr>
+<td>Menu-as-Safety-Boundary</td>
+<td><strong>"type-safe by construction"</strong></td>
+<td>Same concept, vendor phrasing</td>
+</tr>
+<tr>
+<td>Fixed-Cadence Polling + Scalar</td>
+<td><strong>Intent Routing + Confidence Gating</strong></td>
+<td>Related; the vendor pattern is the general form</td>
+</tr>
+<tr>
+<td><em>(not in dossier)</em></td>
+<td><strong>Confidence-Gated Routing</strong></td>
+<td><strong>New here</strong></td>
+</tr>
+<tr>
+<td><em>(not in dossier)</em></td>
+<td><strong>Intent Routing</strong></td>
+<td><strong>New here</strong></td>
+</tr>
+</tbody></table></div>
+<h3>What each volume contributes</h3>
+<p><strong>The Launch Week Dossier answers:</strong> <em>what did people actually build, and did the vendor's claims hold up?</em></p>
+<p><strong>This Handbook answers:</strong> <em>how does the vendor say you should build, and what vocabulary do the docs use?</em></p>
+<p>The dossier's Family C — the five measurement patterns (<em>Format ≠ Judgment</em>, <em>Company Grades Own Homework</em>, <em>Dramatized Mock-Up as Evidence</em>) — remains the necessary counterweight. This volume is a fair and complete account of <strong>the documented design vocabulary</strong>. It is not evidence that the benchmarks are what the marketing says. Those are separate questions, and the dossier addresses them.</p>
+<h3>The unified picture</h3>
+<p><strong>30 distinct patterns across two volumes:</strong></p>
+<div class="tw"><table><thead><tr>
+<th>Source</th>
+<th>Count</th>
+<th>Nature</th>
+</tr></thead><tbody>
+<tr>
+<td>Vendor-documented design patterns</td>
+<td><strong>4</strong></td>
+<td>Speculative Fan-Out, Confidence-Gated Routing, Composite Scoring, Intent Routing</td>
+</tr>
+<tr>
+<td>Vendor-documented primitives &amp; shapes</td>
+<td><strong>13</strong></td>
+<td>3 types + 10 shapes</td>
+</tr>
+<tr>
+<td>Authored, reverse-engineered from builds</td>
+<td><strong>16</strong></td>
+<td>Dossier Family A (6) + Family B (10)</td>
+</tr>
+<tr>
+<td>Authored, diagnostic</td>
+<td><strong>5</strong></td>
+<td>Dossier Family C</td>
+</tr>
+<tr>
+<td><strong>Distinct patterns (deduplicated)</strong></td>
+<td><strong>30</strong></td>
+<td>Overlaps mapped above</td>
+</tr>
+</tbody></table></div>
+<hr>
+<h2>Part VIII — Reference Tables</h2>
+<h3>A. Decision type selection</h3>
+<div class="tw"><table><thead><tr>
+<th>If the answer is...</th>
+<th>Use</th>
+<th>Returns</th>
+</tr></thead><tbody>
+<tr>
+<td>One of a fixed set, unordered</td>
+<td><strong>Choice</strong></td>
+<td><code>choice</code>, <code>probabilities</code>, <code>confidence</code></td>
+</tr>
+<tr>
+<td>A position on a describable spectrum</td>
+<td><strong>Score</strong></td>
+<td><code>score</code>, <code>legend</code>, <code>probabilities</code>, <code>confidence</code></td>
+</tr>
+<tr>
+<td>Yes or no, and the probability is the signal</td>
+<td><strong>Noul</strong></td>
+<td><code>noul</code> (no separate confidence)</td>
+</tr>
+</tbody></table></div>
+<p><strong>Tiebreaker from the docs:</strong> <em>If two types both seem to fit, prefer the one whose answer your code can act on directly.</em> A Choice between <code>refund</code>/<code>rebook</code>/<code>information</code> maps to three code paths. A Score maps to a threshold. A Noul maps to an <code>if</code>.</p>
+<h3>B. Threshold placement</h3>
+<div class="tw"><table><thead><tr>
+<th>Situation</th>
+<th>Threshold guidance</th>
+</tr></thead><tbody>
+<tr>
+<td>Yes and no equally easy to act on</td>
+<td class="num">0.5</td>
+</tr>
+<tr>
+<td>Acting on a false yes is <strong>expensive</strong> (paging, refunds)</td>
+<td><strong>Raise it</strong></td>
+</tr>
+<tr>
+<td>Missing a true yes is <strong>expensive</strong> (safety failures)</td>
+<td><strong>Lower it</strong></td>
+</tr>
+<tr>
+<td>Genuinely ambiguous cases</td>
+<td><strong>Route to a person</strong> — neither code path</td>
+</tr>
+</tbody></table></div>
+<h3>C. Quantitative claims register</h3>
+<div class="tw"><table><thead><tr>
+<th>Claim</th>
+<th>Value</th>
+<th>Source</th>
+</tr></thead><tbody>
+<tr>
+<td>List price</td>
+<td>$0.042 / 1M input tokens</td>
+<td>TypeSafe docs</td>
+</tr>
+<tr>
+<td>Output tokens</td>
+<td><strong>$0.00</strong></td>
+<td>TypeSafe docs</td>
+</tr>
+<tr>
+<td>1M × 1,000-token requests</td>
+<td><strong>~$42</strong></td>
+<td>Presentation arithmetic</td>
+</tr>
+<tr>
+<td>Typical latency</td>
+<td><strong>~100 ms</strong></td>
+<td>"Most queries" — docs</td>
+</tr>
+<tr>
+<td>Real-time latency cited</td>
+<td><strong>~150 ms</strong></td>
+<td>Presentation</td>
+</tr>
+<tr>
+<td>Choice options max</td>
+<td><strong>255</strong></td>
+<td>Docs</td>
+</tr>
+<tr>
+<td>Score levels max</td>
+<td><strong>10</strong></td>
+<td>Docs</td>
+</tr>
+<tr>
+<td>Batching saving</td>
+<td><strong>12.2× cheaper, 10.0× faster</strong></td>
+<td>Cookbook, measured</td>
+</tr>
+<tr>
+<td>Batching answer change</td>
+<td><strong>None</strong> (std dev 0.0 on 11 of 13)</td>
+<td>Cookbook, measured</td>
+</tr>
+<tr>
+<td>Target intelligence-to-speed-and-cost ratio</td>
+<td><strong>&gt;100×</strong></td>
+<td>Docs</td>
+</tr>
+</tbody></table></div>
+<h3>D. Resource index</h3>
+<div class="tw"><table><thead><tr>
+<th>Resource</th>
+<th>URL</th>
+</tr></thead><tbody>
+<tr>
+<td>Introduction</td>
+<td>https://docs.typesafe.ai/introduction</td>
+</tr>
+<tr>
+<td>Patterns</td>
+<td>https://docs.typesafe.ai/patterns</td>
+</tr>
+<tr>
+<td>Primitives (Questions)</td>
+<td>https://docs.typesafe.ai/primitives</td>
+</tr>
+<tr>
+<td>Confidence</td>
+<td>https://docs.typesafe.ai/confidence</td>
+</tr>
+<tr>
+<td>System One concept</td>
+<td>https://docs.typesafe.ai/concepts/system-one</td>
+</tr>
+<tr>
+<td>How to build with TypeSafe</td>
+<td>https://docs.typesafe.ai/concepts/how-to-build-with-system-one</td>
+</tr>
+<tr>
+<td>Line-by-line search cookbook</td>
+<td>https://docs.typesafe.ai/cookbooks/semantic_find</td>
+</tr>
+<tr>
+<td>Parallel questions cookbook</td>
+<td>https://docs.typesafe.ai/cookbooks/parallel_questions</td>
+</tr>
+<tr>
+<td>Speculative fan-out</td>
+<td>https://docs.typesafe.ai/patterns/fan-out</td>
+</tr>
+<tr>
+<td>Confidence-gated routing</td>
+<td>https://docs.typesafe.ai/patterns/confidence-routing</td>
+</tr>
+<tr>
+<td>Composite scoring</td>
+<td>https://docs.typesafe.ai/patterns/composite-scoring</td>
+</tr>
+<tr>
+<td>Intent routing</td>
+<td>https://docs.typesafe.ai/patterns/intent-routing</td>
+</tr>
+</tbody></table></div>
+<hr>
+<h2>Closing Assessment</h2>
+<h3>The shape of the whole thing</h3>
+<p>Every pattern in this volume is a way of answering one question:</p>
+<blockquote><strong>Where does the decision model sit in my software, and what does my code do with what it returns?</strong></blockquote>
+<p>The answers form a consistent philosophy. <strong>Code owns the workflow.</strong> The model supplies narrow, typed, calibrated judgments. Confidence is a first-class value that determines which code path runs. Weights live in code so they can be tuned without rewriting prompts. And because questions run in parallel within one request, asking more of them is close to free.</p>
+<h3>The two guiding disciplines</h3>
+<p><strong>Decompose.</strong> One broad question hides several judgments. Ask atomically, combine explicitly. You gain visibility into how a result was produced — which is the real payoff of composite scoring, not the ranking itself.</p>
+<p><strong>Gate on uncertainty.</strong> A model that cannot express honest uncertainty cannot be trusted. Thresholds are yours, they scale with the stakes of each action, and the middle range — where the model is genuinely unsure — belongs to a human.</p>
+<h3>The one number to carry forward</h3>
+<p>Batching 13 questions into one request is <strong>12.2× cheaper and 10.0× faster</strong> than 13 separate calls, <strong>with no change to the answers.</strong> Every pattern that says "ask many questions together" rests on that measurement. It is the single most actionable finding in either volume.</p>
+<h3>And the discipline that must not be dropped</h3>
+<p>This volume documents <strong>the design vocabulary</strong>. It is a fair account of what TypeSafe says, and its pattern set is genuinely well-constructed.</p>
+<p>It is not, and cannot be, independent evidence that the vendor's <em>performance</em> claims hold. The Launch Week Dossier addresses that separately, and its Family C patterns still apply: <strong>format-validity is not judgment-correctness, and a designed pattern is not the same as a validated benchmark.</strong></p>
+<blockquote><strong>Read this volume to learn how to build. Read the dossier to know what to believe.</strong></blockquote>
+<hr>
+<p><em>Compiled from The AI Automators' presentation "Master ALL Jev Design Patterns (With Practical Examples)" (https://youtu.be/LzweTaOzvvo) and the primary TypeSafe documentation at docs.typesafe.ai. All pattern names, definitions, code examples, and measured figures are as published by TypeSafe; presentation-sourced figures (the ~150ms latency, the $42 arithmetic) are noted as such. Quote, figure, and caveat provenance is marked throughout.</em></p>
+</div></body></html>

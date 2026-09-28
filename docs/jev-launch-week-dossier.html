@@ -49,8 +49,19 @@ h1+blockquote{font-size:1.05em}
 h1{-webkit-text-fill-color:#111;background:none;color:#111}
 h2,h3,h4,th{color:#111}.tw{border-color:#ccc}th{background:#eee;color:#111}
 td{border-color:#ddd}blockquote{background:#f7f7f7;color:#222}code{color:#b3540a}}
+nav.vol{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 2.2em;padding-bottom:1.1em;
+border-bottom:1px solid var(--line);font-size:.86rem}
+nav.vol a,nav.vol span{padding:.4em .85em;border-radius:999px;border:1px solid var(--line);
+border-bottom:1px solid var(--line);white-space:nowrap}
+nav.vol a{background:var(--panel);transition:background .15s,border-color .15s}
+nav.vol a:hover{background:#1f6feb22;border-color:var(--acc)}
+nav.vol span.cur{background:linear-gradient(92deg,#1f6feb33,#f0883e22);border-color:var(--acc);
+color:#fff;font-weight:600}
+nav.vol .lbl{color:var(--dim);border:0;background:none;padding-left:0}
+@media print{nav.vol{display:none}}
 </style></head>
 <body><div class="wrap">
+<nav class="vol"><span class="lbl">Jev volumes:</span><span class="cur">📕 Launch Week Dossier</span><a href="jev-design-patterns-handbook.html">📘 Design Pattern Handbook</a><a href="../">🌐 Home</a></nav>
 <h1>The Jev Launch Week Dossier</h1>
 <h2>A Memorial Record of the "10 Wild Builds" and the Design Patterns They Reveal</h2>
 <p><strong>Compiled:</strong> September 28, 2026</p>
@@ -58,6 +69,7 @@ td{border-color:#ddd}blockquote{background:#f7f7f7;color:#222}code{color:#b3540a
 <p><strong>Source URL:</strong> https://youtu.be/X4Lqj54sw4I</p>
 <p><strong>Subject:</strong> TypeSafe's Jev — a "System One" decision model</p>
 <p><strong>Launch window documented:</strong> September 15 – 21, 2026 (six days)</p>
+<p><strong>Companion volume:</strong> <a href="jev-design-patterns-handbook.md">The Jev Design Pattern Handbook</a> — the vendor's official pattern set: 3 primitives, 10 decision shapes, 4 design patterns.</p>
 <hr>
 <h2>Preface</h2>
 <p>On September 15, 2026, a company called TypeSafe emerged from two years of stealth with $40 million in funding and one strange idea: a model that cannot write a sentence — <strong>by design</strong>. Within six days, developers had bolted it onto everything from a flight search engine to Super Mario to an air traffic control tower.</p>
@@ -929,4 +941,31 @@ td{border-color:#ddd}blockquote{background:#f7f7f7;color:#222}code{color:#b3540a
 <blockquote><strong>Judge Jev on the decisions it makes, not the sentences it won't write.</strong></blockquote>
 <hr>
 <p><em>Document compiled from the Cloud Codes presentation "10 Wild Things You Can Build With Jev" (https://youtu.be/X4Lqj54sw4I). All quotes, figures, and caveats are as reported in that presentation. Independent measurements are identified as such; company-stated figures are labelled throughout.</em></p>
+<hr>
+<h2>See also</h2>
+<p><strong><a href="jev-design-patterns-handbook.md">The Jev Design Pattern Handbook</a></strong> — the companion volume.</p>
+<p>Where this dossier reverse-engineers patterns from what developers <em>built</em>, the Handbook documents the vendor's own named pattern set: the three primitives (Choice, Score, Noul), the ten decision shapes, and the four official design patterns (Speculative Fan-Out, Confidence-Gated Routing, Composite Scoring, Intent Routing).</p>
+<p>The two answer different questions and neither supersedes the other:</p>
+<div class="tw"><table><thead><tr>
+<th></th>
+<th>This dossier</th>
+<th>The Handbook</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Subject</strong></td>
+<td>Community builds</td>
+<td>Vendor's documented pattern set</td>
+</tr>
+<tr>
+<td><strong>Authority</strong></td>
+<td>Third-party observation</td>
+<td>Primary documentation</td>
+</tr>
+<tr>
+<td><strong>Tone</strong></td>
+<td>Auditing claims</td>
+<td>Teaching usage</td>
+</tr>
+</tbody></table></div>
+<blockquote><strong>Read the Handbook to learn how to build. Read this dossier to know what to believe.</strong></blockquote>
 </div></body></html>

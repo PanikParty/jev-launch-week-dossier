@@ -7,6 +7,8 @@
 **Subject:** TypeSafe's Jev — a "System One" decision model
 **Launch window documented:** September 15 – 21, 2026 (six days)
 
+**Companion volume:** [The Jev Design Pattern Handbook](jev-design-patterns-handbook.md) — the vendor's official pattern set: 3 primitives, 10 decision shapes, 4 design patterns.
+
 ---
 
 ## Preface
@@ -563,3 +565,21 @@ The mechanism is genuinely new and useful. The benchmark claims are not proven b
 ---
 
 *Document compiled from the Cloud Codes presentation "10 Wild Things You Can Build With Jev" (https://youtu.be/X4Lqj54sw4I). All quotes, figures, and caveats are as reported in that presentation. Independent measurements are identified as such; company-stated figures are labelled throughout.*
+
+---
+
+## See also
+
+**[The Jev Design Pattern Handbook](jev-design-patterns-handbook.md)** — the companion volume.
+
+Where this dossier reverse-engineers patterns from what developers *built*, the Handbook documents the vendor's own named pattern set: the three primitives (Choice, Score, Noul), the ten decision shapes, and the four official design patterns (Speculative Fan-Out, Confidence-Gated Routing, Composite Scoring, Intent Routing).
+
+The two answer different questions and neither supersedes the other:
+
+| | This dossier | The Handbook |
+|---|---|---|
+| **Subject** | Community builds | Vendor's documented pattern set |
+| **Authority** | Third-party observation | Primary documentation |
+| **Tone** | Auditing claims | Teaching usage |
+
+> **Read the Handbook to learn how to build. Read this dossier to know what to believe.**
