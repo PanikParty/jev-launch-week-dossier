@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Jev Launch Week Dossier — 10 Wild Builds &amp; 21 Design Patterns</title>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--panel2:#1c2128;--ink:#e6edf3;--dim:#9198a1;
+--line:#30363d;--acc:#58a6ff;--acc2:#f0883e;--ok:#3fb950;--warn:#d29922;--bad:#f85149;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+font:16px/1.72 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
+-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:64px 32px 120px}
+h1{font-size:2.5rem;line-height:1.15;letter-spacing:-.02em;margin:0 0 .3em;
+background:linear-gradient(92deg,#79c0ff,#f0883e);-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;background-clip:text}
+h2{font-size:1.65rem;margin:2.6em 0 .7em;padding-bottom:.35em;
+border-bottom:1px solid var(--line);letter-spacing:-.01em}
+h3{font-size:1.22rem;margin:2em 0 .5em;color:#79c0ff}
+h4{font-size:1.02rem;margin:1.5em 0 .4em;color:var(--acc2)}
+p{margin:.85em 0}
+a{color:var(--acc);text-decoration:none;border-bottom:1px solid #1f6feb55}
+a:hover{border-bottom-color:var(--acc)}
+hr{border:0;border-top:1px solid var(--line);margin:2.5em 0}
+strong{color:#fff;font-weight:650}
+em{color:#c9d1d9}
+code{background:#21262d;padding:.15em .42em;border-radius:5px;font-size:.87em;
+font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#ffa657;
+border:1px solid #30363d}
+pre{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+padding:1.1em 1.3em;overflow-x:auto}
+pre code{background:none;border:0;padding:0;color:var(--ink)}
+blockquote{margin:1.3em 0;padding:.85em 1.2em;border-left:3px solid var(--acc);
+background:linear-gradient(90deg,#1f6feb1a,transparent);border-radius:0 8px 8px 0;
+color:#c9d1d9;font-size:1.02em}
+.tw{overflow-x:auto;margin:1.4em 0;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th{background:var(--panel2);text-align:left;padding:11px 14px;font-weight:640;
+color:#79c0ff;border-bottom:1px solid var(--line);white-space:nowrap;
+letter-spacing:.02em;text-transform:uppercase;font-size:.76rem}
+td{padding:10px 14px;border-bottom:1px solid #21262d;vertical-align:top}
+tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#1c212866}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;color:#7ee787}
+ul,ol{margin:.9em 0;padding-left:1.5em}
+li{margin:.38em 0}
+li::marker{color:var(--acc)}
+h1+blockquote{font-size:1.05em}
+@media print{body{background:#fff;color:#111}.wrap{max-width:none;padding:0}
+h1{-webkit-text-fill-color:#111;background:none;color:#111}
+h2,h3,h4,th{color:#111}.tw{border-color:#ccc}th{background:#eee;color:#111}
+td{border-color:#ddd}blockquote{background:#f7f7f7;color:#222}code{color:#b3540a}}
+</style></head>
+<body><div class="wrap">
+<h1>The Jev Launch Week Dossier</h1>
+<h2>A Memorial Record of the "10 Wild Builds" and the Design Patterns They Reveal</h2>
+<p><strong>Compiled:</strong> September 28, 2026</p>
+<p><strong>Source presentation:</strong> Cloud Codes — <em>10 Wild Things You Can Build With Jev</em> (14:15, published Sep 21, 2026)</p>
+<p><strong>Source URL:</strong> https://youtu.be/X4Lqj54sw4I</p>
+<p><strong>Subject:</strong> TypeSafe's Jev — a "System One" decision model</p>
+<p><strong>Launch window documented:</strong> September 15 – 21, 2026 (six days)</p>
+<hr>
+<h2>Preface</h2>
+<p>On September 15, 2026, a company called TypeSafe emerged from two years of stealth with $40 million in funding and one strange idea: a model that cannot write a sentence — <strong>by design</strong>. Within six days, developers had bolted it onto everything from a flight search engine to Super Mario to an air traffic control tower.</p>
+<p>This document memorializes that week: the ten builds the presentation selected as the wildest, the sixteen architectural and agent patterns extractable from them, the five measurement patterns the audit exposed, and a full accounting of what held up under scrutiny and what did not.</p>
+<p>It is written to stand alone. No prior viewing required.</p>
+<hr>
+<h2>Part I — The Model: What Jev Actually Is</h2>
+<h3>The premise</h3>
+<p>A conventional language model writes one word at a time, left to right. Ask it a yes/no question and it still spins up the entire sentence machine just to say "yes."</p>
+<p>Jev does not do this. TypeSafe calls it a <strong>System One model</strong>. The contract is:</p>
+<blockquote>Give it the current state of your program plus a set of questions. Every question arrives with a fixed menu of allowed answers. Jev reads all of it in <strong>one pass</strong> and returns each answer with a <strong>probability attached</strong>.</blockquote>
+<p><strong>Example of the contract in operation:</strong></p>
+<div class="tw"><table><thead><tr>
+<th>Input</th>
+<th>Output</th>
+</tr></thead><tbody>
+<tr>
+<td>Program state: <em>agent has landed on a page</em></td>
+<td>—</td>
+</tr>
+<tr>
+<td>Question 1: <em>Which button do I click?</em> + menu of N buttons</td>
+<td><strong>Button 4 — 91%</strong></td>
+</tr>
+<tr>
+<td>Question 2: <em>Is the form finished?</em> + menu {yes, no}</td>
+<td><strong>Not finished</strong></td>
+</tr>
+</tbody></table></div>
+<p>No paragraph. Just the picks. Returned in well under a second.</p>
+<h3>The person behind it</h3>
+<p><strong>Diogo Almeida</strong>, who was on the original team that built ChatGPT. His stated argument is almost a confession: <em>superhuman chat didn't deliver what it promised, so he went the other way</em> — toward a model that <strong>decides instead of talks</strong>.</p>
+<h3>The framing</h3>
+<p>Almeida borrows a split from psychology:</p>
+<div class="tw"><table><thead><tr>
+<th>System</th>
+<th>Character</th>
+<th>Who chases it</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>System Two</strong></td>
+<td>Slow, deliberate, verbal reasoning</td>
+<td>Chat models</td>
+</tr>
+<tr>
+<td><strong>System One</strong></td>
+<td>Fast, automatic, non-verbal judgment</td>
+<td>Jev</td>
+</tr>
+</tbody></table></div>
+<p>Chat models chase the slow, talkative kind. Jev is built for the fast, automatic kind — <strong>the thousands of tiny calls software makes that never needed a paragraph in the first place.</strong></p>
+<h3>The training claim</h3>
+<p>TypeSafe calls it <strong>reinforcement learning for calibrated decisions</strong>. The analogy offered is a weather forecast: if it says 90% chance of rain, it should rain about nine times in ten. <em>Calibrated</em> means Jev's confidence is honest in exactly that sense.</p>
+<blockquote><strong>Hold that word.</strong> It returns at the end of the document as the load-bearing unverified assumption.</blockquote>
+<h3>The economics</h3>
+<div class="tw"><table><thead><tr>
+<th>Metric</th>
+<th>Value</th>
+</tr></thead><tbody>
+<tr>
+<td>Input pricing</td>
+<td><strong>$0.04 per million words</strong></td>
+</tr>
+<tr>
+<td>Output pricing</td>
+<td><strong>Free</strong> — a typed choice is too small to bill</td>
+</tr>
+<tr>
+<td>Latency per call</td>
+<td><strong>70–500 ms</strong></td>
+</tr>
+<tr>
+<td>Cost for 1M small decisions</td>
+<td><strong>$0.04</strong></td>
+</tr>
+<tr>
+<td>Equivalent chat-model workload</td>
+<td><strong>Dollars, plus long minutes of waiting</strong></td>
+</tr>
+</tbody></table></div>
+<p>The pricing is the flex. A normal model charges for every word it writes; Jev barely writes anything, so there is almost nothing to charge for.</p>
+<hr>
+<h2>Part II — The Ten Wild Builds</h2>
+<p>The presentation ordered these intentionally: useful first, working up to ridiculous.</p>
+<hr>
+<h3>Build 1 — The 7-Second Flight Search</h3>
+<p><strong>Author:</strong> Browser Use (team) · <strong>Repo:</strong> <code>github.com/browser-use/jev-ultrafast</code> · <strong>License:</strong> permissive</p>
+<p><strong>Category:</strong> Serious / Ship-It</p>
+<h4>What it does</h4>
+<p>Opens Google Flights, types Zurich → London, sets a date, and pulls the results — in about 7 seconds, at real speed, unedited.</p>
+<h4>The architectural insight — State Menu Instead of Screenshot</h4>
+<p><strong>How most web agents work:</strong></p>
+<ol>
+<li>Take a screenshot</li>
+<li>Send the picture to a big model</li>
+<li>Wait while it says what to click</li>
+<li>Click it, repeat</li>
+</ol>
+<p>Every step is a slow, expensive round trip.</p>
+<p><strong>How jev-ultrafast works:</strong></p>
+<ul>
+<li><strong>Throws out the screenshot entirely.</strong></li>
+<li>Hands Jev a <strong>numbered list of everything clickable on the page</strong></li>
+<li>Asks exactly one thing: <em>which action, and which element number?</em></li>
+<li>When the action is "type some text," <strong>a tiny separate model</strong> fills in the actual keystrokes.</li>
+</ul>
+<h4>Measured results</h4>
+<div class="tw"><table><thead><tr>
+<th>Metric</th>
+<th>Before</th>
+<th>After</th>
+</tr></thead><tbody>
+<tr>
+<td>Browser talks to the page</td>
+<td>~1,092 calls</td>
+<td><strong>101</strong></td>
+</tr>
+<tr>
+<td>Wall time</td>
+<td>9.5 seconds</td>
+<td><strong>7 seconds</strong></td>
+</tr>
+<tr>
+<td>Cost per run</td>
+<td>—</td>
+<td><strong>under $0.004</strong> (~$0.0039)</td>
+</tr>
+<tr>
+<td>Jev calls</td>
+<td class="num">22</td>
+<td><strong>17</strong></td>
+</tr>
+<tr>
+<td>Adoption</td>
+<td>—</td>
+<td><strong>9,000 users in 3 days</strong></td>
+</tr>
+</tbody></table></div>
+<h4>Two notes from the team</h4>
+<ol>
+<li>The whole project is <strong>open source under a permissive license</strong>.</li>
+<li>The founder pointed out that <strong>the demo runs at real speed — no editing tricks.</strong></li>
+</ol>
+<hr>
+<h3>Build 2 — Playing Super Mario in Real Time</h3>
+<p><strong>Author:</strong> Faadil Shaik · <strong>Repo:</strong> <code>github.com/fhshaik/typesafe-mario</code></p>
+<p><strong>Category:</strong> Gloriously silly, technically instructive</p>
+<h4>What it does</h4>
+<p>Jev plays Super Mario Brothers from live emulator telemetry.</p>
+<h4>The architectural insight — Telemetry Instead of Pixels</h4>
+<p><strong>Jev does not see the screen.</strong> The emulator hands it a <em>description</em> instead:</p>
+<ul>
+<li>Mario's position</li>
+<li>How fast he's going</li>
+<li>Whether he is mid-jump</li>
+<li>The nearest enemy, and when it will reach him</li>
+<li>The gap coming up</li>
+</ul>
+<p>Every <strong>8 frames</strong>, Jev picks from <strong>seven moves</strong>: stand still, go right, jump, run, run and jump (and the balance of the set).</p>
+<p>It <strong>also answers a side question each time</strong>: <em>roughly, how dangerous is this exact moment?</em> That scalar nudges whether it should leave the ground.</p>
+<h4>Honest limitations stated in the presentation</h4>
+<ul>
+<li>There is <strong>no clean run posted start to finish</strong> — the presentation explicitly will not claim it beat the game.</li>
+<li>What you can watch is a model that <strong>thinks in fast reactions</strong>, keeping Mario alive in real time.</li>
+<li>The presenter's own words: <em>"which shouldn't really work as well as it does."</em></li>
+</ul>
+<h4>The pattern named here</h4>
+<p><strong>Hand Jev a state in a menu, get a quick decision back.</strong> This is the repeatable shape the rest of the builds share.</p>
+<hr>
+<h3>Build 3 — The Instant YouTube Sponsor Skipper</h3>
+<p><strong>Author:</strong> Tony Dinh (indie developer) · <strong>Repo:</strong> <code>github.com/trungdq88/youtube-sponsor-detection</code></p>
+<p><strong>License:</strong> ⚠️ <strong>None yet</strong> — do not ship on top of it without checking</p>
+<p><strong>Category:</strong> Installable dev tool</p>
+<h4>What it does</h4>
+<p>A Chrome extension that skips the sponsor read for you.</p>
+<h4>The architectural insight — Streaming Per-Unit Evaluation</h4>
+<p><strong>Not from a crowd-sourced list of timestamps.</strong> It <em>listens and decides</em>, second by second: <em>is this the sponsor, or the actual video?</em></p>
+<p>The distinction matters. A crowd list is a precomputed global index that goes stale and requires human labor. This is <strong>continuous local classification</strong> with no prior index at all.</p>
+<h4>Cost</h4>
+<p>Approximately <strong>half a cent per video</strong>, by the author's own estimate.</p>
+<hr>
+<h3>Build 4 — The Auto-Sorting Downloads Folder</h3>
+<p><strong>Author:</strong> Marcel Pociot (runs a developer tools company)</p>
+<p><strong>Category:</strong> Installable dev tool · the quiet workhorse</p>
+<h4>What it does</h4>
+<p>A desktop app that watches your downloads folder. The second a file lands, it decides what the file is and where it belongs. Something that reads like an invoice gets filed with your invoices.</p>
+<h4>The architectural insight — Daemon-Scale Repetition</h4>
+<p>The detail the presenter singled out, from the author's own post:</p>
+<blockquote><strong>No other model in the loop. Just Jev.</strong></blockquote>
+<p>There is no big language model reading your files and summarizing them. It is <strong>one small decision repeated</strong> — which is precisely why it is cheap enough to leave running all day.</p>
+<p>This is the pattern in its purest form: the <em>economics</em> of a 4-cent-per-million decision is what makes a resident daemon viable, not any algorithmic cleverness.</p>
+<hr>
+<h3>Build 5 — The Natural Language Feed Cleaner</h3>
+<p><strong>Author:</strong> Marcel Pociot (same developer, one day earlier)</p>
+<p><strong>Category:</strong> Demo, not benchmark</p>
+<h4>What it does</h4>
+<p>A browser extension where you type a plain rule — <em>"hide engagement bait"</em> — and Jev walks down your timeline collapsing the posts that match.</p>
+<h4>The architectural insight — Rules in Natural Language, Executed Locally</h4>
+<p>The author says it is quick enough that you don't notice it working. <strong>There is no measurement on that, so the presentation files it as a demo, not a benchmark.</strong></p>
+<h4>Why it still matters</h4>
+<p>A content filter you describe in <strong>one sentence</strong> instead of hunting through settings is a real shift in how you would use a site.</p>
+<hr>
+<h3>Build 6 — 1-Second UI Assembly</h3>
+<p><strong>Author:</strong> A UI framework called <strong>json-render</strong> · clip credited to Michael Tetteh Akula</p>
+<p><strong>Category:</strong> The one developers keep arguing about</p>
+<h4>What it does</h4>
+<p>Instead of asking a model to generate a whole app from scratch, you give it a <strong>box of pre-built pieces</strong> — a button, a chart, a form — and let Jev decide which ones this screen needs and how they are arranged.</p>
+<h4>The architectural insight — Compose From Trusted Components</h4>
+<p>json-render wired it in directly:</p>
+<ol>
+<li>Your app <strong>lists the candidate components</strong></li>
+<li>Jev <strong>picks which to include, in what order, where they sit</strong></li>
+<li><strong>One pass to choose them, another to lay them out</strong></li>
+</ol>
+<h4>Why it matters</h4>
+<div class="tw"><table><thead><tr>
+<th>Generating a full interface with a big model</th>
+<th>Picking from parts you already trust</th>
+</tr></thead><tbody>
+<tr>
+<td>Slow</td>
+<td>Fast</td>
+</tr>
+<tr>
+<td>It <strong>drifts</strong></td>
+<td>Cannot drift</td>
+</tr>
+<tr>
+<td>—</td>
+<td><strong>Cannot invent a button that doesn't exist</strong></td>
+</tr>
+</tbody></table></div>
+<p><strong>"Safety by construction"</strong> — applied to design rather than to decoding.</p>
+<h4>Evidence caveat</h4>
+<p>A clip circulating shows an interface assembling itself in about a second. The presenter <strong>could not track down the original post</strong>, so that speed is <em>what the video shows, not a lab result</em>. The mechanism underneath, however, is already inside real component libraries.</p>
+<hr>
+<h3>Build 7 — Fixing Claude Code's Context Window</h3>
+<p><strong>Author:</strong> Tamara Tran · <strong>Repo:</strong> <code>github.com/tamaratran/fast-jev-compaction</code></p>
+<p><strong>Category:</strong> Strong idea, unproven — and the pivot of the whole audit</p>
+<h4>The problem it targets</h4>
+<p>The context window fills up, and the tool makes room by having a language model <strong>summarize the conversation so far</strong>. Those summaries drop details you needed, and you find out which ones too late.</p>
+<h4>The architectural insight — Structural Compaction</h4>
+<p>Tran's project takes a different route. It <strong>walks back through your old tool calls</strong> and asks Jev <strong>two tiny questions about each one</strong>:</p>
+<ol>
+<li><strong>Keep this call at all?</strong></li>
+<li><strong>Keep the result word for word, or trim it?</strong></li>
+</ol>
+<p>Whatever survives is <strong>kept exactly — not rewritten, not summarized.</strong></p>
+<h4>The evidence, honestly reported</h4>
+<p><strong>The eye-catching animation on her post is, by her own README, a dramatized mock-up.</strong> It does not call the real model. It exists to be screen-recorded.</p>
+<p>When someone ran the <strong>actual thing</strong> across <strong>five real coding sessions</strong> at a safe confidence setting:</p>
+<blockquote><strong>It dropped 0% of the context.</strong></blockquote>
+<p>The calls Jev wanted to throw away were <strong>the ones it was least sure about</strong>, so a careful cutoff kept everything.</p>
+<p><strong>Verdict: good idea, not proven yet.</strong></p>
+<h4>Credit where due — and the flaw identified</h4>
+<p>To be fair to the idea, <strong>keeping the real text instead of a summary is the right instinct.</strong> The trouble is <strong>trusting a confidence score to decide what is safe to lose</strong> — and that confidence is the exact thing that hasn't been checked yet.</p>
+<blockquote><em>Remember this. It is about to become the whole point.</em></blockquote>
+<hr>
+<h3>Build 8 — Running JFK Airport Air Traffic Control</h3>
+<p><strong>Author:</strong> A Reddit builder (GPT-6 Astra generated the simulation)</p>
+<p><strong>Category:</strong> Spectacle · the clearest stress test in the batch</p>
+<h4>What it does</h4>
+<p>An entire simulated JFK airport, with Jev dropped into the control tower.</p>
+<ul>
+<li><strong>Every clearance is a Jev decision:</strong> cleared to land, hold your position, go around.</li>
+<li><strong>A separate voice model handles the radio</strong>, so you <em>hear</em> the pilot and the controller talk while Jev makes the calls underneath.</li>
+<li><strong>As traffic climbs, it keeps planes separated without stalling.</strong></li>
+</ul>
+<h4>The honesty marker</h4>
+<p>It is a simulation, and <strong>the builder says so up front — not real air traffic data.</strong></p>
+<h4>Why it earns its place</h4>
+<p>As a <strong>stress test of decisions under load</strong>, it is the clearest one in the batch.</p>
+<hr>
+<h3>Build 9 — "Kill My Idea" Instant Startup Scorer</h3>
+<p><strong>Author:</strong> Indie hacker posting as <strong>stemonte</strong> · <strong>Site:</strong> <code>killmyidea.stemonte.io</code></p>
+<p><strong>Category:</strong> The model turns on you</p>
+<h4>What it does</h4>
+<p>Takes your startup pitch and, <strong>instead of writing feedback</strong>, fires about <strong>10 Jev questions at once</strong>:</p>
+<ul>
+<li>Demand</li>
+<li>Competition</li>
+<li>Execution risk</li>
+<li><em>(and the rest of the set)</em></li>
+</ul>
+<p>Each scored <strong>in parallel</strong>. Outcomes a single verdict: <strong>kill it, fix it, or ship it.</strong></p>
+<h4>Epistemic hygiene</h4>
+<p>The presentation advises holding the result loosely — and <strong>so does the maker</strong>, who calls it <em>purely demonstrative</em>. <strong>A score is not a market.</strong></p>
+<h4>Why it is bracing anyway</h4>
+<p>There is something clarifying about a tool that hands you a cold number in a second, instead of a paragraph telling you your idea is amazing.</p>
+<hr>
+<h3>Build 10 — The World's Worst Chatbot</h3>
+<p><strong>Authors:</strong> mkotlikov / finetuningsingh</p>
+<p><strong>Category:</strong> A joke that compresses the entire thesis</p>
+<h4>What it does — the inversion hack</h4>
+<p>Jev cannot write a sentence, so a developer made it write one anyway.</p>
+<p><strong>The hack, in three steps:</strong></p>
+<ol>
+<li>Give Jev a <strong>fixed list of words</strong></li>
+<li>Ask it, <strong>over and over</strong>, <em>which word comes next</em></li>
+<li>A reply slowly assembles, one choice at a time</li>
+</ol>
+<h4>Results</h4>
+<ul>
+<li>Ask it something <strong>short and factual</strong> — it manages.</li>
+<li>Ask it <strong>anything real</strong> — it drifts into <strong>word salad</strong>.</li>
+</ul>
+<p>It is a joke, and the builders label it one.</p>
+<h4>Why it is the best entry</h4>
+<p>It is the whole presentation compressed into a bit: <strong>you took a model designed to decide, forced it to talk, and got a properly terrible chatbot.</strong> The thing it is worst at is exactly what it was built to avoid.</p>
+<hr>
+<h3>Beyond the ten</h3>
+<p>Inside one week there were:</p>
+<ul>
+<li>Curated lists of Jev projects</li>
+<li>An official showcase with <strong>hundreds of entries</strong></li>
+<li>So many clones that <strong>the same app name showed up five times over</strong></li>
+</ul>
+<p>The presentation was clear that ten was not close to all of them.</p>
+<hr>
+<h2>Part III — OpenJev: The Weekend Open-Source Clone</h2>
+<p><strong>Author:</strong> Theo Lee (solo developer) · <strong>Shipped six days after Jev launched</strong></p>
+<p><strong>Repo:</strong> <code>github.com/TheoLeeCJ/SemIf</code> · Originally released as OpenJev, since renamed</p>
+<h3>What it is</h3>
+<p>An open-source version that <strong>runs entirely in your browser on open models you can download yourself.</strong></p>
+<h3>What it proves — the core trick is real</h3>
+<blockquote>You can read the probabilities for a set of options <strong>straight out of an ordinary model in one pass</strong>, instead of making it type them out word by word.</blockquote>
+<h3>The comparison it draws, stated exactly</h3>
+<p><strong>One decision, two roads:</strong></p>
+<ul>
+<li>Road A — read the answer from the model's <strong>internal scores, in one pass</strong></li>
+<li>Road B — make the model <strong>type that same answer out as text</strong></li>
+</ul>
+<p><strong>Road A is the whole idea of Jev.</strong></p>
+<h3>Deployment characteristics</h3>
+<ul>
+<li>Leans on <strong>your own graphics card</strong> through the browser — the kind a single gaming machine has</li>
+<li><strong>No server</strong></li>
+<li><strong>No account</strong></li>
+</ul>
+<h3>The half that matters most — the audit-bearing caveat</h3>
+<p>OpenJev's probabilities are <strong>raw</strong> — just the model's gut feeling over the allowed words. <strong>They are NOT calibrated the way TypeSafe says Jev's are.</strong></p>
+<div class="tw"><table><thead><tr>
+<th>Model</th>
+<th>Agreement with reference answers</th>
+</tr></thead><tbody>
+<tr>
+<td>Best open model (OpenJev)</td>
+<td><strong>~85%</strong></td>
+</tr>
+<tr>
+<td>Jev (as reported by TypeSafe)</td>
+<td><strong>88%</strong></td>
+</tr>
+<tr>
+<td>Browser-size models</td>
+<td><strong>Much worse</strong></td>
+</tr>
+</tbody></table></div>
+<h3>Reception and the author's own framing</h3>
+<p>It hit the front page of Hacker News within a couple of days — <em>which usually means a thing struck a nerve.</em> People wanted to try the trick with their own eyes, on their own hardware.</p>
+<p>The author's own line is the fairest summary anyone wrote all week:</p>
+<blockquote><strong>"This is evidence that the mechanism can be reproduced, not a reproduction of Jev's reported performance. It proves the idea. It doesn't prove the numbers."</strong></blockquote>
+<hr>
+<h2>Part IV — The Audit: Claims vs. Evidence</h2>
+<p>Two things keep getting blended together. <strong>Pulling them apart is the whole answer.</strong></p>
+<h3>What is actually solid</h3>
+<p>Jev <strong>cannot hand you an answer outside the menu.</strong> Ask for one of five choices, you get one of five — <strong>guaranteed by the way the model is decoded.</strong></p>
+<p>For software, that is real value. No parsing a paragraph and praying it is valid.</p>
+<h3>What is slippery</h3>
+<blockquote><strong>Being valid is not the same as being right.</strong></blockquote>
+<div class="tw"><table><thead><tr>
+<th>TypeSafe claim</th>
+<th>What the evidence shows</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>"Zero hallucinations"</strong></td>
+<td>Their <strong>own page admits the number isn't measured</strong>. They call it <em>"guaranteed by construction"</em> — <strong>which only covers the format, not the judgment.</strong></td>
+</tr>
+<tr>
+<td><strong>"200× faster"</strong></td>
+<td>One TypeSafe page says <strong>40–200×</strong>. Another says <strong>20×</strong>. The one independent test found ~<strong>25×</strong> (0.33s vs ~9s against Claude Fable 5 on a writing review).</td>
+</tr>
+<tr>
+<td><strong>Accuracy</strong></td>
+<td>TypeSafe's own check measures how often Jev <strong>agrees with a panel of frontier models</strong> (GPT-6 Astra, Claude Fable) — it lands around <strong>68%</strong>. That is <strong>agreement with other models, not proof of being right</strong> — and it is <strong>the company grading its own homework</strong>.</td>
+</tr>
+</tbody></table></div>
+<h3>On the speed test specifically</h3>
+<p>On the one writing-review task measured independently:</p>
+<ul>
+<li>Jev came in at about <strong>a third of a second</strong> vs nearly <strong>nine seconds</strong> for Claude Fable 5</li>
+<li>That is roughly <strong>25× faster, not 200×</strong></li>
+<li>And on that task, <strong>Jev missed a flaw the slower model caught</strong></li>
+</ul>
+<h3>The pattern, lined up</h3>
+<ul>
+<li>The compaction tool that <strong>dropped nothing</strong> at a safe setting</li>
+<li>OpenJev's <strong>accuracy gap</strong></li>
+<li>A <strong>zero that isn't measured</strong></li>
+<li>A <strong>speed number that changes by the page</strong></li>
+</ul>
+<blockquote><strong>The pattern is clear. The mechanism is genuinely new and useful. The benchmark claims are not proven by anyone outside the company.</strong></blockquote>
+<h3>The verdict</h3>
+<p><strong>Try Jev this week if</strong> you are building something where a fast, cheap typed decision replaces a giant model <strong>and a wrong call is easy to catch</strong> — routing a request, retrying, filtering a feed, skipping an ad.</p>
+<p><strong>Wait for outside testing if</strong> you are leaning on the accuracy numbers from the landing page.</p>
+<blockquote><strong>The real headline of the week isn't the flight demo, fun as it was. It's that the moment a model stopped trying to talk and started making decisions, developers found a hundred uses for it in six days.</strong><br><strong>Judge Jev on the decisions it makes, not the sentences it won't write.</strong></blockquote>
+<hr>
+<h2>Part V — The Complete Pattern Catalogue</h2>
+<p>Twenty-one patterns across three families.</p>
+<h3>Family A — Model Architecture Patterns (1–6)</h3>
+<div class="tw"><table><thead><tr>
+<th>#</th>
+<th>Pattern</th>
+<th>Definition</th>
+<th>Origin in the material</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>1</strong></td>
+<td><strong>Typed Choice / Closed Menu</strong></td>
+<td>Present a fixed enumeration of allowed answers with each question. The model returns one of N, never free text. Constraint is enforced <strong>by the decode</strong>, not by prompting.</td>
+<td>TypeSafe's core thesis</td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td><strong>System One vs. System Two</strong></td>
+<td>Match inference mode to the task's latency budget. Slow deliberate talk vs. fast automatic judgment. Don't spin up the sentence machine to say "yes."</td>
+<td>Almeida's psychological framing</td>
+</tr>
+<tr>
+<td><strong>3</strong></td>
+<td><strong>Batch Multi-Question Single-Pass</strong></td>
+<td>One request carries many independent questions, each with its own menu. Removes sequentially-ordered round trips. <strong>Cost:</strong> enables cross-question coupling — one latent state can flip several answers at once.</td>
+<td>"Which button" + "is the form finished" in one shot</td>
+</tr>
+<tr>
+<td><strong>4</strong></td>
+<td><strong>Calibrated Decisions</strong></td>
+<td>Train so a stated confidence is honest — 90% means right ~9/10, a weather-forecast contract.</td>
+<td>TypeSafe's RL claim</td>
+</tr>
+<tr>
+<td><strong>5</strong></td>
+<td><strong>Menu-as-Safety-Boundary</strong></td>
+<td>A closed vocabulary is structural containment. The model cannot emit outside the permitted set — including injected instructions. Guardrails become unnecessary.</td>
+<td>Implied throughout; explicit in json-render</td>
+</tr>
+<tr>
+<td><strong>6</strong></td>
+<td><strong>Prose-From-Choices (Inversion)</strong></td>
+<td>Enumerate a fixed word list; ask "which word comes next?" repeatedly. Produces text generation that immediately degrades to word salad. A <em>negative</em> demonstration: the model's worst capability is what it was designed to avoid.</td>
+<td>Build 10</td>
+</tr>
+</tbody></table></div>
+<h3>Family B — Agent &amp; Integration Patterns (7–16)</h3>
+<div class="tw"><table><thead><tr>
+<th>#</th>
+<th>Pattern</th>
+<th>Definition</th>
+<th>Origin in the material</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>7</strong></td>
+<td><strong>State Menu Instead of Screenshot</strong></td>
+<td>Hand the model a structured description — numbered clickables, or telemetry — instead of pixels. Strips the vision round trip from the loop. <strong>Caveat:</strong> only viable when the environment can self-describe.</td>
+<td>Build 1 (DOM list), Build 2 (emulator telemetry)</td>
+</tr>
+<tr>
+<td><strong>8</strong></td>
+<td><strong>Two-Tier Policy / Payload Split</strong></td>
+<td>A small decision model chooses the <em>action</em>; a second tiny model generates the <em>payload</em>. Separate policy from content synthesis; the cheapest tier handles the high-frequency call.</td>
+<td>"Type into element #4" → separate model produces keystrokes</td>
+</tr>
+<tr>
+<td><strong>9</strong></td>
+<td><strong>Fixed-Cadence Polling + Auxiliary Scalar</strong></td>
+<td>Decision frequency is a tunable — decouple it from the render/telemetry rate. An auxiliary scalar answered alongside each action can shape behavior without being an action itself.</td>
+<td>Build 2 — every 8 frames, plus "how dangerous is this moment?"</td>
+</tr>
+<tr>
+<td><strong>10</strong></td>
+<td><strong>Streaming Per-Unit Evaluation</strong></td>
+<td>Continuous local classification replaces a precomputed global index. Enabled because cost-per-decision is low enough to run unbatched forever.</td>
+<td>Build 3 (second-by-second sponsor detection), Build 5</td>
+</tr>
+<tr>
+<td><strong>11</strong></td>
+<td><strong>Daemon-Scale Repetition</strong></td>
+<td>Cheap-per-decision + event-driven trigger = a resident process you can leave running all day. <strong>The economics enables the daemon, not the algorithm.</strong></td>
+<td>Build 4 — "no other model in the loop, just Jev"</td>
+</tr>
+<tr>
+<td><strong>12</strong></td>
+<td><strong>Compose From Trusted Components</strong></td>
+<td>Expose a box of pre-built pieces; let the model select the set, the order, and the placement. Two passes: one to choose, one to lay out. Fast, cannot drift, <strong>cannot invent a component that does not exist</strong>. Safety by construction, applied to design.</td>
+<td>Build 6 (json-render)</td>
+</tr>
+<tr>
+<td><strong>13</strong></td>
+<td><strong>Structural Compaction</strong></td>
+<td>Walk back through history; ask per-call <em>keep at all?</em> and <em>keep verbatim or trim?</em> Survivors preserved exactly — never rewritten, never summarized. <strong>Open question it creates:</strong> you are trusting a confidence score to decide what is safe to lose — the exact unverified number.</td>
+<td>Build 7</td>
+</tr>
+<tr>
+<td><strong>14</strong></td>
+<td><strong>Parallel Fan-Out, Single Verdict</strong></td>
+<td>Fire N independent scorers concurrently, then collapse to a categorical verdict. Latency stays flat as criteria multiply.</td>
+<td>Build 9 — ~10 scores → kill / fix / ship</td>
+</tr>
+<tr>
+<td><strong>15</strong></td>
+<td><strong>Simulation as Stress Bench</strong></td>
+<td>Use a generative world as the load generator for decision policy. Forces decisions under climbing pressure without real-world stakes. Honesty marker: label it simulation, not live data.</td>
+<td>Build 8 — JFK tower</td>
+</tr>
+<tr>
+<td><strong>16</strong></td>
+<td><strong>Open-Source Local Reimplementation</strong></td>
+<td>Reproduce the <em>mechanism</em> with visible internals to separate the idea from the vendor's numbers. Runs on commodity hardware, no server, no account.</td>
+<td>OpenJev / SemIf</td>
+</tr>
+</tbody></table></div>
+<h3>Family C — Measurement &amp; Claims Patterns (17–21)</h3>
+<p><em>These are patterns of mis-measurement — the reusable diagnostic shapes the audit exposed.</em></p>
+<div class="tw"><table><thead><tr>
+<th>#</th>
+<th>Pattern</th>
+<th>Definition</th>
+<th>Evidence</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>17</strong></td>
+<td><strong>Format ≠ Judgment</strong></td>
+<td>Schema-validity and correctness are different properties. "Guaranteed by construction" typically covers only the first. <strong>The blender of the two is the marketing.</strong></td>
+<td><em>Valid is not the same as right</em></td>
+</tr>
+<tr>
+<td><strong>18</strong></td>
+<td><strong>Unmeasured Guarantee by Construction</strong></td>
+<td>A headline metric ("zero hallucinations") that the company's own page concedes is not measured. The guarantee is structural, not empirical.</td>
+<td>TypeSafe's own disclosure</td>
+</tr>
+<tr>
+<td><strong>19</strong></td>
+<td><strong>Agreement-With-Panel as Proxy Accuracy</strong></td>
+<td>Measuring how often a model agrees with peer models and presenting it as accuracy. Agreement is not correctness — peers can share a blind spot.</td>
+<td>~68% vs GPT-6 Astra / Claude Fable panel</td>
+</tr>
+<tr>
+<td><strong>20</strong></td>
+<td><strong>Company Grades Own Homework</strong></td>
+<td>Self-reported benchmarks with no external replication. <strong>Diagnostic tell:</strong> the number changes depending on which page you read.</td>
+<td>200× vs 40× vs 20×</td>
+</tr>
+<tr>
+<td><strong>21</strong></td>
+<td><strong>Dramatized Mock-Up as Evidence</strong></td>
+<td>A demo asset (GIF/video) that never calls the real system, presented adjacent to the claim it is meant to support. The tell is usually a README's own admission.</td>
+<td>Build 7's animation</td>
+</tr>
+</tbody></table></div>
+<hr>
+<h2>Part VI — Reference Tables</h2>
+<h3>A. Build Index</h3>
+<div class="tw"><table><thead><tr>
+<th>#</th>
+<th>Build</th>
+<th>Author</th>
+<th>Category</th>
+<th>Repo / Link</th>
+<th>License</th>
+</tr></thead><tbody>
+<tr>
+<td class="num">1</td>
+<td><strong>7-Second Flight Search</strong></td>
+<td>Browser Use</td>
+<td>Serious / Ship-It</td>
+<td><code>github.com/browser-use/jev-ultrafast</code></td>
+<td>Permissive</td>
+</tr>
+<tr>
+<td class="num">2</td>
+<td><strong>Real-Time Super Mario</strong></td>
+<td>Faadil Shaik</td>
+<td>Silly but instructive</td>
+<td><code>github.com/fhshaik/typesafe-mario</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td class="num">3</td>
+<td><strong>YouTube Sponsor Skipper</strong></td>
+<td>Tony Dinh</td>
+<td>Installable tool</td>
+<td><code>github.com/trungdq88/youtube-sponsor-detection</code></td>
+<td>⚠️ <strong>None yet</strong></td>
+</tr>
+<tr>
+<td class="num">4</td>
+<td><strong>Downloads Organizer</strong></td>
+<td>Marcel Pociot</td>
+<td>Installable tool</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td class="num">5</td>
+<td><strong>Feed Cleaner (NL rules)</strong></td>
+<td>Marcel Pociot</td>
+<td>Demo</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td class="num">6</td>
+<td><strong>1-Second UI Assembly</strong></td>
+<td>json-render / Michael Tetteh Akula</td>
+<td>Contested</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td class="num">7</td>
+<td><strong>Claude Code Compactor</strong></td>
+<td>Tamara Tran</td>
+<td>Unproven</td>
+<td><code>github.com/tamaratran/fast-jev-compaction</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td class="num">8</td>
+<td><strong>JFK ATC Simulator</strong></td>
+<td>Reddit builder</td>
+<td>Spectacle / stress test</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td class="num">9</td>
+<td><strong>Kill My Idea</strong></td>
+<td>stemonte</td>
+<td>Demonstrative only</td>
+<td><code>killmyidea.stemonte.io</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td class="num">10</td>
+<td><strong>World's Worst Chatbot</strong></td>
+<td>mkotlikov / finetuningsingh</td>
+<td>Joke</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>—</td>
+<td><strong>OpenJev / SemIf</strong></td>
+<td>Theo Lee</td>
+<td>Open-source clone</td>
+<td><code>github.com/TheoLeeCJ/SemIf</code></td>
+<td>Open source</td>
+</tr>
+<tr>
+<td>—</td>
+<td><strong>Jev (the model)</strong></td>
+<td>TypeSafe / Diogo Almeida</td>
+<td>—</td>
+<td><code>typesafe.ai/blog/introducing-system-one-models-and-jev</code></td>
+<td>Commercial</td>
+</tr>
+</tbody></table></div>
+<h3>B. Pattern-to-Build Cross-Reference</h3>
+<div class="tw"><table><thead><tr>
+<th>Pattern</th>
+<th>Builds</th>
+</tr></thead><tbody>
+<tr>
+<td>1 Typed Choice / Closed Menu</td>
+<td>All (foundational)</td>
+</tr>
+<tr>
+<td>2 System One vs. Two</td>
+<td>All (framing)</td>
+</tr>
+<tr>
+<td>3 Batch Multi-Question</td>
+<td>1, 2, 9</td>
+</tr>
+<tr>
+<td>4 Calibrated Decisions</td>
+<td>7, OpenJev (audit)</td>
+</tr>
+<tr>
+<td>5 Menu-as-Safety-Boundary</td>
+<td>6, all</td>
+</tr>
+<tr>
+<td>6 Prose-From-Choices</td>
+<td class="num">10</td>
+</tr>
+<tr>
+<td>7 State Menu ≠ Screenshot</td>
+<td>1, 2</td>
+</tr>
+<tr>
+<td>8 Two-Tier Policy / Payload</td>
+<td class="num">1</td>
+</tr>
+<tr>
+<td>9 Fixed-Cadence + Scalar</td>
+<td class="num">2</td>
+</tr>
+<tr>
+<td>10 Streaming Per-Unit</td>
+<td>3, 5</td>
+</tr>
+<tr>
+<td>11 Daemon-Scale Repetition</td>
+<td class="num">4</td>
+</tr>
+<tr>
+<td>12 Compose From Trusted Components</td>
+<td class="num">6</td>
+</tr>
+<tr>
+<td>13 Structural Compaction</td>
+<td class="num">7</td>
+</tr>
+<tr>
+<td>14 Parallel Fan-Out</td>
+<td class="num">9</td>
+</tr>
+<tr>
+<td>15 Simulation as Stress Bench</td>
+<td class="num">8</td>
+</tr>
+<tr>
+<td>16 Open-Source Local Reimpl.</td>
+<td>OpenJev</td>
+</tr>
+<tr>
+<td>17 Format ≠ Judgment</td>
+<td>Audit</td>
+</tr>
+<tr>
+<td>18 Unmeasured Guarantee</td>
+<td>Audit</td>
+</tr>
+<tr>
+<td>19 Agreement-as-Accuracy</td>
+<td>Audit</td>
+</tr>
+<tr>
+<td>20 Company Grades Own Homework</td>
+<td>Audit</td>
+</tr>
+<tr>
+<td>21 Dramatized Mock-Up</td>
+<td class="num">7</td>
+</tr>
+</tbody></table></div>
+<h3>C. Quantitative Claims Register</h3>
+<div class="tw"><table><thead><tr>
+<th>Claim</th>
+<th>Value</th>
+<th>Status</th>
+</tr></thead><tbody>
+<tr>
+<td>Input price</td>
+<td>$0.04 / million words</td>
+<td>Company-stated</td>
+</tr>
+<tr>
+<td>Output price</td>
+<td>Free</td>
+<td>Company-stated</td>
+</tr>
+<tr>
+<td>Latency</td>
+<td>70–500 ms</td>
+<td>Company-stated</td>
+</tr>
+<tr>
+<td>Flight search: browser calls</td>
+<td>1,092 → 101</td>
+<td>Team-reported, demo unedited</td>
+</tr>
+<tr>
+<td>Flight search: wall time</td>
+<td>9.5s → 7s</td>
+<td>Team-reported, demo unedited</td>
+</tr>
+<tr>
+<td>Flight search: cost</td>
+<td>~$0.0039 / run</td>
+<td>Team-reported</td>
+</tr>
+<tr>
+<td>Flight search: adoption</td>
+<td>9,000 users / 3 days</td>
+<td>Team-reported</td>
+</tr>
+<tr>
+<td>Sponsor skip cost</td>
+<td>~$0.005 / video</td>
+<td>Author estimate</td>
+</tr>
+<tr>
+<td>Mario decision cadence</td>
+<td>every 8 frames</td>
+<td>Repo</td>
+</tr>
+<tr>
+<td>Mario move menu</td>
+<td>7 moves</td>
+<td>Repo</td>
+</tr>
+<tr>
+<td>Compaction drop rate</td>
+<td><strong>0%</strong> across 5 sessions</td>
+<td>Independent run</td>
+</tr>
+<tr>
+<td>OpenJev accuracy</td>
+<td><strong>~85%</strong></td>
+<td>Independent</td>
+</tr>
+<tr>
+<td>Jev accuracy (reported)</td>
+<td><strong>88%</strong></td>
+<td>Company-stated</td>
+</tr>
+<tr>
+<td>Jev agreement w/ panel</td>
+<td><strong>~68%</strong></td>
+<td>Company self-check</td>
+</tr>
+<tr>
+<td>Speed (independent)</td>
+<td><strong>~25×</strong> (0.33s vs ~9s)</td>
+<td>Independent</td>
+</tr>
+<tr>
+<td>Speed (marketed)</td>
+<td>40–200× / 20×</td>
+<td><strong>Company-stated, self-contradictory</strong></td>
+</tr>
+<tr>
+<td>"Zero hallucinations"</td>
+<td><strong>Not measured</strong></td>
+<td>Company concession</td>
+</tr>
+<tr>
+<td>Jev calls (flight)</td>
+<td>22 → 17</td>
+<td>Team-reported</td>
+</tr>
+</tbody></table></div>
+<hr>
+<h2>Part VII — Closing Assessment</h2>
+<h3>The repeatable shape</h3>
+<p>Every successful build reduces to one motion:</p>
+<blockquote><strong>Hand the model a state and a menu. Get back a typed decision.</strong></blockquote>
+<p>Everything else — the DOM list, the emulator telemetry, the file event, the second of audio, the component palette — is just a way of producing the state.</p>
+<h3>The two questions that decide fitness</h3>
+<ol>
+<li><strong>Is the decision high-frequency and low-content?</strong> If yes, the pricing model wins outright.</li>
+<li><strong>Is a wrong call easy to catch?</strong> If yes, validity-without-correctness is an acceptable bargain. If no — the compaction case — you are trusting an unverified confidence score with something you cannot audit after the fact.</li>
+</ol>
+<h3>The honest summary</h3>
+<p>The mechanism is genuinely new and useful. The benchmark claims are not proven by anyone outside the company. Both statements are true at once, and the discipline is to hold them together rather than letting the marketing blend them.</p>
+<blockquote><strong>Judge Jev on the decisions it makes, not the sentences it won't write.</strong></blockquote>
+<hr>
+<p><em>Document compiled from the Cloud Codes presentation "10 Wild Things You Can Build With Jev" (https://youtu.be/X4Lqj54sw4I). All quotes, figures, and caveats are as reported in that presentation. Independent measurements are identified as such; company-stated figures are labelled throughout.</em></p>
+</div></body></html>
