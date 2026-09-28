@@ -6,7 +6,7 @@
 **Source URL:** https://youtu.be/LzweTaOzvVo
 **Primary documentation:** docs.typesafe.ai — [Introduction](https://docs.typesafe.ai/introduction) · [Primitives](https://docs.typesafe.ai/primitives) · [Patterns](https://docs.typesafe.ai/patterns) · [Confidence](https://docs.typesafe.ai/confidence)
 
-**Companion volume:** [The Jev Launch Week Dossier](jev-launch-week-dossier.md) — the ten community builds and the 21 patterns they reveal.
+**Companion volumes:** [The Jev Launch Week Dossier](jev-launch-week-dossier.md) — the ten community builds and the 21 patterns they reveal. · [The Jev Benchmark Report](jev-benchmark-report.md) — independent measurement: which decision models actually perform best.
 
 ---
 
@@ -895,6 +895,21 @@ This volume documents **the design vocabulary**. It is a fair account of what Ty
 It is not, and cannot be, independent evidence that the vendor's *performance* claims hold. The Launch Week Dossier addresses that separately, and its Family C patterns still apply: **format-validity is not judgment-correctness, and a designed pattern is not the same as a validated benchmark.**
 
 > **Read this volume to learn how to build. Read the dossier to know what to believe.**
+
+---
+
+## See also
+
+**[The Jev Launch Week Dossier](jev-launch-week-dossier.md)** — Volume I. What developers actually built in the six days after launch, and an honest audit of which vendor claims held up.
+
+**[The Jev Benchmark Report](jev-benchmark-report.md)** — Volume III. Independent measurement of Jev against 12 local decision models. It tests this volume's patterns in production conditions and reports where they hold:
+
+- **Speculative Fan-Out** is confirmed — batching 13 questions is 12.2× cheaper and 10.0× faster with identical answers
+- **Confidence-Gated Routing** is validated by the *option-order fragility* finding: one model swung from 21% to 72% on reversed options, so thresholds must be validated per model, not adopted across models
+- **Composite Scoring's** decomposition principle is what makes the benchmark interpretable at all — the aggregate rank hides per-task inversions
+- **Intent Routing's** "act vs. speak" distinction is exactly what separates Jev from Winnow in the support-workflow test
+
+> **Read this volume to learn how to build. Read Volume III to choose.**
 
 ---
 

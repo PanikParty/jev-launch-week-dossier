@@ -7,7 +7,7 @@
 **Subject:** TypeSafe's Jev — a "System One" decision model
 **Launch window documented:** September 15 – 21, 2026 (six days)
 
-**Companion volume:** [The Jev Design Pattern Handbook](jev-design-patterns-handbook.md) — the vendor's official pattern set: 3 primitives, 10 decision shapes, 4 design patterns.
+**Companion volumes:** [The Jev Design Pattern Handbook](jev-design-patterns-handbook.md) — the vendor's official pattern set: 3 primitives, 10 decision shapes, 4 design patterns. · [The Jev Benchmark Report](jev-benchmark-report.md) — independent measurement of Jev against 12 local decision models.
 
 ---
 
@@ -570,16 +570,16 @@ The mechanism is genuinely new and useful. The benchmark claims are not proven b
 
 ## See also
 
-**[The Jev Design Pattern Handbook](jev-design-patterns-handbook.md)** — the companion volume.
+This dossier is Volume I of three. Each answers a different question.
 
-Where this dossier reverse-engineers patterns from what developers *built*, the Handbook documents the vendor's own named pattern set: the three primitives (Choice, Score, Noul), the ten decision shapes, and the four official design patterns (Speculative Fan-Out, Confidence-Gated Routing, Composite Scoring, Intent Routing).
+| | Volume I (this) | [Volume II — Handbook](jev-design-patterns-handbook.md) | [Volume III — Benchmark Report](jev-benchmark-report.md) |
+|---|---|---|---|
+| **Question** | What did they build? | How should you build? | **What actually performs best?** |
+| **Authority** | Third-party observation | Vendor documentation | **Independent measurement** |
+| **Tone** | Auditing claims | Teaching usage | **Measuring** |
 
-The two answer different questions and neither supersedes the other:
+**Volume II** documents the vendor's own named pattern set: the three primitives (Choice, Score, Noul), the ten decision shapes, and the four official design patterns.
 
-| | This dossier | The Handbook |
-|---|---|---|
-| **Subject** | Community builds | Vendor's documented pattern set |
-| **Authority** | Third-party observation | Primary documentation |
-| **Tone** | Auditing claims | Teaching usage |
+**Volume III is the independent test this dossier said was missing.** It validates the broad verdict — the mechanism is sound, the marketing overreached — but the numbers are now measured rather than asserted. Its most important finding for this volume: Volume I's *Format ≠ Judgment* pattern turned out to be the organizing insight of the whole benchmark, and the measured accuracy (~95% against real answer keys) supersedes the ~68% agreement figure reported here.
 
-> **Read the Handbook to learn how to build. Read this dossier to know what to believe.**
+> **Read Volume II to learn how to build. Read Volume III to choose. Read this dossier to know what to believe.**

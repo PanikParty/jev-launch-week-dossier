@@ -1,8 +1,8 @@
 # The Jev Papers
 
-**Two companion volumes on TypeSafe Jev — the ten wildest community builds from launch week, and the vendor's official design pattern set.**
+**Three volumes on TypeSafe Jev — the ten wildest community builds from launch week, the vendor's official design pattern set, and independent benchmark measurement against 12 local decision models.**
 
-[![Volumes](https://img.shields.io/badge/volumes-2-blueviolet)](#read-both-volumes)
+[![Volumes](https://img.shields.io/badge/volumes-3-blueviolet)](#read-all-three-volumes)
 [![Patterns](https://img.shields.io/badge/patterns-30-orange)](#the-pattern-catalogue)
 [![Builds](https://img.shields.io/badge/builds-10-yellow)](#the-ten-wild-builds)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
@@ -19,13 +19,13 @@ Jev reads your program's state plus a menu of allowed answers, and returns typed
 
 Within **six days**, developers had bolted it onto everything from flight search to Super Mario to an air traffic control tower.
 
-This repository is a systematic teardown of that week across two volumes: **what developers built**, and **how the vendor says you should build** — plus an honest audit of which vendor claims held up.
+This repository is a systematic teardown of that week across three volumes: **what developers built**, **how the vendor says you should build**, and **what actually performs best when measured independently** — plus an honest audit of which vendor claims held up.
 
 **Source presentation:** [Cloud Codes — *10 Wild Things You Can Build With Jev*](https://youtu.be/X4Lqj54sw4I) (14:15, Sep 21 2026)
 
 ---
 
-## Read both volumes
+## Read all three volumes
 
 ### 📕 Volume I — The Jev Launch Week Dossier
 
@@ -43,6 +43,14 @@ This repository is a systematic teardown of that week across two volumes: **what
 - **[📄 Markdown source](docs/jev-design-patterns-handbook.md)** — 8 parts, 4 patterns, 13 shapes
 - Sources: *The AI Automators — Master ALL Jev Design Patterns* + primary docs at [docs.typesafe.ai](https://docs.typesafe.ai/patterns)
 
+### 📊 Volume III — The Jev Benchmark Report
+
+*What actually performs best.* Independent measurement of Jev against 12 local decision models — 7,671 records each, frozen protocol, fully disclosed limitations. Jev leads the aggregate; a 12B model you can run yourself lands 29 answers behind, and five answers behind once you exclude the one test it couldn't take.
+
+- **[🌐 Rendered online](https://panikparty.github.io/jev-launch-week-dossier/docs/jev-benchmark-report.html)**
+- **[📄 Markdown source](docs/jev-benchmark-report.md)** — 11 parts, 31 tables
+- Sources: *The AI Automators — I Tested Jev vs 12 Local Decision Models* + the [jev-arena](https://github.com/theaiautomators/jev-arena) harness
+
 ### Also
 
 - **[⚡ Quick-reference pattern sheet](patterns/design-patterns-quick-reference.md)** — Volume I's 21 patterns, one screen
@@ -53,9 +61,11 @@ This repository is a systematic teardown of that week across two volumes: **what
 
 Volume I **reverse-engineers** patterns from observed mechanics — the presentation describes how each build works but never names a pattern. Those names are authored. Volume II documents patterns the vendor **named and defined itself**. Where the vocabularies overlap, Volume II's terms are canonical; Volume II includes a full cross-reference mapping.
 
-They also do different work. Volume II is a fair and complete account of the documented design vocabulary. It is not independent evidence that the vendor's *performance* claims hold — Volume I's audit addresses that separately.
+Volume III closes the loop. Its independent, frozen-protocol measurements *test* the claims Volume I could only audit, and they confirm Volume I's central diagnostic: *Format ≠ Judgment* turned out to be the organizing insight of the entire benchmark. Volume III also supersedes several Volume I figures — measured accuracy of ~95% against real answer keys replaces the ~68% agreement-with-a-panel number, and the OpenJev figure revises down to 81.70% on a much larger, harder suite.
 
-> **Read Volume II to learn how to build. Read Volume I to know what to believe.**
+What none of them do is settle the vendor's *performance* marketing on its own terms. Volume II is a fair account of the documented design vocabulary, not evidence the benchmarks hold. Volume III is evidence — and it says the mechanism is sound while the aggregate rank hides large per-task inversions.
+
+> **Read Volume II to learn how to build. Read Volume III to choose. Read Volume I to know what to believe.**
 
 ---
 
@@ -214,7 +224,9 @@ Twenty-one patterns across three families. Full definitions with evidence in [th
 │   ├── jev-launch-week-dossier.md              ← Volume I (source of truth)
 │   ├── jev-launch-week-dossier.html            ← Volume I, rendered
 │   ├── jev-design-patterns-handbook.md         ← Volume II (source of truth)
-│   └── jev-design-patterns-handbook.html       ← Volume II, rendered
+│   ├── jev-design-patterns-handbook.html       ← Volume II, rendered
+│   ├── jev-benchmark-report.md                 ← Volume III (source of truth)
+│   └── jev-benchmark-report.html               ← Volume III, rendered
 ├── patterns/
 │   └── design-patterns-quick-reference.md      ← Volume I's 21 patterns, one screen
 └── scripts/
@@ -229,8 +241,9 @@ The HTML is generated from the Markdown by a dependency-free Python script:
 # Volume I (default)
 python3 scripts/render.py
 
-# Volume II, or any other file, by path
+# Any other volume, by path
 python3 scripts/render.py docs/jev-design-patterns-handbook.md
+python3 scripts/render.py docs/jev-benchmark-report.md
 ```
 
 Edit the Markdown, run the script, and the sibling `.html` updates in place. Each rendered page gets a

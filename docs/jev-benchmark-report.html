@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Jev Benchmark Report — Jev vs 12 Local Decision Models</title>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--panel2:#1c2128;--ink:#e6edf3;--dim:#9198a1;
+--line:#30363d;--acc:#58a6ff;--acc2:#f0883e;--ok:#3fb950;--warn:#d29922;--bad:#f85149;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+font:16px/1.72 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
+-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:64px 32px 120px}
+h1{font-size:2.5rem;line-height:1.15;letter-spacing:-.02em;margin:0 0 .3em;
+background:linear-gradient(92deg,#79c0ff,#f0883e);-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;background-clip:text}
+h2{font-size:1.65rem;margin:2.6em 0 .7em;padding-bottom:.35em;
+border-bottom:1px solid var(--line);letter-spacing:-.01em}
+h3{font-size:1.22rem;margin:2em 0 .5em;color:#79c0ff}
+h4{font-size:1.02rem;margin:1.5em 0 .4em;color:var(--acc2)}
+p{margin:.85em 0}
+a{color:var(--acc);text-decoration:none;border-bottom:1px solid #1f6feb55}
+a:hover{border-bottom-color:var(--acc)}
+hr{border:0;border-top:1px solid var(--line);margin:2.5em 0}
+strong{color:#fff;font-weight:650}
+em{color:#c9d1d9}
+code{background:#21262d;padding:.15em .42em;border-radius:5px;font-size:.87em;
+font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#ffa657;
+border:1px solid #30363d}
+pre{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+padding:1.1em 1.3em;overflow-x:auto}
+pre code{background:none;border:0;padding:0;color:var(--ink)}
+blockquote{margin:1.3em 0;padding:.85em 1.2em;border-left:3px solid var(--acc);
+background:linear-gradient(90deg,#1f6feb1a,transparent);border-radius:0 8px 8px 0;
+color:#c9d1d9;font-size:1.02em}
+.tw{overflow-x:auto;margin:1.4em 0;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th{background:var(--panel2);text-align:left;padding:11px 14px;font-weight:640;
+color:#79c0ff;border-bottom:1px solid var(--line);white-space:nowrap;
+letter-spacing:.02em;text-transform:uppercase;font-size:.76rem}
+td{padding:10px 14px;border-bottom:1px solid #21262d;vertical-align:top}
+tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#1c212866}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;color:#7ee787}
+ul,ol{margin:.9em 0;padding-left:1.5em}
+li{margin:.38em 0}
+li::marker{color:var(--acc)}
+h1+blockquote{font-size:1.05em}
+@media print{body{background:#fff;color:#111}.wrap{max-width:none;padding:0}
+h1{-webkit-text-fill-color:#111;background:none;color:#111}
+h2,h3,h4,th{color:#111}.tw{border-color:#ccc}th{background:#eee;color:#111}
+td{border-color:#ddd}blockquote{background:#f7f7f7;color:#222}code{color:#b3540a}}
+nav.vol{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 2.2em;padding-bottom:1.1em;
+border-bottom:1px solid var(--line);font-size:.86rem}
+nav.vol a,nav.vol span{padding:.4em .85em;border-radius:999px;border:1px solid var(--line);
+border-bottom:1px solid var(--line);white-space:nowrap}
+nav.vol a{background:var(--panel);transition:background .15s,border-color .15s}
+nav.vol a:hover{background:#1f6feb22;border-color:var(--acc)}
+nav.vol span.cur{background:linear-gradient(92deg,#1f6feb33,#f0883e22);border-color:var(--acc);
+color:#fff;font-weight:600}
+nav.vol .lbl{color:var(--dim);border:0;background:none;padding-left:0}
+@media print{nav.vol{display:none}}
+</style></head>
+<body><div class="wrap">
+<nav class="vol"><span class="lbl">Jev volumes:</span><a href="jev-launch-week-dossier.html">📕 Launch Week Dossier</a><a href="jev-design-patterns-handbook.html">📘 Pattern Handbook</a><span class="cur">📊 Benchmark Report</span><a href="../">🌐 Home</a></nav>
+<h1>The Jev Benchmark Report</h1>
+<h2>Independent Evaluation: Jev vs 12 Local Decision Models</h2>
+<p><strong>Compiled:</strong> September 28, 2026</p>
+<p><strong>Source presentation:</strong> The AI Automators — <em>I Tested Jev vs 12 Local Decision Models</em> (12:18, published Sep 28, 2026)</p>
+<p><strong>Source URL:</strong> https://youtu.be/zBw5BMrlZLo</p>
+<p><strong>Harness:</strong> <a href="https://github.com/theaiautomators/jev-arena">jev-arena</a> (MIT, independent, unaffiliated with TypeSafe)</p>
+<p><strong>Run:</strong> <code>20260927-205440-6350b9</code>, 27–28 September 2026 · Windows RTX 5090 (32 GB) · serial calls</p>
+<p><strong>Companion volumes:</strong> <a href="jev-launch-week-dossier.md">The Jev Launch Week Dossier</a> · <a href="jev-design-patterns-handbook.md">The Jev Design Pattern Handbook</a></p>
+<hr>
+<h2>Preface — The Third Layer</h2>
+<p>Three volumes now sit on three different axes.</p>
+<div class="tw"><table><thead><tr>
+<th></th>
+<th>Volume I</th>
+<th>Volume II</th>
+<th><strong>Volume III</strong></th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Question</strong></td>
+<td>What did they build?</td>
+<td>How should you build?</td>
+<td><strong>What actually performs best?</strong></td>
+</tr>
+<tr>
+<td><strong>Authority</strong></td>
+<td>Third-party observation</td>
+<td>Vendor documentation</td>
+<td><strong>Independent measurement</strong></td>
+</tr>
+<tr>
+<td><strong>Evidence type</strong></td>
+<td>Demos and claims</td>
+<td>Specs and patterns</td>
+<td><strong>Frozen protocols, recorded runs</strong></td>
+</tr>
+<tr>
+<td><strong>Tone</strong></td>
+<td>Auditing</td>
+<td>Teaching</td>
+<td><strong>Measuring</strong></td>
+</tr>
+</tbody></table></div>
+<p><strong>This volume is the most evidentially careful of the three, and it changes what we can say confidently.</strong></p>
+<p>Volume I documented TypeSafe's own accuracy numbers and flagged them as unverified: a ~68% agreement-with-a-panel figure, the company grading its own homework, a speed claim that varied by page. <strong>Volume III is the independent test Volume I said was missing.</strong> It reaches the same broad verdict — the mechanism is sound, the marketing overreached on specifics — but the numbers are now measured rather than asserted.</p>
+<p>And it delivers a finding neither prior volume anticipated: <strong>several small models you can run on your own hardware are within a fraction of a percent of Jev on the same questions, and are 4–5× faster.</strong></p>
+<h3>What "independent" means here, precisely</h3>
+<p>The harness publishes its own limitations more aggressively than its results. That is the reason to trust it. Highlights of what it discloses:</p>
+<ul>
+<li><strong>The suite is a restricted intersection, not the whole workload.</strong> The shared cohort excludes 1,000 cases two models couldn't accept, plus 36 more. 4,635 of 7,671 planned cases.</li>
+<li><strong>"Not public" is not "not seen."</strong> Held-out items were sent to the services being evaluated to get predictions. <em>"This is not a contamination proof."</em></li>
+<li><strong>The latency adjustment is an assumption, not a measurement.</strong> Self-hosted runs got a ×2 / +0.15 s penalty to approximate production load.</li>
+<li><strong>8,192-token limits were often chosen serving configurations, not architectural ceilings.</strong></li>
+<li><strong><code>publication_ready=false</code></strong> — "the unmet human-audit gate; do not claim paper-level acceptance."</li>
+<li><strong>13 entrants are not 13 architectures.</strong> Three are Laya variants; there are diagnostic controls.</li>
+<li>Every invalid output is preserved, never repaired into a valid distribution. <em>"An unknown price is <code>null</code>, not <code>0</code>."</em></li>
+</ul>
+<blockquote><strong>The harness's own framing, worth adopting:</strong> <em>"Jev led this suite; several local profiles were close on shared label selection and much faster per serial request. There is no universal winner."</em></blockquote>
+<hr>
+<h2>Part I — The Arena</h2>
+<h3>What was tested</h3>
+<p><strong>13 pinned deployment profiles</strong>, each run through <strong>7,671 static records</strong> — 99,723 unique records total. Plus 39 serial timing blocks, 1,040 workflow episodes, 33 local load/cleanup cycles, and 1,600 targeted follow-up predictions.</p>
+<div class="tw"><table><thead><tr>
+<th>Profile</th>
+<th>Tested approach</th>
+<th>Base / scale</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Jev 1.13</strong></td>
+<td>Hosted decision service</td>
+<td><strong>Undisclosed</strong></td>
+</tr>
+<tr>
+<td><strong>Winnow</strong></td>
+<td>Decision fine-tune, Q8_0</td>
+<td>Gemma 4 12B</td>
+</tr>
+<tr>
+<td><strong>Decider v2</strong></td>
+<td>Decision fine-tune, BF16</td>
+<td>Qwen3.5-4B-Base</td>
+</tr>
+<tr>
+<td><strong>Plumb</strong></td>
+<td>Decision fine-tune, BF16</td>
+<td>JevK5 on Qwen3.5-4B</td>
+</tr>
+<tr>
+<td><strong>Nimble</strong></td>
+<td>Decision adapter/backbone, BF16</td>
+<td>Qwen3.5-9B</td>
+</tr>
+<tr>
+<td><strong>CLM</strong></td>
+<td>Learned contrastive heads</td>
+<td>Frozen Qwen3-8B backbone</td>
+</tr>
+<tr>
+<td><strong>SemIf</strong></td>
+<td>Direct option scoring, no new fine-tune</td>
+<td>Qwen3.5-4B</td>
+</tr>
+<tr>
+<td><strong>Laya English</strong></td>
+<td>Decision encoder</td>
+<td>ModernBERT-large + head, <strong>421M</strong></td>
+</tr>
+<tr>
+<td><strong>Laya typed</strong></td>
+<td>Related task-specific checkpoint</td>
+<td>ModernBERT-large + head, 421M</td>
+</tr>
+<tr>
+<td><strong>Laya multilingual</strong></td>
+<td>Related multilingual checkpoint</td>
+<td>mmBERT + head, <strong>322M</strong></td>
+</tr>
+<tr>
+<td><strong>Qwen JSON</strong></td>
+<td>Generative classification control</td>
+<td>Qwen3.5-4B</td>
+</tr>
+<tr>
+<td><strong>ModernBERT NLI</strong></td>
+<td>Entailment classification control</td>
+<td>395M</td>
+</tr>
+<tr>
+<td><strong>Uniform baseline</strong></td>
+<td>Deterministic first-option selection</td>
+<td><strong>No model</strong></td>
+</tr>
+</tbody></table></div>
+<h3>The three question types</h3>
+<p>Same structure as Volume II's primitives — the benchmark tests the paradigm, not just one vendor.</p>
+<ul>
+<li><strong>Noul (yes/no)</strong> — "is this requested action permitted?" returns a probability</li>
+<li><strong>Choice</strong> — extraction: "extract the final confirmed delivery method," with options and probabilities</li>
+<li><strong>Score</strong> — "how likely is the customer to stop doing business?" with defined levels up to imminent cancellation</li>
+</ul>
+<h3>The data</h3>
+<p><strong>7,671 cases per entrant</strong>, drawn from JevBench (public repo), classification, multilingual document relevance, and a chat-conversation set with full agent/customer back-and-forth.</p>
+<p><strong>5,671 primary reference cases + 2,000 teacher-agreement cases</strong> before capability exclusions.</p>
+<h3>Two metrics, deliberately kept apart</h3>
+<p>This is the most important methodological decision in the whole report, and it directly vindicates Volume I's <em>Format ≠ Judgment</em> pattern.</p>
+<div class="tw"><table><thead><tr>
+<th>Metric</th>
+<th>Definition</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Strict correctness</strong></td>
+<td>Correct label <strong>AND</strong> valid output under Arena's frozen contract</td>
+</tr>
+<tr>
+<td><strong>Selected-label agreement</strong></td>
+<td>Correct selected label, <strong>ignoring</strong> probability-format failures</td>
+</tr>
+</tbody></table></div>
+<blockquote><strong>Why both matter:</strong> <em>"Output quality and decision quality therefore need separate explanations."</em> A model can pick the right answer and still emit a probability vector that software cannot consume.</blockquote>
+<hr>
+<h2>Part II — Headline Accuracy</h2>
+<h3>The shared cohort: 4,635 identical references</h3>
+<p>Every entrant answered the same questions. This is the fairest comparison in the report.</p>
+<div class="tw"><table><thead><tr>
+<th>Profile</th>
+<th>Strict correct</th>
+<th>Label matches</th>
+<th><strong>Label agreement</strong></th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Jev 1.13</strong></td>
+<td class="num">4,412</td>
+<td class="num">4,414</td>
+<td><strong>95.23%</strong></td>
+</tr>
+<tr>
+<td><strong>Winnow 12B</strong></td>
+<td class="num">4,385</td>
+<td class="num">4,385</td>
+<td><strong>94.61%</strong></td>
+</tr>
+<tr>
+<td><strong>Decider 4B · v2</strong></td>
+<td class="num">4,373</td>
+<td class="num">4,378</td>
+<td><strong>94.46%</strong></td>
+</tr>
+<tr>
+<td><strong>Nimble 9B</strong></td>
+<td class="num">4,280</td>
+<td class="num">4,280</td>
+<td><strong>92.34%</strong></td>
+</tr>
+<tr>
+<td>Plumb 4B</td>
+<td class="num">4,150</td>
+<td class="num">4,150</td>
+<td class="num">89.54%</td>
+</tr>
+<tr>
+<td>Qwen 3.5 · JSON</td>
+<td class="num">3,976</td>
+<td class="num">3,976</td>
+<td class="num">85.78%</td>
+</tr>
+<tr>
+<td>SemIf 4B</td>
+<td class="num">3,787</td>
+<td class="num">3,787</td>
+<td class="num">81.70%</td>
+</tr>
+<tr>
+<td>Laya</td>
+<td class="num">3,000</td>
+<td class="num">3,005</td>
+<td class="num">64.83%</td>
+</tr>
+<tr>
+<td>Laya · typed</td>
+<td class="num">2,960</td>
+<td class="num">2,962</td>
+<td class="num">63.91%</td>
+</tr>
+<tr>
+<td>ModernBERT · NLI</td>
+<td class="num">2,722</td>
+<td class="num">2,722</td>
+<td class="num">58.73%</td>
+</tr>
+<tr>
+<td>Laya · multilingual</td>
+<td class="num">2,604</td>
+<td class="num">2,610</td>
+<td class="num">56.31%</td>
+</tr>
+<tr>
+<td>Uniform baseline</td>
+<td class="num">2,075</td>
+<td class="num">2,075</td>
+<td class="num">44.77%</td>
+</tr>
+<tr>
+<td>CLM 8B</td>
+<td class="num">1,673</td>
+<td class="num">1,673</td>
+<td class="num">36.09%</td>
+</tr>
+</tbody></table></div>
+<p><strong>Jev wins the aggregate.</strong> But look at the margin:</p>
+<blockquote>Jev's selected-label advantage is <strong>29 answers over Winnow</strong> and 36 over Decider — out of 4,635.</blockquote>
+<h3>The confidence intervals — read these before quoting anything</h3>
+<p>The harness publishes descriptive paired cluster-bootstrap intervals for <strong>competitor minus Jev</strong>:</p>
+<div class="tw"><table><thead><tr>
+<th>Comparison</th>
+<th>Interval</th>
+<th>Reading</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Winnow − Jev</strong></td>
+<td><strong>−0.63 pp [−1.25, −0.07]</strong></td>
+<td>Does not cross zero — a real, if small, gap</td>
+</tr>
+<tr>
+<td><strong>Decider − Jev</strong></td>
+<td><strong>−0.78 pp [−2.17, +0.38]</strong></td>
+<td><strong>Crosses zero</strong> — proves neither equivalence <strong>nor</strong> superiority</td>
+</tr>
+<tr>
+<td><strong>Nimble − Jev</strong></td>
+<td><strong>−2.89 pp [−5.59, −1.03]</strong></td>
+<td>Does not cross zero</td>
+</tr>
+</tbody></table></div>
+<blockquote><em>"The Decider interval crossing zero proves neither equivalence nor superiority. These are unadjusted exploratory comparisons on a fixed suite, not population guarantees."</em></blockquote>
+<p><strong>The honest summary: Jev leads, and the lead over the two strongest local models is small enough that one of the two intervals includes zero.</strong></p>
+<h3>Full coverage — and the denominator trap</h3>
+<p>The next table uses each profile's <em>recorded</em> denominator. The harness explicitly warns it is <strong>inappropriate to rank these rows as equal-coverage accuracy.</strong></p>
+<div class="tw"><table><thead><tr>
+<th>Profile</th>
+<th>Recorded n</th>
+<th>Strict</th>
+<th>Label</th>
+<th>Valid outputs / 7,671</th>
+<th>Unsupported</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Jev 1.13</strong></td>
+<td class="num">5,671</td>
+<td>5,217 (91.99%)</td>
+<td>5,263 (92.81%)</td>
+<td><strong>7,587</strong></td>
+<td class="num">0</td>
+</tr>
+<tr>
+<td>Winnow 12B</td>
+<td class="num">5,671</td>
+<td>4,813 (84.87%)</td>
+<td>4,813 (84.87%)</td>
+<td class="num">7,171</td>
+<td class="num">0</td>
+</tr>
+<tr>
+<td>Decider 4B · v2</td>
+<td class="num">5,671</td>
+<td>4,752 (83.79%)</td>
+<td><strong>5,235 (92.31%)</strong></td>
+<td class="num">7,090</td>
+<td class="num">0</td>
+</tr>
+<tr>
+<td>Nimble 9B</td>
+<td class="num">5,671</td>
+<td><strong>5,121 (90.30%)</strong></td>
+<td>5,121 (90.30%)</td>
+<td><strong>7,671</strong></td>
+<td class="num">0</td>
+</tr>
+<tr>
+<td>Plumb 4B</td>
+<td class="num">4,671</td>
+<td>4,177 (89.42%)</td>
+<td>4,177 (89.42%)</td>
+<td class="num">6,671</td>
+<td><strong>1,000</strong></td>
+</tr>
+<tr>
+<td>Qwen 3.5 · JSON</td>
+<td class="num">5,671</td>
+<td>4,675 (82.44%)</td>
+<td>4,675 (82.44%)</td>
+<td class="num">7,669</td>
+<td class="num">0</td>
+</tr>
+<tr>
+<td>SemIf 4B</td>
+<td class="num">4,671</td>
+<td>3,807 (81.50%)</td>
+<td>3,807 (81.50%)</td>
+<td class="num">6,671</td>
+<td><strong>1,000</strong></td>
+</tr>
+<tr>
+<td>Laya</td>
+<td class="num">5,671</td>
+<td>3,151 (55.56%)</td>
+<td>3,244 (57.20%)</td>
+<td class="num">6,997</td>
+<td class="num">0</td>
+</tr>
+<tr>
+<td>Laya · typed</td>
+<td class="num">5,671</td>
+<td>3,056 (53.89%)</td>
+<td>3,234 (57.03%)</td>
+<td class="num">7,111</td>
+<td class="num">0</td>
+</tr>
+<tr>
+<td>ModernBERT · NLI</td>
+<td class="num">5,671</td>
+<td>3,207 (56.55%)</td>
+<td>3,207 (56.55%)</td>
+<td class="num">7,671</td>
+<td class="num">0</td>
+</tr>
+<tr>
+<td>Laya · multilingual</td>
+<td class="num">5,671</td>
+<td>2,806 (49.48%)</td>
+<td>2,927 (51.61%)</td>
+<td class="num">7,023</td>
+<td class="num">0</td>
+</tr>
+<tr>
+<td>Uniform baseline</td>
+<td class="num">5,671</td>
+<td>2,096 (36.96%)</td>
+<td>2,096 (36.96%)</td>
+<td class="num">7,671</td>
+<td class="num">0</td>
+</tr>
+<tr>
+<td>CLM 8B</td>
+<td class="num">5,635</td>
+<td>1,731 (30.72%)</td>
+<td>1,731 (30.72%)</td>
+<td class="num">7,635</td>
+<td class="num">36</td>
+</tr>
+</tbody></table></div>
+<p><strong>Three things to notice:</strong></p>
+<ol>
+<li><strong>Nimble has the highest local strict result on the full denominator</strong> — 90.30%, with zero unsupported cases and all 7,671 valid.</li>
+<li><strong>Decider's 483-answer strict/label gap</strong> is not 483 reasoning errors. It is probability-sum failures under Arena's 1e-4 tolerance — <em>"Arena's chosen contract, not necessarily a reasoning error."</em></li>
+<li><strong>Jev has only 84 probability-sum failures across all 7,671.</strong> Decider has 581; Laya 674.</li>
+</ol>
+<h3>The post-hoc sensitivity that must be read with the primary result</h3>
+<p>Excluding the 500 BANKING77 cases (see Part III) leaves 5,171 references:</p>
+<div class="tw"><table><thead><tr>
+<th></th>
+<th>Strict</th>
+<th>Labels</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Jev</strong></td>
+<td class="num">4,818</td>
+<td class="num">4,852</td>
+</tr>
+<tr>
+<td><strong>Winnow</strong></td>
+<td><strong>4,813</strong></td>
+<td><strong>4,813</strong></td>
+</tr>
+</tbody></table></div>
+<blockquote><strong>Only five strict answers apart.</strong> The harness labels this a <em>"post-hoc capacity sensitivity"</em> that <em>"does not replace the frozen primary result or establish equivalence."</em></blockquote>
+<p><strong>But it is the single most decision-relevant number in the report</strong> for anyone considering self-hosting: on a workload both models can actually accept, a 12B model you run yourself lands within five answers of hosted Jev.</p>
+<hr>
+<h2>Part III — Capacity: The Silent Disqualifier</h2>
+<p>The presentation's second lesson, and the one most likely to bite a builder who skips it.</p>
+<blockquote><em>"The number of choices sounds like a minor detail until it actually stops the whole request."</em></blockquote>
+<div class="tw"><table><thead><tr>
+<th>Profile / interface</th>
+<th>Choice capacity</th>
+<th>What happens on BANKING77</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Plumb 4B</strong></td>
+<td><strong>16</strong></td>
+<td>500 unsupported cases</td>
+</tr>
+<tr>
+<td><strong>SemIf</strong> (on Qwen3.5-4B)</td>
+<td><strong>16</strong> in this interface</td>
+<td>500 unsupported cases</td>
+</tr>
+<tr>
+<td><strong>Winnow 12B</strong> native server</td>
+<td><strong>64</strong></td>
+<td>500 HTTP 400 failures</td>
+</tr>
+<tr>
+<td><strong>Jev</strong></td>
+<td>up to <strong>255</strong> (per Volume II docs)</td>
+<td>Handles all 77 options</td>
+</tr>
+</tbody></table></div>
+<p><strong>BANKING77 supplies 77 options per question.</strong> Plumb and SemIf have a native limit of 16 — they cannot weigh in at all. Those two 500-case groups, plus 36 further unsupported cases, account for the 1,036 questions outside the shared cohort.</p>
+<h3>The Winnow incident — a harness bug, disclosed in full</h3>
+<p>This is the most instructive episode in the report, because the harness made an error and published the post-mortem.</p>
+<blockquote><strong>Winnow's 500 BANKING77 HTTP 400s came from a missed native 64-option limit. Arena incorrectly advertised 255. These are failed requests caused by a capability mismatch, not 500 wrong decisions.</strong></blockquote>
+<p>The recorded manifest stays frozen and uncorrected. A corrected registry entry and a 64/65 boundary regression test were added. The shared comparison already excludes BANKING77 and is unaffected.</p>
+<p><strong>Why this matters beyond one bug:</strong> it is the exact failure mode Volume I's audit pattern <em>Dramatized Mock-Up vs Real Run</em> warns about, handled correctly. The error was found, the raw evidence preserved, the correction documented, the affected numbers excluded rather than patched, and the conclusion explicitly restricted. <strong>A benchmark that hides a bug like this is worth less than one that documents it.</strong></p>
+<h3>Input length is the other disqualifier</h3>
+<div class="tw"><table><thead><tr>
+<th>Model</th>
+<th>Input ceiling</th>
+<th>Consequence</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Nimble 9B</strong> (pinned release)</td>
+<td><strong>8,192 tokens</strong></td>
+<td>Could not accept the full ABCD policy handbook</td>
+</tr>
+<tr>
+<td><strong>Jev</strong></td>
+<td>32K state/question; 64K total</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Winnow</td>
+<td>64K</td>
+<td>Longest tested input was 29,128 tokens</td>
+</tr>
+<tr>
+<td>Qwen</td>
+<td>configured 32K (incl. output)</td>
+<td>Backbone supports more than tested</td>
+</tr>
+</tbody></table></div>
+<blockquote><strong>Nimble's 1,200 full-handbook records and 108 longer synthetic variants were explicitly unavailable. "Unavailable capacity is not a wrong reasoning answer."</strong></blockquote>
+<p><strong>Bonus correction for Volume I readers:</strong> the docs note many 8K figures were <strong>serving choices, not architectural limits</strong>. Qwen's native configuration is larger than its tested setting. Do not infer a model's ceiling from a benchmark's pinned profile.</p>
+<hr>
+<h2>Part IV — Speed: The Reversal</h2>
+<h3>Short inputs — local wins decisively</h3>
+<p>Three serial timing blocks each, same first 200 frozen inputs, one request in flight, warmup excluded.</p>
+<div class="tw"><table><thead><tr>
+<th>Profile</th>
+<th>Block p50 values (ms)</th>
+<th>Valid / 600</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Jev 1.13</strong></td>
+<td>244.70, 243.63, 245.13</td>
+<td class="num">600</td>
+</tr>
+<tr>
+<td><strong>Winnow 12B</strong></td>
+<td>55.00, 55.97, 59.14</td>
+<td class="num">600</td>
+</tr>
+<tr>
+<td><strong>Decider 4B · v2</strong></td>
+<td><strong>46.95, 47.45, 48.49</strong></td>
+<td class="num">600</td>
+</tr>
+<tr>
+<td>Nimble 9B</td>
+<td>47.90, 49.68, 52.58</td>
+<td class="num">600</td>
+</tr>
+<tr>
+<td>Plumb 4B</td>
+<td>48.07, 49.59, 48.84</td>
+<td class="num">600</td>
+</tr>
+<tr>
+<td>Qwen 3.5 · JSON</td>
+<td>316.90, 318.95, 305.06</td>
+<td class="num">600</td>
+</tr>
+<tr>
+<td>SemIf 4B</td>
+<td>54.29, 50.96, 48.16</td>
+<td class="num">600</td>
+</tr>
+<tr>
+<td>Laya</td>
+<td><strong>17.22, 16.60, 18.01</strong></td>
+<td class="num">588</td>
+</tr>
+<tr>
+<td>Laya · typed</td>
+<td>18.10, 15.86, 17.06</td>
+<td class="num">597</td>
+</tr>
+<tr>
+<td>ModernBERT · NLI</td>
+<td>23.29, 20.45, 18.91</td>
+<td class="num">600</td>
+</tr>
+<tr>
+<td>Laya · multilingual</td>
+<td>15.19, 13.87, 13.45</td>
+<td class="num">594</td>
+</tr>
+<tr>
+<td>Uniform baseline</td>
+<td class="num">0.00</td>
+<td class="num">600</td>
+</tr>
+<tr>
+<td>CLM 8B</td>
+<td>116.58, 117.22, 117.84</td>
+<td class="num">516</td>
+</tr>
+</tbody></table></div>
+<p><strong>Jev's 245 ms includes the network trip; local profiles do not.</strong> Decider is ~5× faster. Laya is ~14× faster.</p>
+<h3>Long inputs — the advantage reverses completely</h3>
+<p>Same models, a ~20,000-token policy handbook instead of a short state.</p>
+<div class="tw"><table><thead><tr>
+<th>Profile</th>
+<th>Short-input median*</th>
+<th><strong>Full handbook</strong></th>
+<th><strong>Retrieved policy</strong></th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Jev</strong></td>
+<td>244.70 ms</td>
+<td><strong>358 ms</strong></td>
+<td>265 ms</td>
+</tr>
+<tr>
+<td>Winnow</td>
+<td>55.97 ms</td>
+<td><strong>2,847 ms</strong></td>
+<td>320 ms</td>
+</tr>
+<tr>
+<td>Decider</td>
+<td>47.45 ms</td>
+<td><strong>1,895 ms</strong></td>
+<td><strong>144 ms</strong></td>
+</tr>
+<tr>
+<td>Nimble</td>
+<td>49.68 ms</td>
+<td>Unsupported</td>
+<td>240 ms</td>
+</tr>
+<tr>
+<td>Qwen JSON</td>
+<td>316.90 ms</td>
+<td>1,570 ms</td>
+<td>468 ms</td>
+</tr>
+</tbody></table></div>
+<blockquote><strong>The reversal is the finding.</strong> Local models are faster only when the input is short. Feed them a full handbook and Jev turns the request around in <strong>0.36 s</strong> while Decider takes <strong>1.9 s</strong> and Winnow <strong>2.8 s</strong>.</blockquote>
+<p><strong>The retrieval mitigation.</strong> Instead of the full handbook, retrieve sections:</p>
+<ul>
+<li><strong>Decider: 1,895 ms → 144 ms</strong> (13× faster)</li>
+<li><strong>Winnow: 2,847 ms → 320 ms</strong> (8.9× faster)</li>
+<li><strong>Jev: 358 ms → 265 ms</strong> (a modest gain)</li>
+</ul>
+<blockquote><em>"An alternative approach is to use a RAG style system: not use the full handbook but instead just retrieve sections of the handbook and drop that in for the decision."</em></blockquote>
+<h3>The caveats the harness insists on</h3>
+<ul>
+<li>These are <strong>serial</strong> calls — not maximum-throughput measurements.</li>
+<li>Jev is <strong>hosted, with network included and an undisclosed backend</strong>; local runs are one GPU. <em>"A hosted endpoint and a local CPU are not the same kind of latency and should not be read as one ranking."</em></li>
+<li>Local profiles used the ×2 / +0.15 s adjustment, which is <em>"an assumption, not a measurement."</em></li>
+<li>Jev's parameter count and hardware are <strong>undisclosed</strong>. Slower short requests do not prove it is larger.</li>
+</ul>
+<hr>
+<h2>Part V — Where Task Fit Beats Aggregate Rank</h2>
+<p>The harness's repeated warning: <em>"Start with the actual decision, not the leaderboard."</em></p>
+<h3>Slices where the aggregate inverts</h3>
+<div class="tw"><table><thead><tr>
+<th>Job</th>
+<th>Observation</th>
+<th>Implication</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>News classification</strong></td>
+<td><strong>Laya 92.2%</strong>, Decider 90.0%, Jev 88.2% on the same 500 articles</td>
+<td>A 421M encoder beats Jev on a narrow job</td>
+</tr>
+<tr>
+<td><strong>Sentiment</strong></td>
+<td>Jev 96.4%, Winnow 96.2%, ModernBERT NLI 95.8% on 500 reviews</td>
+<td>A compact classifier is competitive</td>
+</tr>
+<tr>
+<td><strong>Multilingual entailment</strong></td>
+<td><strong>Decider 84.0%</strong>; Jev and Nimble 81.4% on 500 translated examples</td>
+<td>A model named "multilingual" isn't automatically best</td>
+</tr>
+<tr>
+<td><strong>Public decision questions</strong></td>
+<td><strong>Plumb 92.3%</strong>, Jev 90.3% on the shared 195-question JevBench subset</td>
+<td>Aggregate rank hides specialties</td>
+</tr>
+<tr>
+<td><strong>Explicit policy rules</strong></td>
+<td>Jev and Winnow <strong>100%</strong> on 1,440 generated rules; 100% on 1,000 changed-input cases</td>
+<td>Strong controlled rule-following</td>
+</tr>
+<tr>
+<td><strong>Support action selection</strong></td>
+<td><strong>Jev 78.67%</strong> vs Winnow 66.67% full-handbook</td>
+<td>Jev much stronger at choosing <em>which</em> action</td>
+</tr>
+</tbody></table></div>
+<h3>The tiny-model upset</h3>
+<p>The presentation's most striking finding:</p>
+<blockquote><strong>Laya — a 421M-parameter encoder — comes out on top for news classification, beating Jev and models 30× its size.</strong></blockquote>
+<p>The task analysis quantifies the divergence:</p>
+<div class="tw"><table><thead><tr>
+<th>News paired outcomes</th>
+<th>Count</th>
+</tr></thead><tbody>
+<tr>
+<td>Both correct</td>
+<td class="num">427</td>
+</tr>
+<tr>
+<td><strong>Laya only</strong></td>
+<td><strong>34</strong></td>
+</tr>
+<tr>
+<td><strong>Jev only</strong></td>
+<td><strong>14</strong></td>
+</tr>
+<tr>
+<td>Both wrong</td>
+<td class="num">25</td>
+</tr>
+</tbody></table></div>
+<blockquote><em>"Neither model's correct-answer set contains the other's. Their errors differ."</em></blockquote>
+<p><strong>Then the harness immediately questions its own reference labels.</strong> Three AG News cases describe Olympic basketball, Olympic hockey, and NFL games — labeled <strong>World</strong>, with Jev predicting <strong>Sports</strong>. The harness checked the raw parquet, confirmed the label mapping, and concluded:</p>
+<blockquote><em>"I would question the reference for a news-topic product."</em></blockquote>
+<p>And then refused to overclaim:</p>
+<blockquote><em>"These examples were selected after inspecting model disagreements. They do not estimate the prevalence of bad labels, establish a corrected ranking, or prove that Laya memorized the benchmark. <strong>Do not erase Laya's measured lead</strong>, and do not describe every Jev mismatch as a semantic mistake."</em></blockquote>
+<h3>The relevance trap — why recall alone is insufficient</h3>
+<p>SciFact: 453 "not relevant" references, 47 "relevant." The <strong>first-option control scores 90.6% accuracy while finding zero relevant documents.</strong></p>
+<div class="tw"><table><thead><tr>
+<th>Profile</th>
+<th>Overall accuracy</th>
+<th>Relevant found / 47</th>
+<th>False positives</th>
+<th>Precision among "yes"</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Jev</strong></td>
+<td class="num">93.6%</td>
+<td><strong>40 (85.1%)</strong></td>
+<td class="num">25</td>
+<td class="num">61.5%</td>
+</tr>
+<tr>
+<td>Winnow</td>
+<td class="num">92.6%</td>
+<td>38 (80.9%)</td>
+<td class="num">28</td>
+<td class="num">57.6%</td>
+</tr>
+<tr>
+<td>Decider</td>
+<td class="num">92.4%</td>
+<td>35 (74.5%)</td>
+<td class="num">26</td>
+<td class="num">57.4%</td>
+</tr>
+<tr>
+<td><strong>Laya</strong></td>
+<td class="num">52.0%</td>
+<td><strong>40 (85.1%)</strong></td>
+<td><strong>233</strong></td>
+<td><strong>14.7%</strong></td>
+</tr>
+<tr>
+<td>First-option control</td>
+<td><strong>90.6%</strong></td>
+<td><strong>0 (0%)</strong></td>
+<td class="num">0</td>
+<td>Undefined</td>
+</tr>
+</tbody></table></div>
+<blockquote><strong>Laya and Jev find the same number of relevant documents. Laya admits 233 irrelevant ones; Jev admits 25.</strong></blockquote>
+<p><strong>For a RAG system, precision matters as much as recall.</strong> Volume II's <em>Verification</em> shape exists precisely because a plausible-looking match is not a correct one.</p>
+<h3>Task-mix sensitivity</h3>
+<p>The shared score contains <strong>2,440 generated policy/variation questions out of 4,635 — 52.64%</strong>, from eight recurring templates. Remove them:</p>
+<div class="tw"><table><thead><tr>
+<th>Profile</th>
+<th>Remaining matches</th>
+<th>Accuracy</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Decider</strong></td>
+<td>1,976 / 2,195</td>
+<td><strong>90.02%</strong></td>
+</tr>
+<tr>
+<td><strong>Jev</strong></td>
+<td>1,974 / 2,195</td>
+<td><strong>89.93%</strong></td>
+</tr>
+<tr>
+<td>Winnow</td>
+<td>1,945 / 2,195</td>
+<td class="num">88.61%</td>
+</tr>
+<tr>
+<td>Nimble</td>
+<td>1,923 / 2,195</td>
+<td class="num">87.61%</td>
+</tr>
+</tbody></table></div>
+<blockquote><strong>Decider and Jev differ by two labels.</strong> <em>"The useful conclusion is that weighting changes the ranking; this is not a replacement primary benchmark."</em></blockquote>
+<p><strong>This is the harness's most valuable intellectual move:</strong> it shows its own headline is task-mix dependent, using its own data, without being asked.</p>
+<hr>
+<h2>Part VI — The Workflow Test: Accuracy Isn't Competence</h2>
+<p>Twenty seeds per task and mode. Each ticket episode requires <strong>all 12 routes correct</strong>; warehouse success means reaching the goal. The 500 ms mode discards any action slower than the deadline.</p>
+<div class="tw"><table><thead><tr>
+<th>Profile</th>
+<th>Untimed tickets</th>
+<th>Untimed warehouse</th>
+<th>500 ms tickets</th>
+<th>500 ms warehouse</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Jev 1.13</strong></td>
+<td><strong>20/20</strong></td>
+<td><strong>20/20</strong></td>
+<td><strong>20/20</strong></td>
+<td><strong>20/20</strong></td>
+</tr>
+<tr>
+<td>Winnow 12B</td>
+<td>20/20</td>
+<td>19/20</td>
+<td>20/20</td>
+<td>19/20</td>
+</tr>
+<tr>
+<td>Decider 4B · v2</td>
+<td>20/20</td>
+<td><strong>9/20</strong></td>
+<td>20/20</td>
+<td><strong>9/20</strong></td>
+</tr>
+<tr>
+<td>Nimble 9B</td>
+<td>20/20</td>
+<td>17/20</td>
+<td>20/20</td>
+<td>17/20</td>
+</tr>
+<tr>
+<td>Plumb 4B</td>
+<td><strong>0/20</strong></td>
+<td>7/20</td>
+<td>0/20</td>
+<td>7/20</td>
+</tr>
+<tr>
+<td>Qwen 3.5 · JSON</td>
+<td><strong>0/20</strong></td>
+<td>1/20</td>
+<td>0/20</td>
+<td>1/20</td>
+</tr>
+<tr>
+<td>SemIf 4B</td>
+<td>0/20</td>
+<td>0/20</td>
+<td>0/20</td>
+<td>0/20</td>
+</tr>
+<tr>
+<td>Laya (all 3)</td>
+<td>0/20</td>
+<td>0/20</td>
+<td>0/20</td>
+<td>0/20</td>
+</tr>
+<tr>
+<td>ModernBERT NLI</td>
+<td>0/20</td>
+<td>0/20</td>
+<td>0/20</td>
+<td>0/20</td>
+</tr>
+<tr>
+<td>Uniform baseline</td>
+<td>0/20</td>
+<td>0/20</td>
+<td>0/20</td>
+<td>0/20</td>
+</tr>
+<tr>
+<td>CLM 8B</td>
+<td>0/20</td>
+<td>0/20</td>
+<td>0/20</td>
+<td>0/20</td>
+</tr>
+</tbody></table></div>
+<p><strong>Jev is the only entrant with a perfect score in every mode.</strong></p>
+<h3>But the zeroes are not all failures of the same kind</h3>
+<blockquote><em>"Mechanisms matter more than zeroes."</em></blockquote>
+<ul>
+<li><strong>Plumb, Qwen, and all three Laya variants route every untimed ticket to <code>Review</code>.</strong> That is 62/240 correct with <strong>178 unnecessary deferrals</strong>. They avoided violations by refusing to act.</li>
+<li><strong>CLM sends all to <code>Billing</code></strong> — 58/240 correct and <strong>62 restricted-account violations</strong>.</li>
+<li><strong>Jev: 240/240 correct ticket routes in each mode.</strong></li>
+</ul>
+<p><strong>The harness's framing is the takeaway:</strong></p>
+<blockquote><em>"A safe-looking output is not necessarily a productive automation."</em></blockquote>
+<p>A model that defers everything looks safe and delivers nothing. Volume II's <em>Confidence-Gated Routing</em> pattern exists to make that trade-off deliberate rather than accidental.</p>
+<h3>And the limits of the workflow test</h3>
+<blockquote><em>"Warehouse failures often repeat a blocked choice against an unchanged state. Those repeated violations are not independent errors... A deterministic planner solves this environment; the experiment tests these supplied interfaces and constraints, not difficult navigation or general agent competence."</em></blockquote>
+<p><strong>Tiny workflow counts are illustrations of failure mechanisms, not production estimates.</strong></p>
+<hr>
+<h2>Part VII — The ABCD Test: More Context Is Not Automatically Better</h2>
+<p>A second, separate assessment. 300 held-out support conversations, each with three checkpoints, run under <strong>two conditions</strong>: the full policy handbook (~19.5–21K tokens) versus five BM25-retrieved policy sections (~2.3–2.9K tokens).</p>
+<h3>Combined routing + action (900 checkpoints per condition)</h3>
+<div class="tw"><table><thead><tr>
+<th>Profile</th>
+<th>Full: strict</th>
+<th>Full: label</th>
+<th>Retrieved: strict</th>
+<th>Retrieved: label</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Winnow 12B Q8</strong></td>
+<td><strong>616/900 · 68.44%</strong></td>
+<td class="num">68.44%</td>
+<td><strong>626/900 · 69.56%</strong></td>
+<td class="num">69.56%</td>
+</tr>
+<tr>
+<td><strong>Jev 1.13</strong></td>
+<td>566/900 · 62.89%</td>
+<td class="num">63.78%</td>
+<td>584/900 · 64.89%</td>
+<td class="num">65.78%</td>
+</tr>
+<tr>
+<td>Nimble 9B</td>
+<td>Unavailable</td>
+<td>—</td>
+<td>541/900 · 60.11%</td>
+<td class="num">60.11%</td>
+</tr>
+<tr>
+<td>Qwen 3.5 JSON</td>
+<td>504/900 · 56.00%</td>
+<td class="num">56.00%</td>
+<td>518/900 · 57.56%</td>
+<td class="num">57.56%</td>
+</tr>
+<tr>
+<td>Decider 4B v2</td>
+<td>414/900 · 46.00%</td>
+<td class="num">54.33%</td>
+<td>479/900 · 53.22%</td>
+<td class="num">59.00%</td>
+</tr>
+</tbody></table></div>
+<p><strong>Winnow wins the balanced combined task</strong>, with a paired interval of <strong>+5.56 pp [+2.67, +8.44]</strong> over Jev on the full handbook.</p>
+<h3>The mechanism behind the reversal</h3>
+<p>The harness decomposes the win rather than reporting the number:</p>
+<div class="tw"><table><thead><tr>
+<th>Sub-task</th>
+<th>Jev</th>
+<th>Winnow</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Conditional action label</strong> (told an action is due)</td>
+<td><strong>236/300 (78.67%)</strong></td>
+<td>200/300 (66.67%)</td>
+</tr>
+<tr>
+<td>Combined route+action on action checkpoints</td>
+<td><strong>221/300</strong></td>
+<td>141/300</td>
+</tr>
+<tr>
+<td><strong>Correct route on agent-message checkpoints</strong></td>
+<td>69/300</td>
+<td><strong>185/300</strong></td>
+</tr>
+<tr>
+<td>Combined task incl. synthesized endings</td>
+<td>574/900 (63.78%)</td>
+<td><strong>616/900 (68.44%)</strong></td>
+</tr>
+</tbody></table></div>
+<blockquote><strong>Winnow's 116 additional message-checkpoint matches outweigh Jev's 80 additional action-checkpoint matches.</strong></blockquote>
+<p><strong>The task analysis names the real distinction:</strong></p>
+<blockquote><em>"Tool selection and workflow control are different jobs... <strong>Deciding whether to act is a distinct problem from choosing an action when told one is due.</strong>"</em></blockquote>
+<p>Jev is much better at picking <em>which</em> action; Winnow is much better at knowing <em>when</em> to speak. The balanced mix is not the natural production prevalence of either.</p>
+<h3>The conditional action-selection result</h3>
+<p>When told an action is due — all 30 ontology labels exposed:</p>
+<div class="tw"><table><thead><tr>
+<th>Profile</th>
+<th>Full strict / label</th>
+<th>Retrieved strict / label</th>
+<th><strong>Macro F1</strong> (full / retrieved)</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Jev</strong></td>
+<td><strong>76.00% / 78.67%</strong></td>
+<td>73.33% / 75.33%</td>
+<td><strong>.769 / .732</strong></td>
+</tr>
+<tr>
+<td>Winnow</td>
+<td>66.67% / 66.67%</td>
+<td><strong>76.33% / 76.33%</strong></td>
+<td>.523 / .663</td>
+</tr>
+<tr>
+<td>Nimble</td>
+<td>Unavailable</td>
+<td class="num">64.00%</td>
+<td>— / .598</td>
+</tr>
+<tr>
+<td>Decider</td>
+<td>32.33% / 58.67%</td>
+<td>41.00% / 61.33%</td>
+<td>.574 / .573</td>
+</tr>
+<tr>
+<td>Qwen JSON</td>
+<td>51.00% / 51.00%</td>
+<td class="num">55.67%</td>
+<td>.437 / .458</td>
+</tr>
+</tbody></table></div>
+<p><strong>Macro F1 treats all 30 labels equally, making Jev's stronger coverage of rarer actions visible.</strong> The largest single label is 18.33% of examples, so accuracy alone flatters models that over-predict common actions.</p>
+<h3>The retrieval result, honestly asymmetric</h3>
+<ul>
+<li><strong>Winnow: retrieval <em>improves</em> conditional action selection by +9.67 points</strong> (+4.67 to +14.67)</li>
+<li><strong>Jev: retrieval <em>reduces</em> it by −3.33 points</strong> (−7.67 to +1.00)</li>
+</ul>
+<blockquote><em>"This does not establish that the full policy is generally better for Jev."</em></blockquote>
+<p><strong>Different models respond differently to context. Choose between full policy and retrieval experimentally</strong> — this is Volume II's <em>Speculative Fan-Out</em> lesson applied to the context layer rather than the question layer.</p>
+<h3>The context-stress control, and why it proves little</h3>
+<p>12 synthetic bases × 4 templates × 4 lengths × 3 evidence positions. <strong>Jev, Winnow, Qwen, and Decider all matched the constructed answer in all 144 supported variants.</strong></p>
+<blockquote><em>"An easy extraction control with neutral distractors... it neither separates long-context reasoning quality among the four supported profiles nor establishes Jev superiority. It has 12 bases, not 144 independent tasks."</em></blockquote>
+<p><strong>Jev is not uniquely long-context.</strong> Volume II's docs claim a 32K state limit; four profiles handled this control equally.</p>
+<hr>
+<h2>Part VIII — Reliability and Determinism</h2>
+<h3>Repeat consistency and option-order sensitivity</h3>
+<p>200 reference Choice cases, repeated exactly, then repeated with <strong>options and their associated criteria reversed</strong>.</p>
+<div class="tw"><table><thead><tr>
+<th>Model</th>
+<th>Same label on repeat</th>
+<th>Same label after reversal</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Jev</strong></td>
+<td>199/200</td>
+<td>196/199</td>
+</tr>
+<tr>
+<td>Winnow</td>
+<td>187/187</td>
+<td>183/187</td>
+</tr>
+<tr>
+<td>Decider</td>
+<td>200/200</td>
+<td>196/200</td>
+</tr>
+<tr>
+<td>Nimble</td>
+<td>200/200</td>
+<td>189/200</td>
+</tr>
+</tbody></table></div>
+<blockquote><em>"Reversed-order runs differ from the original run on some answers, sometimes toward the reference and sometimes away. These comparisons can reflect order sensitivity or run-to-run variation; <strong>one repeat does not isolate the cause.</strong>"</em></blockquote>
+<h3>The finding from the <em>other</em> benchmark — a warning about small models</h3>
+<p>JevBench's own release notes report something the Arena didn't test:</p>
+<blockquote><strong>The same model scored 21% instead of 72% on answer-judging items when the two options were simply reversed</strong> (<code>A. yes, B. no</code> → <code>A. no, B. yes</code>).<br><em>"Small models are very sensitive to option order."</em></blockquote>
+<p>Both runs are published. <strong>This is the single most alarming number in either benchmark suite</strong>, and it is a robustness failure that aggregate accuracy completely conceals. Volume II's <em>Calibrated Decisions</em> pattern assumes the model's probabilities mean something stable; option-order fragility undermines that assumption for some architectures.</p>
+<hr>
+<h2>Part IX — Cost, Hardware, and the Deployment Decision</h2>
+<h3>Memory requirements (measured load allocations, not peaks)</h3>
+<div class="tw"><table><thead><tr>
+<th>Profile</th>
+<th>GPU allocation after load</th>
+</tr></thead><tbody>
+<tr>
+<td>4B BF16 profiles (Decider, Plumb)</td>
+<td><strong>~7.8 GiB</strong></td>
+</tr>
+<tr>
+<td>Nimble 9B</td>
+<td><strong>~17.5 GiB</strong></td>
+</tr>
+<tr>
+<td>Small encoders (Laya, ModernBERT)</td>
+<td><strong>1.2–1.6 GiB</strong></td>
+</tr>
+<tr>
+<td>Jev</td>
+<td>Hosted — no local footprint</td>
+</tr>
+</tbody></table></div>
+<p>The presentation's framing: <em>"You don't need 32 gigs of VRAM to run these models."</em> <strong>Laya runs in under 2 GB.</strong></p>
+<blockquote><strong>Caveat from the harness:</strong> <em>"These are allocated memory after load, not peak inference VRAM or system RAM. Long inputs and concurrent requests need additional headroom."</em></blockquote>
+<h3>Jev's measured cost</h3>
+<div class="tw"><table><thead><tr>
+<th>Run</th>
+<th>Recorded cost</th>
+</tr></thead><tbody>
+<tr>
+<td>Arena Full v2 (main + follow-ups)</td>
+<td><strong>$0.248143</strong></td>
+</tr>
+<tr>
+<td>ABCD assessment</td>
+<td><strong>$1.210811</strong></td>
+</tr>
+<tr>
+<td><strong>Combined</strong></td>
+<td><strong>$1.458954</strong></td>
+</tr>
+</tbody></table></div>
+<p>Plus an automated judge audit: 111 CLI calls, 879 answer reviews over 300 questions, 1,461,596 input tokens (433,664 cached) — <strong>an estimate in subscription credits, not cash</strong>.</p>
+<p>Total runtime: Full v2 at <strong>4 h 25 m</strong>; ABCD at <strong>3 h 16 m</strong>.</p>
+<blockquote>Both figures are <em>"application token ledgers, not invoice reconciliation"</em> — hardware, electricity, and development runs excluded.</blockquote>
+<h3>The decision framework</h3>
+<div class="tw"><table><thead><tr>
+<th>Choose</th>
+<th>When</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Hosted Jev</strong></td>
+<td>You want zero local serving work; short-path speed matters less than long-context speed; 77+ option questions are in scope; you need the strongest action-selection quality</td>
+</tr>
+<tr>
+<td><strong>Winnow 12B</strong></td>
+<td>Strongest combined next-step agreement; 64-option capacity; 64K context; ~13 GB VRAM; <strong>must retrieve policy</strong> to stay fast</td>
+</tr>
+<tr>
+<td><strong>Decider 4B</strong></td>
+<td>Shortest latency (<strong>47 ms</strong>); lowest memory (~7.8 GiB); best with retrieval (144 ms); <strong>test the probability contract</strong></td>
+</tr>
+<tr>
+<td><strong>Nimble 9B</strong></td>
+<td>Best local strict accuracy on the full denominator; but <strong>8K input ceiling</strong></td>
+</tr>
+<tr>
+<td><strong>Laya (421M)</strong></td>
+<td>Narrow single-purpose classification; <strong>under 2 GB</strong>; extremely fast; poor on broad task mixes</td>
+</tr>
+<tr>
+<td><strong>None of the above</strong></td>
+<td>If you need air-gapped, fine-tuned, or fully self-hosted — then local is the only option and the accuracy gap is small enough to be acceptable</td>
+</tr>
+</tbody></table></div>
+<h3>The presentation's own shortlist</h3>
+<blockquote>- <strong>Short decision requests that must stay local:</strong> <em>"Winnow and Decider are definitely the two I would investigate right now."</em> Decider uses less memory.<br>- <strong>Narrow classification:</strong> <em>"Laya performed very well on that news classification. It's absolutely tiny... And it's pretty straightforward to train that on your data using coding agents."</em><br>- <strong>Very large states:</strong> <em>"Winnow and Decider — things will get a little bit slower, you're into the seconds as opposed to the milliseconds. Winnow does have a 64k context window that you can work with."</em></blockquote>
+<hr>
+<h2>Part X — What This Does to Volume I's Audit</h2>
+<p>Volume I's Family C patterns were diagnostic instruments for claims with no outside testing. <strong>They now have outside testing.</strong> Here is how each fares.</p>
+<div class="tw"><table><thead><tr>
+<th>Volume I finding</th>
+<th>Volume III's verdict</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>"200× faster"</strong> — internally inconsistent, independent test found ~25×</td>
+<td><strong>Largely vindicated.</strong> Arena measures Jev at <strong>245 ms</strong> on short inputs versus <strong>47–59 ms</strong> for local models. Jev is <em>slower</em> here, not faster — a different comparison, but it confirms the marketing overshot</td>
+</tr>
+<tr>
+<td><strong>~68% "agreement with a panel"</strong> — not accuracy</td>
+<td><strong>Superseded by measurement.</strong> Jev scores <strong>95.23%</strong> label agreement on the shared cohort against real answer keys</td>
+</tr>
+<tr>
+<td><strong>"Zero hallucinations" not measured</strong></td>
+<td><strong>Confirmed as a format claim.</strong> Arena's strict/label split shows exactly this: valid output ≠ correct answer. Jev's own 84 probability-sum failures prove the contract is not free even for Jev</td>
+</tr>
+<tr>
+<td><strong>Compaction dropped 0%</strong> — an unverified confidence score</td>
+<td><strong>Reinforced.</strong> Option-order fragility (21% → 72%) shows confidence and stability are architecture-dependent; <strong>validate thresholds per model</strong></td>
+</tr>
+<tr>
+<td><strong>OpenJev ~85% vs Jev's reported 88%</strong></td>
+<td><strong>Updated.</strong> SemIf/OpenJev scores <strong>81.70%</strong> on the shared cohort — lower than Volume I's 85% figure, on a much larger and harder suite</td>
+</tr>
+</tbody></table></div>
+<h3>The pattern that held up best</h3>
+<p>Volume I's <strong>Format ≠ Judgment</strong> is the organizing insight of this entire report. Arena built its two-metric methodology around precisely that distinction, and the headline finding — Decider selecting the right label 92.31% of the time but passing the contract only 83.79% of the time — is a textbook demonstration.</p>
+<p><strong>Volume I was right about the shape of the problem before the measurements arrived.</strong></p>
+<h3>The pattern Volume III adds</h3>
+<p>Volume I's Family C needs a sixth member:</p>
+<blockquote><strong>22. Aggregate Rank Hides Task Fit</strong> — a leaderboard position conceals per-task inversions. Laya (421M) beats Jev on news classification; Decider beats Jev on multilingual entailment; Plumb beats Jev on the public JevBench subset; Decider and Jev tie within two labels once 52% of the suite is reweighted. <strong>Always slice before you choose.</strong></blockquote>
+<p>And a corollary worth carrying into any future vendor evaluation:</p>
+<blockquote><strong>23. Published Caveats Beat Published Wins</strong> — the harness that documents its own bug (the Winnow incident), its own questionable reference labels (three AG News cases), its own assumption (the ×2 latency adjustment), and its own unmet gate (<code>publication_ready=false</code>) is more trustworthy than one reporting only headline numbers. <strong>Weight a source by what it admits, not by what it claims.</strong></blockquote>
+<hr>
+<h2>Part XI — Reference Tables</h2>
+<h3>A. Accuracy (shared 4,635-case cohort)</h3>
+<div class="tw"><table><thead><tr>
+<th>Profile</th>
+<th>Label agreement</th>
+<th>vs Jev</th>
+<th>Interval crosses zero?</th>
+</tr></thead><tbody>
+<tr>
+<td>Jev 1.13</td>
+<td><strong>95.23%</strong></td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Winnow 12B</td>
+<td class="num">94.61%</td>
+<td>−0.63 pp</td>
+<td><strong>No</strong></td>
+</tr>
+<tr>
+<td>Decider 4B v2</td>
+<td class="num">94.46%</td>
+<td>−0.78 pp</td>
+<td><strong>Yes</strong></td>
+</tr>
+<tr>
+<td>Nimble 9B</td>
+<td class="num">92.34%</td>
+<td>−2.89 pp</td>
+<td><strong>No</strong></td>
+</tr>
+<tr>
+<td>Plumb 4B</td>
+<td class="num">89.54%</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Qwen 3.5 JSON</td>
+<td class="num">85.78%</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>SemIf 4B</td>
+<td class="num">81.70%</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Laya</td>
+<td class="num">64.83%</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody></table></div>
+<h3>B. Speed (short input, serial, ms)</h3>
+<div class="tw"><table><thead><tr>
+<th>Profile</th>
+<th>p50 (three blocks)</th>
+<th>vs Jev</th>
+</tr></thead><tbody>
+<tr>
+<td>Laya · multilingual</td>
+<td class="num">13.45–15.19</td>
+<td>~17× faster</td>
+</tr>
+<tr>
+<td>Laya</td>
+<td class="num">16.60–18.01</td>
+<td>~14× faster</td>
+</tr>
+<tr>
+<td>ModernBERT NLI</td>
+<td class="num">18.91–23.29</td>
+<td>~12× faster</td>
+</tr>
+<tr>
+<td>Decider 4B</td>
+<td><strong>46.95–48.49</strong></td>
+<td>~5× faster</td>
+</tr>
+<tr>
+<td>Nimble 9B</td>
+<td class="num">47.90–52.58</td>
+<td>~5× faster</td>
+</tr>
+<tr>
+<td>Plumb 4B</td>
+<td class="num">48.07–49.59</td>
+<td>~5× faster</td>
+</tr>
+<tr>
+<td>SemIf 4B</td>
+<td class="num">48.16–54.29</td>
+<td>~5× faster</td>
+</tr>
+<tr>
+<td>Winnow 12B</td>
+<td class="num">55.00–59.14</td>
+<td>~4× faster</td>
+</tr>
+<tr>
+<td>CLM 8B</td>
+<td class="num">116.58–117.84</td>
+<td>~2× faster</td>
+</tr>
+<tr>
+<td><strong>Jev 1.13</strong></td>
+<td><strong>243.63–245.13</strong></td>
+<td>—</td>
+</tr>
+</tbody></table></div>
+<h3>C. Speed reversal (full handbook, ms)</h3>
+<div class="tw"><table><thead><tr>
+<th>Profile</th>
+<th>Short</th>
+<th>Full handbook</th>
+<th>Retrieved</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Jev</strong></td>
+<td class="num">245</td>
+<td><strong>358</strong></td>
+<td class="num">265</td>
+</tr>
+<tr>
+<td>Decider</td>
+<td class="num">47</td>
+<td class="num">1,895</td>
+<td><strong>144</strong></td>
+</tr>
+<tr>
+<td>Winnow</td>
+<td class="num">56</td>
+<td><strong>2,847</strong></td>
+<td class="num">320</td>
+</tr>
+<tr>
+<td>Nimble</td>
+<td class="num">50</td>
+<td>Unsupported</td>
+<td class="num">240</td>
+</tr>
+<tr>
+<td>Qwen JSON</td>
+<td class="num">317</td>
+<td class="num">1,570</td>
+<td class="num">468</td>
+</tr>
+</tbody></table></div>
+<h3>D. Capacity limits</h3>
+<div class="tw"><table><thead><tr>
+<th>Profile</th>
+<th>Choice limit</th>
+<th>Input limit</th>
+</tr></thead><tbody>
+<tr>
+<td>Plumb 4B</td>
+<td><strong>16</strong></td>
+<td>—</td>
+</tr>
+<tr>
+<td>SemIf (tested interface)</td>
+<td><strong>16</strong></td>
+<td>—</td>
+</tr>
+<tr>
+<td>Winnow 12B</td>
+<td><strong>64</strong></td>
+<td><strong>64K</strong></td>
+</tr>
+<tr>
+<td>Decider 4B</td>
+<td>—</td>
+<td>32K</td>
+</tr>
+<tr>
+<td>Nimble 9B</td>
+<td>—</td>
+<td><strong>8,192</strong></td>
+</tr>
+<tr>
+<td>Qwen 3.5</td>
+<td>—</td>
+<td>32K configured</td>
+</tr>
+<tr>
+<td><strong>Jev 1.13</strong></td>
+<td><strong>255</strong> (docs)</td>
+<td><strong>32K state / 64K total</strong></td>
+</tr>
+</tbody></table></div>
+<h3>E. Quantified claims register</h3>
+<div class="tw"><table><thead><tr>
+<th>Claim</th>
+<th>Value</th>
+<th>Source</th>
+</tr></thead><tbody>
+<tr>
+<td>Records per profile</td>
+<td class="num">7,671</td>
+<td>Arena</td>
+</tr>
+<tr>
+<td>Unique records</td>
+<td class="num">99,723</td>
+<td>Arena</td>
+</tr>
+<tr>
+<td>Shared cohort</td>
+<td class="num">4,635</td>
+<td>Arena</td>
+</tr>
+<tr>
+<td>Jev label agreement</td>
+<td class="num">95.23%</td>
+<td>Arena</td>
+</tr>
+<tr>
+<td>Jev strict (full n)</td>
+<td class="num">91.99%</td>
+<td>Arena</td>
+</tr>
+<tr>
+<td>Jev lead over Winnow</td>
+<td><strong>29 answers</strong></td>
+<td>Arena</td>
+</tr>
+<tr>
+<td>Local accuracy gap (post-hoc, excl. BANKING77)</td>
+<td><strong>5 strict answers</strong></td>
+<td>Arena</td>
+</tr>
+<tr>
+<td>Jev probability failures</td>
+<td>84 / 7,671</td>
+<td>Arena</td>
+</tr>
+<tr>
+<td>Decider probability failures</td>
+<td>581 / 7,671</td>
+<td>Arena</td>
+</tr>
+<tr>
+<td>Option-order swing (JevBench)</td>
+<td><strong>21% → 72%</strong></td>
+<td>JevBench</td>
+</tr>
+<tr>
+<td>Jev recorded cost (v2 + ABCD)</td>
+<td class="num">$1.458954</td>
+<td>Arena</td>
+</tr>
+<tr>
+<td>Total benchmark runtime</td>
+<td>~7h41m</td>
+<td>Arena</td>
+</tr>
+<tr>
+<td>Load allocation, 4B BF16</td>
+<td>~7.8 GiB</td>
+<td>Arena</td>
+</tr>
+<tr>
+<td>Load allocation, Laya</td>
+<td>1.2–1.6 GiB</td>
+<td>Arena</td>
+</tr>
+<tr>
+<td>Raw latency adjustment</td>
+<td>×2, +0.15 s</td>
+<td>Arena (assumption)</td>
+</tr>
+</tbody></table></div>
+<h3>F. Resource index</h3>
+<div class="tw"><table><thead><tr>
+<th>Resource</th>
+<th>URL</th>
+</tr></thead><tbody>
+<tr>
+<td>Jev Arena (harness)</td>
+<td>https://github.com/theaiautomators/jev-arena</td>
+</tr>
+<tr>
+<td>Arena Full v2 results</td>
+<td>https://github.com/theaiautomators/jev-arena/blob/main/docs/RESULTS.md</td>
+</tr>
+<tr>
+<td>Task analysis</td>
+<td>https://github.com/theaiautomators/jev-arena/blob/main/docs/ANALYSIS.md</td>
+</tr>
+<tr>
+<td>ABCD results</td>
+<td>https://github.com/theaiautomators/jev-arena/blob/main/docs/ABCD-RESULTS.md</td>
+</tr>
+<tr>
+<td>Builder takeaways</td>
+<td>https://github.com/theaiautomators/jev-arena/blob/main/docs/BUILDER-TAKEAWAYS.md</td>
+</tr>
+<tr>
+<td>Reference cautions</td>
+<td>https://github.com/theaiautomators/jev-arena/blob/main/docs/REFERENCE-CAUTIONS.md</td>
+</tr>
+<tr>
+<td>Why Arena</td>
+<td>https://github.com/theaiautomators/jev-arena/blob/main/docs/WHY-ARENA.md</td>
+</tr>
+<tr>
+<td>JevBench</td>
+<td>https://github.com/fstandhartinger/jevbench</td>
+</tr>
+<tr>
+<td>JevBench live board</td>
+<td>https://benchmarkheaven.com/jev-models</td>
+</tr>
+<tr>
+<td>DecisionBench</td>
+<td>https://huggingface.co/spaces/Hanno-Labs/decision-bench-leaderboard</td>
+</tr>
+<tr>
+<td>TypeSafe models &amp; pricing</td>
+<td>https://docs.typesafe.ai/models</td>
+</tr>
+</tbody></table></div>
+<hr>
+<h2>Closing Assessment</h2>
+<h3>What we now know that we didn't</h3>
+<p><strong>Three things, and they point in different directions.</strong></p>
+<p><strong>1. Jev is genuinely good, and the mechanism is validated.</strong> 95.23% label agreement against real answer keys, the only perfect workflow score in every mode, the strongest conditional action selection, the highest macro F1 on rare actions. This is no longer vendor-reported.</p>
+<p><strong>2. The local gap is small enough to change buying decisions.</strong> Winnow lands 29 answers behind out of 4,635. Excluding the one test neither could take, the gap is five answers. For anyone who needs air-gapped inference, fine-tuning, or no per-call cost, <strong>the accuracy penalty is now measured and modest</strong> — and the short-input speed advantage is 4–5×.</p>
+<p><strong>3. Every one of these rankings is task-mix dependent.</strong> Reweight the suite and Decider ties Jev within two labels. Slice by job and a 421M model beats Jev on news while a 4B model beats it on multilingual entailment. <strong>The aggregate is a shortlist, not a decision.</strong></p>
+<h3>The four lessons that survive all three volumes</h3>
+<ol>
+<li><strong>Capacity is an eligibility check, not a footnote.</strong> Two models couldn't answer 1,000 questions at all. Count your options and your tokens before comparing quality.</li>
+<li><strong>Speed must be measured at your input length.</strong> A 5× local advantage inverts into an 8× <em>disadvantage</em> on a full handbook. Retrieval recovers most of it.</li>
+<li><strong>A correct answer must also be usable by software.</strong> Decider's 8.5-point strict/label gap is a contract failure, not a reasoning failure — and it counts against you either way.</li>
+<li><strong>Test the workflow, not isolated answers.</strong> A model that defers every ticket to a human is safe and useless. Jev is the only entrant that scored 20/20 in every mode.</li>
+</ol>
+<h3>The line to remember</h3>
+<blockquote><em>"Local decision models can be competitive and fast, but task fit, input limits, output validity and complete-workflow behavior determine whether they are useful in an application."</em></blockquote>
+<p>And the harness's own honest verdict, which is better than any summary:</p>
+<blockquote><strong>"Jev led this suite; several local profiles were close on shared label selection and much faster per serial request. There is no universal winner."</strong></blockquote>
+<h3>The three volumes together</h3>
+<div class="tw"><table><thead><tr>
+<th>Volume</th>
+<th>Answers</th>
+<th>Trust it for</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>I — Launch Week Dossier</strong></td>
+<td>What was built, and did the claims hold?</td>
+<td>Knowing what to be skeptical of</td>
+</tr>
+<tr>
+<td><strong>II — Design Pattern Handbook</strong></td>
+<td>How does TypeSafe say you should build?</td>
+<td>Knowing how to build</td>
+</tr>
+<tr>
+<td><strong>III — Benchmark Report</strong></td>
+<td>What actually performs best, measured?</td>
+<td>Knowing what to choose</td>
+</tr>
+</tbody></table></div>
+<blockquote><strong>Read II to learn how to build. Read III to choose. Read I to know what to believe.</strong></blockquote>
+<hr>
+<p><em>Compiled from The AI Automators' presentation "I Tested Jev vs 12 Local Decision Models" (https://youtu.be/zBw5BMrlZLo) and the primary evidence published in the jev-arena repository. All measurements, caveats, and quoted limitations are as published in that repository; the presentation's figures are cross-checked against the repository's recorded results and reconciled where the two differ in precision. The harness is independent and unaffiliated with TypeSafe. Its own <code>publication_ready=false</code> flag — reflecting an unmet human-audit gate — is preserved here.</em></p>
+</div></body></html>

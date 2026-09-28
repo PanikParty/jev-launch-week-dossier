@@ -175,7 +175,8 @@ DOCS = {
         "title": "The Jev Launch Week Dossier — 10 Wild Builds &amp; 21 Design Patterns",
         "nav": [
             ("cur", "📕 Launch Week Dossier"),
-            ("a", "jev-design-patterns-handbook.html", "📘 Design Pattern Handbook"),
+            ("a", "jev-design-patterns-handbook.html", "📘 Pattern Handbook"),
+            ("a", "jev-benchmark-report.html", "📊 Benchmark Report"),
             ("a", "../", "🌐 Home"),
         ],
     },
@@ -183,7 +184,17 @@ DOCS = {
         "title": "The Jev Design Pattern Handbook — 3 Primitives, 10 Shapes, 4 Patterns",
         "nav": [
             ("a", "jev-launch-week-dossier.html", "📕 Launch Week Dossier"),
-            ("cur", "📘 Design Pattern Handbook"),
+            ("cur", "📘 Pattern Handbook"),
+            ("a", "jev-benchmark-report.html", "📊 Benchmark Report"),
+            ("a", "../", "🌐 Home"),
+        ],
+    },
+    "jev-benchmark-report": {
+        "title": "The Jev Benchmark Report — Jev vs 12 Local Decision Models",
+        "nav": [
+            ("a", "jev-launch-week-dossier.html", "📕 Launch Week Dossier"),
+            ("a", "jev-design-patterns-handbook.html", "📘 Pattern Handbook"),
+            ("cur", "📊 Benchmark Report"),
             ("a", "../", "🌐 Home"),
         ],
     },
