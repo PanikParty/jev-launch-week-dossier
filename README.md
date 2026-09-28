@@ -6,6 +6,8 @@
 [![Builds](https://img.shields.io/badge/builds-10-orange)](#the-ten-wild-builds)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
+**🌐 Read it rendered: https://panikparty.github.io/jev-launch-week-dossier/**
+
 ---
 
 ## What is this?
@@ -24,8 +26,8 @@ This repository is a systematic teardown of that week: the ten builds, the archi
 
 ## Read the dossier
 
-- **[📄 The full dossier (Markdown)](docs/jev-launch-week-dossier.md)** — 4,300 words, 7 parts, 13 tables
-- **[🌐 The full dossier (HTML)](docs/jev-launch-week-dossier.html)** — self-contained, dark-themed, print-ready
+- **[🌐 Rendered online](https://panikparty.github.io/jev-launch-week-dossier/)** — dark-themed, hosted on GitHub Pages
+- **[📄 Markdown source](docs/jev-launch-week-dossier.md)** — 4,300 words, 7 parts, 13 tables
 - **[⚡ Quick-reference pattern sheet](patterns/design-patterns-quick-reference.md)** — all 21 patterns, one screen
 
 > The HTML file is fully self-contained — no CDN, no external assets. Open it directly in any browser, or `Ctrl+P` → *Save as PDF* for an archival copy.
@@ -181,6 +183,7 @@ Twenty-one patterns across three families. Full definitions with evidence in [th
 
 ```
 .
+├── index.html                                  ← GitHub Pages landing page (embeds the dossier)
 ├── README.md                                   ← you are here
 ├── docs/
 │   ├── jev-launch-week-dossier.md              ← full dossier (source of truth)
@@ -199,7 +202,7 @@ The HTML is generated from the Markdown by a dependency-free Python script:
 python3 scripts/render.py
 ```
 
-Edit `docs/jev-launch-week-dossier.md`, run the script, and the HTML updates in place.
+Edit `docs/jev-launch-week-dossier.md`, run the script, and the HTML updates in place. Push to `main` and GitHub Pages redeploys automatically.
 
 ---
 
