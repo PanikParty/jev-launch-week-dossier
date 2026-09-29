@@ -61,7 +61,7 @@ nav.vol .lbl{color:var(--dim);border:0;background:none;padding-left:0}
 @media print{nav.vol{display:none}}
 </style></head>
 <body><div class="wrap">
-<nav class="vol"><span class="lbl">Jev volumes:</span><a href="jev-launch-week-dossier.html">📕 Launch Week Dossier</a><a href="jev-design-patterns-handbook.html">📘 Pattern Handbook</a><span class="cur">📊 Benchmark Report</span><a href="../">🌐 Home</a></nav>
+<nav class="vol"><span class="lbl">Jev volumes:</span><a href="jev-launch-week-dossier.html">📕 Dossier</a><a href="jev-design-patterns-handbook.html">📘 Patterns</a><span class="cur">📊 Benchmarks</span><a href="jev-production-playbook.html">🔧 Playbook</a><a href="../">🌐 Home</a></nav>
 <h1>The Jev Benchmark Report</h1>
 <h2>Independent Evaluation: Jev vs 12 Local Decision Models</h2>
 <p><strong>Compiled:</strong> September 28, 2026</p>
@@ -69,7 +69,7 @@ nav.vol .lbl{color:var(--dim);border:0;background:none;padding-left:0}
 <p><strong>Source URL:</strong> https://youtu.be/zBw5BMrlZLo</p>
 <p><strong>Harness:</strong> <a href="https://github.com/theaiautomators/jev-arena">jev-arena</a> (MIT, independent, unaffiliated with TypeSafe)</p>
 <p><strong>Run:</strong> <code>20260927-205440-6350b9</code>, 27–28 September 2026 · Windows RTX 5090 (32 GB) · serial calls</p>
-<p><strong>Companion volumes:</strong> <a href="jev-launch-week-dossier.md">The Jev Launch Week Dossier</a> · <a href="jev-design-patterns-handbook.md">The Jev Design Pattern Handbook</a></p>
+<p><strong>Companion volumes:</strong> <a href="jev-launch-week-dossier.md">Launch Week Dossier</a> · <a href="jev-design-patterns-handbook.md">Pattern Handbook</a> · <a href="jev-production-playbook.md">Production Playbook</a></p>
 <hr>
 <h2>Preface — The Third Layer</h2>
 <p>Three volumes now sit on three different axes.</p>
@@ -1569,7 +1569,9 @@ nav.vol .lbl{color:var(--dim);border:0;background:none;padding-left:0}
 <td>Knowing what to choose</td>
 </tr>
 </tbody></table></div>
-<blockquote><strong>Read II to learn how to build. Read III to choose. Read I to know what to believe.</strong></blockquote>
+<blockquote><strong>Read II to learn how to build. Read III to choose. Read IV to cost it. Read I to know what to believe.</strong></blockquote>
+<h3>Where Volume IV picks up</h3>
+<p>This volume stops at the model boundary — per-decision accuracy, latency, and memory. <strong>Volume IV asks what the whole pipeline costs</strong> and finds that the decisive layer is frequently not the model at all. Its measured figures (5–6× cheaper, 5–7× faster than the cheapest chat model) sit alongside a claim correction even wider than the one this volume documents.</p>
 <hr>
 <p><em>Compiled from The AI Automators' presentation "I Tested Jev vs 12 Local Decision Models" (https://youtu.be/zBw5BMrlZLo) and the primary evidence published in the jev-arena repository. All measurements, caveats, and quoted limitations are as published in that repository; the presentation's figures are cross-checked against the repository's recorded results and reconciled where the two differ in precision. The harness is independent and unaffiliated with TypeSafe. Its own <code>publication_ready=false</code> flag — reflecting an unmet human-audit gate — is preserved here.</em></p>
 </div></body></html>

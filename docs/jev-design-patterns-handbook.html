@@ -61,14 +61,14 @@ nav.vol .lbl{color:var(--dim);border:0;background:none;padding-left:0}
 @media print{nav.vol{display:none}}
 </style></head>
 <body><div class="wrap">
-<nav class="vol"><span class="lbl">Jev volumes:</span><a href="jev-launch-week-dossier.html">📕 Launch Week Dossier</a><span class="cur">📘 Pattern Handbook</span><a href="jev-benchmark-report.html">📊 Benchmark Report</a><a href="../">🌐 Home</a></nav>
+<nav class="vol"><span class="lbl">Jev volumes:</span><a href="jev-launch-week-dossier.html">📕 Dossier</a><span class="cur">📘 Patterns</span><a href="jev-benchmark-report.html">📊 Benchmarks</a><a href="jev-production-playbook.html">🔧 Playbook</a><a href="../">🌐 Home</a></nav>
 <h1>The Jev Design Pattern Handbook</h1>
 <h2>The Official TypeSafe Pattern Set — Three Primitives, Ten Decision Shapes, Four Design Patterns</h2>
 <p><strong>Compiled:</strong> September 28, 2026</p>
 <p><strong>Source presentation:</strong> The AI Automators — <em>Master ALL Jev Design Patterns (With Practical Examples)</em> (14:20, published Sep 25, 2026)</p>
 <p><strong>Source URL:</strong> https://youtu.be/LzweTaOzvVo</p>
 <p><strong>Primary documentation:</strong> docs.typesafe.ai — <a href="https://docs.typesafe.ai/introduction">Introduction</a> · <a href="https://docs.typesafe.ai/primitives">Primitives</a> · <a href="https://docs.typesafe.ai/patterns">Patterns</a> · <a href="https://docs.typesafe.ai/confidence">Confidence</a></p>
-<p><strong>Companion volumes:</strong> <a href="jev-launch-week-dossier.md">The Jev Launch Week Dossier</a> — the ten community builds and the 21 patterns they reveal. · <a href="jev-benchmark-report.md">The Jev Benchmark Report</a> — independent measurement: which decision models actually perform best.</p>
+<p><strong>Companion volumes:</strong> <a href="jev-launch-week-dossier.md">Launch Week Dossier</a> · <a href="jev-benchmark-report.md">Benchmark Report</a> · <a href="jev-production-playbook.md">Production Playbook</a>.</p>
 <hr>
 <h2>Preface — What This Volume Is, and How It Differs</h2>
 <p>The Launch Week Dossier documents what developers <strong>built</strong> in six days. This volume documents what TypeSafe <strong>designed</strong> — the vendor's own canonical, documented pattern vocabulary, taught with practical worked examples.</p>
@@ -1315,13 +1315,21 @@ L029  0.90  ###########   You must be age 13 or older. While we are thrilled to 
 <h2>See also</h2>
 <p><strong><a href="jev-launch-week-dossier.md">The Jev Launch Week Dossier</a></strong> — Volume I. What developers actually built in the six days after launch, and an honest audit of which vendor claims held up.</p>
 <p><strong><a href="jev-benchmark-report.md">The Jev Benchmark Report</a></strong> — Volume III. Independent measurement of Jev against 12 local decision models. It tests this volume's patterns in production conditions and reports where they hold:</p>
+<p><strong><a href="jev-production-playbook.md">The Jev Production Playbook</a></strong> — Volume IV. Deployment economics from a team running Jev in production. It supplies the missing half of this volume: <strong>what each pattern costs.</strong></p>
+<ul>
+<li><strong>Confidence-Gated Routing</strong> — deployed as a three-band policy (act / review / pass) at ~$0.00002 per message, with thresholds you tune rather than the model</li>
+<li><strong>Speculative Fan-Out</strong> — the "four hazards in one call" guardrail, and the ≈$20-per-million-decisions figure that makes it viable</li>
+<li><strong>Composite Scoring</strong> — the rubric is where routing policy lives; a single <code>focus</code> key flipped a ticket from billing to technical</li>
+<li><strong>Decomposition</strong> — <em>"internal linking is not writing, it is 8,790 yes/no calls"</em>: 586 pages for $0.21 in 45 seconds</li>
+</ul>
+<p>It also adds three patterns this volume lacked: <strong>Cheap-Layer Pairing</strong>, <strong>Confidence-Banded Autonomy</strong>, and <strong>Decompose the Creative-Sounding Task</strong>.</p>
 <ul>
 <li><strong>Speculative Fan-Out</strong> is confirmed — batching 13 questions is 12.2× cheaper and 10.0× faster with identical answers</li>
 <li><strong>Confidence-Gated Routing</strong> is validated by the <em>option-order fragility</em> finding: one model swung from 21% to 72% on reversed options, so thresholds must be validated per model, not adopted across models</li>
 <li><strong>Composite Scoring's</strong> decomposition principle is what makes the benchmark interpretable at all — the aggregate rank hides per-task inversions</li>
 <li><strong>Intent Routing's</strong> "act vs. speak" distinction is exactly what separates Jev from Winnow in the support-workflow test</li>
 </ul>
-<blockquote><strong>Read this volume to learn how to build. Read Volume III to choose.</strong></blockquote>
+<blockquote><strong>Read this volume to learn how to build. Read Volume III to choose. Read Volume IV to cost it.</strong></blockquote>
 <hr>
 <p><em>Compiled from The AI Automators' presentation "Master ALL Jev Design Patterns (With Practical Examples)" (https://youtu.be/LzweTaOzvvo) and the primary TypeSafe documentation at docs.typesafe.ai. All pattern names, definitions, code examples, and measured figures are as published by TypeSafe; presentation-sourced figures (the ~150ms latency, the $42 arithmetic) are noted as such. Quote, figure, and caveat provenance is marked throughout.</em></p>
 </div></body></html>

@@ -1,9 +1,9 @@
 # The Jev Papers
 
-**Three volumes on TypeSafe Jev — the ten wildest community builds from launch week, the vendor's official design pattern set, and independent benchmark measurement against 12 local decision models.**
+**Four volumes on TypeSafe Jev — the ten wildest community builds, the vendor's official design pattern set, independent benchmark measurement against 12 local decision models, and production deployment economics.**
 
-[![Volumes](https://img.shields.io/badge/volumes-3-blueviolet)](#read-all-three-volumes)
-[![Patterns](https://img.shields.io/badge/patterns-30-orange)](#the-pattern-catalogue)
+[![Volumes](https://img.shields.io/badge/volumes-4-blueviolet)](#read-all-four-volumes)
+[![Patterns](https://img.shields.io/badge/patterns-33-orange)](#the-pattern-catalogue)
 [![Builds](https://img.shields.io/badge/builds-10-yellow)](#the-ten-wild-builds)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
@@ -19,13 +19,13 @@ Jev reads your program's state plus a menu of allowed answers, and returns typed
 
 Within **six days**, developers had bolted it onto everything from flight search to Super Mario to an air traffic control tower.
 
-This repository is a systematic teardown of that week across three volumes: **what developers built**, **how the vendor says you should build**, and **what actually performs best when measured independently** — plus an honest audit of which vendor claims held up.
+This repository is a systematic teardown of that week across three volumes: **what developers built**, **how the vendor says you should build**, **what actually performs best when measured independently**, and **whether the economics close in production** — plus an honest audit of which vendor claims held up.
 
 **Source presentation:** [Cloud Codes — *10 Wild Things You Can Build With Jev*](https://youtu.be/X4Lqj54sw4I) (14:15, Sep 21 2026)
 
 ---
 
-## Read all three volumes
+## Read all four volumes
 
 ### 📕 Volume I — The Jev Launch Week Dossier
 
@@ -51,6 +51,14 @@ This repository is a systematic teardown of that week across three volumes: **wh
 - **[📄 Markdown source](docs/jev-benchmark-report.md)** — 11 parts, 31 tables
 - Sources: *The AI Automators — I Tested Jev vs 12 Local Decision Models* + the [jev-arena](https://github.com/theaiautomators/jev-arena) harness
 
+### 🔧 Volume IV — The Jev Production Playbook
+
+*Does the economics close?* Deployment economics from a team running Jev in production alongside Treg, an "OpenRouter for agent tools". Four shipped workflows with real cost figures — and the finding that the decisive layer is often not the model at all.
+
+- **[🌐 Rendered online](https://panikparty.github.io/jev-launch-week-dossier/docs/jev-production-playbook.html)**
+- **[📄 Markdown source](docs/jev-production-playbook.md)** — 9 parts, 16 tables
+- Sources: *AI Jason — Jev + Treg is a crazy combo for automation* + [treg.to/jev](https://treg.to/jev)
+
 ### Also
 
 - **[⚡ Quick-reference pattern sheet](patterns/design-patterns-quick-reference.md)** — Volume I's 21 patterns, one screen
@@ -63,9 +71,18 @@ Volume I **reverse-engineers** patterns from observed mechanics — the presenta
 
 Volume III closes the loop. Its independent, frozen-protocol measurements *test* the claims Volume I could only audit, and they confirm Volume I's central diagnostic: *Format ≠ Judgment* turned out to be the organizing insight of the entire benchmark. Volume III also supersedes several Volume I figures — measured accuracy of ~95% against real answer keys replaces the ~68% agreement-with-a-panel number, and the OpenJev figure revises down to 81.70% on a much larger, harder suite.
 
-What none of them do is settle the vendor's *performance* marketing on its own terms. Volume II is a fair account of the documented design vocabulary, not evidence the benchmarks hold. Volume III is evidence — and it says the mechanism is sound while the aggregate rank hides large per-task inversions.
+Volume IV asks the question that decides whether any of it ships: what does the whole *pipeline* cost? A cheap decision model paired with a cheap data layer moves automation from "not worth building" to "runs every 15 minutes for $1 a day" — and the decisive layer is frequently not the model at all.
 
-> **Read Volume II to learn how to build. Read Volume III to choose. Read Volume I to know what to believe.**
+What none of them do is settle the vendor's *performance* marketing on its own terms. Volume II is a fair account of the documented design vocabulary, not evidence the benchmarks hold. Volumes III and IV are evidence — and **every independent measurement lands below the vendor's claim**:
+
+| Vendor claim | Independent measurement | Source |
+|---|---|---|
+| 193.6× faster | **5–7× faster** | Volume IV |
+| 444.6× cheaper | **5–6× cheaper** | Volume IV |
+| 200× faster | **~25×** | Volume I audit |
+| "Zero hallucinations" | **95.23%** label agreement (format ≠ judgment) | Volume III |
+
+> **Read II to learn how to build. Read III to choose. Read IV to know whether to build it. Read I to know what to believe.**
 
 ---
 
@@ -226,7 +243,9 @@ Twenty-one patterns across three families. Full definitions with evidence in [th
 │   ├── jev-design-patterns-handbook.md         ← Volume II (source of truth)
 │   ├── jev-design-patterns-handbook.html       ← Volume II, rendered
 │   ├── jev-benchmark-report.md                 ← Volume III (source of truth)
-│   └── jev-benchmark-report.html               ← Volume III, rendered
+│   ├── jev-benchmark-report.html               ← Volume III, rendered
+│   ├── jev-production-playbook.md              ← Volume IV (source of truth)
+│   └── jev-production-playbook.html            ← Volume IV, rendered
 ├── patterns/
 │   └── design-patterns-quick-reference.md      ← Volume I's 21 patterns, one screen
 └── scripts/
@@ -244,10 +263,11 @@ python3 scripts/render.py
 # Any other volume, by path
 python3 scripts/render.py docs/jev-design-patterns-handbook.md
 python3 scripts/render.py docs/jev-benchmark-report.md
+python3 scripts/render.py docs/jev-production-playbook.md
 ```
 
 Edit the Markdown, run the script, and the sibling `.html` updates in place. Each rendered page gets a
-two-way nav bar between volumes. Push to `main` and GitHub Pages redeploys automatically.
+four-way nav bar across all volumes. Push to `main` and GitHub Pages redeploys automatically.
 
 ---
 

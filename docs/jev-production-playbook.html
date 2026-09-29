@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Jev Production Playbook — Deployment Economics with Jev + Treg</title>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--panel2:#1c2128;--ink:#e6edf3;--dim:#9198a1;
+--line:#30363d;--acc:#58a6ff;--acc2:#f0883e;--ok:#3fb950;--warn:#d29922;--bad:#f85149;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+font:16px/1.72 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
+-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:64px 32px 120px}
+h1{font-size:2.5rem;line-height:1.15;letter-spacing:-.02em;margin:0 0 .3em;
+background:linear-gradient(92deg,#79c0ff,#f0883e);-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;background-clip:text}
+h2{font-size:1.65rem;margin:2.6em 0 .7em;padding-bottom:.35em;
+border-bottom:1px solid var(--line);letter-spacing:-.01em}
+h3{font-size:1.22rem;margin:2em 0 .5em;color:#79c0ff}
+h4{font-size:1.02rem;margin:1.5em 0 .4em;color:var(--acc2)}
+p{margin:.85em 0}
+a{color:var(--acc);text-decoration:none;border-bottom:1px solid #1f6feb55}
+a:hover{border-bottom-color:var(--acc)}
+hr{border:0;border-top:1px solid var(--line);margin:2.5em 0}
+strong{color:#fff;font-weight:650}
+em{color:#c9d1d9}
+code{background:#21262d;padding:.15em .42em;border-radius:5px;font-size:.87em;
+font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#ffa657;
+border:1px solid #30363d}
+pre{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+padding:1.1em 1.3em;overflow-x:auto}
+pre code{background:none;border:0;padding:0;color:var(--ink)}
+blockquote{margin:1.3em 0;padding:.85em 1.2em;border-left:3px solid var(--acc);
+background:linear-gradient(90deg,#1f6feb1a,transparent);border-radius:0 8px 8px 0;
+color:#c9d1d9;font-size:1.02em}
+.tw{overflow-x:auto;margin:1.4em 0;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th{background:var(--panel2);text-align:left;padding:11px 14px;font-weight:640;
+color:#79c0ff;border-bottom:1px solid var(--line);white-space:nowrap;
+letter-spacing:.02em;text-transform:uppercase;font-size:.76rem}
+td{padding:10px 14px;border-bottom:1px solid #21262d;vertical-align:top}
+tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#1c212866}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;color:#7ee787}
+ul,ol{margin:.9em 0;padding-left:1.5em}
+li{margin:.38em 0}
+li::marker{color:var(--acc)}
+h1+blockquote{font-size:1.05em}
+@media print{body{background:#fff;color:#111}.wrap{max-width:none;padding:0}
+h1{-webkit-text-fill-color:#111;background:none;color:#111}
+h2,h3,h4,th{color:#111}.tw{border-color:#ccc}th{background:#eee;color:#111}
+td{border-color:#ddd}blockquote{background:#f7f7f7;color:#222}code{color:#b3540a}}
+nav.vol{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 2.2em;padding-bottom:1.1em;
+border-bottom:1px solid var(--line);font-size:.86rem}
+nav.vol a,nav.vol span{padding:.4em .85em;border-radius:999px;border:1px solid var(--line);
+border-bottom:1px solid var(--line);white-space:nowrap}
+nav.vol a{background:var(--panel);transition:background .15s,border-color .15s}
+nav.vol a:hover{background:#1f6feb22;border-color:var(--acc)}
+nav.vol span.cur{background:linear-gradient(92deg,#1f6feb33,#f0883e22);border-color:var(--acc);
+color:#fff;font-weight:600}
+nav.vol .lbl{color:var(--dim);border:0;background:none;padding-left:0}
+@media print{nav.vol{display:none}}
+</style></head>
+<body><div class="wrap">
+<nav class="vol"><span class="lbl">Jev volumes:</span><a href="jev-launch-week-dossier.html">📕 Dossier</a><a href="jev-design-patterns-handbook.html">📘 Patterns</a><a href="jev-benchmark-report.html">📊 Benchmarks</a><span class="cur">🔧 Playbook</span><a href="../">🌐 Home</a></nav>
+<h1>The Jev Production Playbook</h1>
+<h2>Deployment Economics — Jev + Treg in Real Automation Workflows</h2>
+<p><strong>Compiled:</strong> September 29, 2026</p>
+<p><strong>Source presentation:</strong> AI Jason — <em>Jev + Treg is a crazy combo for automation...</em> (14:29, published Sep 21, 2026)</p>
+<p><strong>Source URL:</strong> https://youtu.be/o4Vi5uBZYH0</p>
+<p><strong>Primary sources:</strong> <a href="https://github.com/superdesigndev/treg">treg</a> (Apache 2.0, 3.8k ★) · <a href="https://treg.to/jev">treg.to/jev</a> · workshop at <a href="https://treg.to/jev">treg.to/jev</a></p>
+<p><strong>Companion volumes:</strong> <a href="jev-launch-week-dossier.md">Launch Week Dossier</a> · <a href="jev-design-patterns-handbook.md">Pattern Handbook</a> · <a href="jev-benchmark-report.md">Benchmark Report</a></p>
+<hr>
+<h2>Preface — The Fourth Layer</h2>
+<p>The first three volumes established what the model is, how to build with it, and how it performs. <strong>This volume answers the question that decides whether any of it ships: does the economics close?</strong></p>
+<div class="tw"><table><thead><tr>
+<th></th>
+<th>I — Dossier</th>
+<th>II — Handbook</th>
+<th>III — Benchmark</th>
+<th><strong>IV — Playbook</strong></th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Question</strong></td>
+<td>What did they build?</td>
+<td>How should you build?</td>
+<td>What performs best?</td>
+<td><strong>Does it pay for itself?</strong></td>
+</tr>
+<tr>
+<td><strong>Authority</strong></td>
+<td>Third-party observation</td>
+<td>Vendor docs</td>
+<td>Independent measurement</td>
+<td><strong>Practitioner deployment</strong></td>
+</tr>
+<tr>
+<td><strong>Unit</strong></td>
+<td>Applications</td>
+<td>Decisions</td>
+<td>Model profiles</td>
+<td><strong>Workflows and dollars</strong></td>
+</tr>
+</tbody></table></div>
+<h3>What makes this volume different — and why it's the most useful one</h3>
+<p>Volumes I–III all analyze <strong>the model</strong>. This volume analyzes <strong>the economics of a workflow</strong> — and its central insight is that the second half of the equation is not the model at all.</p>
+<p>The presenter runs two live products (Superdesign, a vibe-design platform; Treg, an "OpenRouter for agent tools"). His team's production pipelines pair a cheap decision model with a cheap data layer. <strong>Neither half was affordable before; together they made a category of automation newly viable.</strong></p>
+<blockquote><em>"The workflow like this before Jev and Treg emerge is very difficult to do because the unique economy just didn't make sense."</em></blockquote>
+<h3>The correction this volume carries</h3>
+<p>Volume I flagged TypeSafe's "200× faster / 444× cheaper" claims as unsupported. <strong>This volume's primary source independently measured them — and asked for the same discipline.</strong></p>
+<p>From <code>treg.to/jev</code>:</p>
+<blockquote><em>"TypeSafe's own workflow demo claims far more (193.6× faster, 444.6× cheaper); these are our numbers."</em></blockquote>
+<p>Their measured figures: <strong>5–6× cheaper and 5–7× faster</strong> than GPT-5.6 Luna, the cheapest chat model they could find.</p>
+<p><strong>Volume I's audit pattern 20 — <em>Company Grades Own Homework</em> — is confirmed for the fourth time, now with a competing practitioner publishing the counter-measurement.</strong></p>
+<hr>
+<h2>Part I — The Problem Jev Actually Solves</h2>
+<p>The presentation opens with a question worth preserving, because it names the gap precisely.</p>
+<blockquote><strong>Frontier models handle Olympic-math-level problems brilliantly — and still can't be trusted with a basic business workflow.</strong></blockquote>
+<p>Ask a model to handle a customer enquiry involving billing, and most companies will not let it decide autonomously. Two reasons.</p>
+<h3>Reason 1 — Overconfidence</h3>
+<blockquote><em>"You definitely experience agents just saying 'you're absolutely right.' And in fact, it is absolutely wrong. The model today will make a judgment call like this without calibrating the actual confidence. While most business workflows require almost 100% accuracy. That's why humans are good."</em></blockquote>
+<h3>Reason 2 — Cost and speed at scale</h3>
+<blockquote><em>"Many business workflows have huge scale volume."</em></blockquote>
+<p>You cannot spend frontier-model money on every signup, every document, every tweet.</p>
+<p><strong>And the presenter identifies the root cause of both:</strong></p>
+<blockquote><em>"The reason large models have those factors is baked into the results from the training process. The large language models today all go through this reinforcement learning from human feedback process, where the model will be fine-tuned based on feedback that humans give in chat assistant."</em></blockquote>
+<p>RLHF optimizes for being <strong>helpful in conversation</strong> — which trains fluency and confidence, not calibration. Jev's alternative is <strong>reinforcement learning for calibrated decisions</strong>, which optimizes for being <em>right and knowing how right</em>.</p>
+<h3>What that buys you</h3>
+<blockquote><em>"This is a game-changer, because for business automation you can finally trust a model to operate fully autonomously — because every answer it gives comes with this confidence score that you can build business logic around."</em></blockquote>
+<p><strong>The confidence score is the product.</strong> Volume II documented it as a primitive property; this volume shows what it's <em>for</em>.</p>
+<hr>
+<h2>Part II — The Model's Shape, From a Practitioner</h2>
+<h3>What it is</h3>
+<blockquote><em>"A model that is designed for reliable, high-quality decision making rather than being creative or assisting humans. Basically it is a model designed to make a decision given a set of options — but it cannot make up options itself, and it cannot output text, it cannot write code, it cannot reason step by step."</em></blockquote>
+<blockquote><em>"Unlike a normal language model, where they output results token by token, Jev does not predict text but outputs probability of a list of given answers in an extremely fast and efficient approach."</em></blockquote>
+<p><strong>The honest framing:</strong> <em>"At a high level it might feel a bit limited, but it is just so much faster and cheaper than even the cheapest large model out there."</em></p>
+<h3>The measured comparison — and the discipline behind it</h3>
+<p>The presentation says <strong>5–7× faster and 5× cheaper</strong> against GPT-5.6 Luna. The primary source breaks it down properly, with input padded by real support tickets from 2k to 200k tokens:</p>
+<div class="tw"><table><thead><tr>
+<th>Input</th>
+<th>Jev cost</th>
+<th>Jev time</th>
+<th>Luna cost</th>
+<th>Luna time</th>
+<th>Jev advantage</th>
+</tr></thead><tbody>
+<tr>
+<td>2k</td>
+<td class="num">$0.0000755</td>
+<td>0.39 s</td>
+<td class="num">$0.0001299</td>
+<td>2.74 s</td>
+<td>1.7× cheaper / 7.0× faster</td>
+</tr>
+<tr>
+<td>8k</td>
+<td class="num">$0.0002248</td>
+<td>0.40 s</td>
+<td class="num">$0.0013071</td>
+<td>2.35 s</td>
+<td><strong>5.8× / 5.9×</strong></td>
+</tr>
+<tr>
+<td>16k</td>
+<td class="num">$0.0004122</td>
+<td>0.40 s</td>
+<td class="num">$0.0023791</td>
+<td>2.46 s</td>
+<td><strong>5.8× / 6.1×</strong></td>
+</tr>
+<tr>
+<td>32k</td>
+<td class="num">$0.0008031</td>
+<td>0.51 s</td>
+<td class="num">$0.0045953</td>
+<td>2.29 s</td>
+<td><strong>5.7× / 4.5×</strong></td>
+</tr>
+<tr>
+<td>34k</td>
+<td><strong>over limit</strong></td>
+<td>—</td>
+<td class="num">$0.0080371</td>
+<td>3.59 s</td>
+<td>—</td>
+</tr>
+<tr>
+<td>100k</td>
+<td><strong>over limit</strong></td>
+<td>—</td>
+<td class="num">$0.0233656</td>
+<td>3.03 s</td>
+<td>—</td>
+</tr>
+<tr>
+<td>200k</td>
+<td><strong>over limit</strong></td>
+<td>—</td>
+<td class="num">$0.0467147</td>
+<td>3.89 s</td>
+<td>—</td>
+</tr>
+</tbody></table></div>
+<p><strong>Two structural observations the table makes unavoidable:</strong></p>
+<ol>
+<li><strong>Jev's time barely moves with input</strong> (0.39 s → 0.51 s across a 16× input increase) because <strong>it never writes</strong>. Luna's time is dominated by producing ~80 output tokens, so it sits at 2–4 s regardless.</li>
+<li><strong>Jev stops at ~30k tokens.</strong> Above that you chunk the state yourself.</li>
+</ol>
+<blockquote><strong>The measured conclusion:</strong> <em>"Where both run, Jev is 5 to 6× cheaper and 5 to 7× faster, and its time barely moves with input because it never writes."</em></blockquote>
+<p>At ~$0.0008 per 32k-token decision, the primary source estimates <strong>≈ $20 per million decisions.</strong></p>
+<h3>The capability boundary — stated cleanly</h3>
+<p>The <code>treg.to/jev</code> page draws the line better than anything in the first three volumes:</p>
+<div class="tw"><table><thead><tr>
+<th><strong>CAN</strong></th>
+<th><strong>CAN'T</strong></th>
+</tr></thead><tbody>
+<tr>
+<td>Pick an action from your options, with a probability on each</td>
+<td><strong>Write a sentence</strong> — an LLM writes; Jev verifies each field</td>
+</tr>
+<tr>
+<td>Classify (<code>billing 0.99 · technical 0.01 · account 0.00</code>)</td>
+<td><strong>Explain itself</strong> — <em>"the distribution is the explanation: log it"</em></td>
+</tr>
+<tr>
+<td>Score / rank — 368 people in 42.8 s, $0.013</td>
+<td><strong>Write code</strong> — it can <em>judge</em> code: risky change, needs review</td>
+</tr>
+<tr>
+<td>Say yes/no — jailbreak 0.99, four hazards in one call</td>
+<td><strong>Reason step by step</strong> — you write the steps as questions</td>
+</tr>
+<tr>
+<td>Route on confidence — two thresholds in your code, nothing re-run</td>
+<td><strong>Read past ~30k tokens</strong> — chunk, or summarise then judge the summary</td>
+</tr>
+<tr>
+<td>Read your JSON as-is — rows, tables, element lists, ticket histories</td>
+<td><strong>Fetch anything</strong> — that's the data layer's job</td>
+</tr>
+<tr>
+<td>At 5–7× a chat model's speed and 5–6× cheaper</td>
+<td><strong>Remember the last call</strong> — every request is stateless; put history in the state</td>
+</tr>
+</tbody></table></div>
+<p><strong>"It is a judge, not a writer."</strong> That single line is the clearest statement of the paradigm in any of the four volumes.</p>
+<h3>The three question types, from the practitioner</h3>
+<p>Not a re-derivation — an operational framing.</p>
+<div class="tw"><table><thead><tr>
+<th>Type</th>
+<th>Shape</th>
+<th>The presentation's example</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Choice</strong></td>
+<td>Pick one of your options</td>
+<td><em>"Which department should handle this request?"</em></td>
+</tr>
+<tr>
+<td><strong>Noul</strong></td>
+<td>Yes/no as a probability</td>
+<td><em>"Is this prompt a jailbreak? true or false"</em> — for an AI chat platform's injection guard</td>
+</tr>
+<tr>
+<td><strong>Score</strong></td>
+<td>Position on your ordered rubric</td>
+<td><em>"Is this Twitter post organic or paid advertisement, based on engagement stats?"</em></td>
+</tr>
+</tbody></table></div>
+<p><strong>On Score specifically:</strong> <em>"You can give different criteria ranging from 'clearly manipulated' to 'suspicious' to 'probably organic' to 'clearly organic.' Each new option you add will plus one on the index and Jev will output probability for each option and give you a final score."</em></p>
+<h3>The context-window workaround</h3>
+<blockquote><em>"One thing to be aware of is that Jev has this context window of 32K. If your response is bigger, currently it can't handle it — or you will have to do things like map-reduce to work around it."</em></blockquote>
+<p><strong>Volume III measured this empirically:</strong> the ABCD full-handbook condition ran at ~19.5–21K tokens, comfortably inside, and Jev's latency went from 245 ms (short) to 358 ms (full handbook). The practical ceiling is real but generous for most support workflows.</p>
+<hr>
+<h2>Part III — The Confidence Decision Tree</h2>
+<p>The presentation's most directly reusable artifact: a three-band routing policy built entirely on the confidence score.</p>
+<h3>Worked example: prompt-injection guard</h3>
+<p>Send <strong>every</strong> user request to Jev with the question <em>"is this a jailbreak?"</em> and detailed instructions. Jev returns a probability. Then:</p>
+<pre><code>
+if hazard_score &gt; 0.70:
+    block()                    # automatically block the message
+elif 0.35 &lt; jailbreak_score &lt;= 0.70:
+    ask_human_for_review()     # flag for review
+else:
+    send_as_normal()           # pass through
+</code></pre>
+<blockquote><em>"This is one example of how you can build really sophisticated business logic based on the confidence score from Jev."</em></blockquote>
+<h3>The richer version from the primary source</h3>
+<p>The <code>treg.to/jev</code> page publishes TypeSafe's guardrail cookbook pattern in full — <strong>one call per message, four hazard Nouls plus a severity score, about $0.00002:</strong></p>
+<pre><code>
+review_threshold = 0.35
+action_threshold = 0.70
+severity_block   = 2.0
+
+action = {
+    &quot;jailbreak&quot;: &quot;block&quot;,
+    &quot;harmful&quot;:   &quot;block&quot;,
+    &quot;medical&quot;:   &quot;review&quot;,
+    &quot;self_harm&quot;: &quot;support&quot;,
+}
+</code></pre>
+<blockquote><em>"Edit the two numbers and the same assessments route differently, nothing is re-run."</em></blockquote>
+<p><strong>This is Volume II's <em>Confidence-Gated Routing</em> pattern, deployed.</strong> The key property: <strong>the model's assessment is cached and reusable.</strong> Change your policy, re-route the same answers, pay nothing.</p>
+<h3>Why this works and chat models don't</h3>
+<p>Volume I's audit found TypeSafe's calibration claims unverified. Volume III measured the aggregate accuracy. <strong>This volume supplies the operational argument:</strong></p>
+<blockquote>Most business workflows require <em>almost 100% accuracy</em>. A confidence score lets you achieve that <strong>not by making every decision correct, but by routing the uncertain ones to a human</strong> — which is exactly what a well-run human process already does.</blockquote>
+<p>The three-band structure is not a compromise. It is how the work was always done; Jev just makes the first and third bands cheap enough to automate.</p>
+<hr>
+<h2>Part IV — Steering: There Is No System Prompt</h2>
+<p>A genuinely important operational fact, and the primary source states it plainly:</p>
+<blockquote><strong>There is no system prompt. Everything you would say in one goes into the question itself.</strong></blockquote>
+<p>And every text field also accepts structure: <code>instructions</code>, each option under <code>criteria</code>, each level of a score. <strong>Jev reads the keys as well as the values.</strong></p>
+<h3>The three shapes of the same question</h3>
+<p><strong>1 — A string.</strong> The minimum. One sentence per field.</p>
+<pre><code>
+{
+  &quot;department&quot;: {
+    &quot;type&quot;: &quot;choice&quot;,
+    &quot;instructions&quot;: &quot;Which team should handle this?&quot;,
+    &quot;criteria&quot;: {
+      &quot;billing&quot;: &quot;Charges, invoices, credits&quot;,
+      &quot;technical&quot;: &quot;Bugs, errors, integrations&quot;
+    }
+  }
+}
+</code></pre>
+<p><strong>2 — Instructions as an object.</strong> Keys are yours to name; none is reserved.</p>
+<pre><code>
+{
+  &quot;type&quot;: &quot;choice&quot;,
+  &quot;instructions&quot;: {
+    &quot;question&quot;: &quot;Which team should handle this?&quot;,
+    &quot;focus&quot;: &quot;Route to whoever must fix the root cause.&quot;
+  },
+  &quot;criteria&quot;: { &quot;...&quot;: &quot;same as 1&quot; }
+}
+</code></pre>
+<p><strong>3 — Options as rubrics.</strong> Each option says what it covers, what it does <strong>not</strong>, and what it looks like.</p>
+<pre><code>
+{
+  &quot;criteria&quot;: {
+    &quot;billing&quot;: {
+      &quot;what&quot;: &quot;charges, invoices, credits, refunds&quot;,
+      &quot;not_for&quot;: &quot;a bug that caused a wrong charge&quot;,
+      &quot;examples&quot;: [&quot;I was charged twice&quot;, &quot;Where is my refund?&quot;]
+    },
+    &quot;technical&quot;: {
+      &quot;what&quot;: &quot;bugs, errors, integrations&quot;,
+      &quot;not_for&quot;: &quot;a correct charge the customer disputes&quot;,
+      &quot;examples&quot;: [&quot;The export is empty&quot;, &quot;API returns 500&quot;]
+    }
+  }
+}
+</code></pre>
+<blockquote>Score levels take the same shape with <code>summary</code> and <code>signals</code>.</blockquote>
+<h3>The measured effect of steering</h3>
+<p>The presentation demonstrates this with a real ticket:</p>
+<blockquote><em>"The export button double-charged my credits, so my invoice is wrong this month."</em></blockquote>
+<div class="tw"><table><thead><tr>
+<th>Instructions</th>
+<th>Result</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Simple:</strong> <em>"Which team should handle this?"</em></td>
+<td>Routes to <strong>billing</strong> (confidence 0.99) — it's a double-charge</td>
+</tr>
+<tr>
+<td><strong>Steered:</strong> <code>"focus": "route to whoever must fix the root cause"</code></td>
+<td><strong>Flips to technical</strong></td>
+</tr>
+</tbody></table></div>
+<p>The primary source quantifies a related effect:</p>
+<blockquote><em>"Strip the options back to one-line labels and a tenth of the mass moves to <code>technical</code>, because a bug caused it; add <code>"focus": "route to whoever must fix the root cause"</code> and the same message flips."</em></blockquote>
+<blockquote><strong>The rubric is where your routing policy lives.</strong></blockquote>
+<h3>This is Volume II's advice, now measured</h3>
+<p>Volume II documented <em>structured criteria for confusable options</em> and <em>the level-examples trap</em> (a relevant example took confidence 0.35 → 0.96; an unrelated one changed nothing). <strong>This volume confirms the same mechanism from a production deployment</strong> — and adds the finding that a single <code>focus</code> key can flip an answer outright.</p>
+<p><strong>The practical rule:</strong> when a model keeps misclassifying something, you have three escalating levers — a better <code>what</code>, a <code>not_for</code> that names the confusion, and a <code>focus</code> that redirects the policy.</p>
+<hr>
+<h2>Part V — The Two-Tool Thesis</h2>
+<p>This is the volume's core argument, and it is not about Jev at all.</p>
+<h3>What Treg is</h3>
+<blockquote><strong>OpenRouter, but for agent tools instead of models.</strong> One base URL, one token, a curated catalog of thousands of endpoints across many providers — SEO and backlinks, social and trends, people and company enrichment, ads, scraping, image and video generation — <strong>priced per call, from a cent, with no provider signup.</strong></blockquote>
+<p>The problem it solves:</p>
+<blockquote><em>"The tools an agent needs for real work sit behind subscriptions nobody buys for a single run — Semrush $139/mo, Moz $99/mo, Crunchbase $99/mo, Apollo $59/seat — behind signup walls, or behind no public API at all."</em></blockquote>
+<p>Three design properties worth noting:</p>
+<ol>
+<li><strong>"Ask for the task, not the tool."</strong> You search by what you want to <em>do</em>, not by vendor:</li>
+</ol>
+<pre><code>
+   treg catalog search &quot;backlinks for a domain&quot;
+   treg catalog search &quot;find a work email&quot;
+</code></pre>
+<ol>
+<li><strong>The faithful-relay contract.</strong> The proxy alters <strong>only</strong> three things — hop-by-hop headers, its own control headers, and the injected credential. Everything else is verbatim. <em>"The proxy relays, never models the upstream."</em></li>
+<li><strong>Credential precedence.</strong> <em>"Your own key always wins over Treg's, and those calls are never metered."</em> Connecting a key you already pay for makes those calls free rather than duplicating spend.</li>
+</ol>
+<h3>The economics that changed</h3>
+<p><strong>Measured, from the presentation:</strong></p>
+<div class="tw"><table><thead><tr>
+<th>Workload</th>
+<th>Treg</th>
+<th>Alternative</th>
+<th>Advantage</th>
+</tr></thead><tbody>
+<tr>
+<td>Enrich ~290 people</td>
+<td><strong>$1.49</strong></td>
+<td>Clay <strong>$9–10.30</strong></td>
+<td><strong>~85% cheaper</strong>, similar or better accuracy</td>
+</tr>
+</tbody></table></div>
+<blockquote><em>"For the same people-enrichment task, Treg is achieving similar, even better accuracy, but with 85% cheaper cost."</em></blockquote>
+<p><strong>And the combined effect on a real pipeline:</strong></p>
+<blockquote><em>"Because both Jev and Treg are extremely cheap, we're able to scan hundreds of signups with around just $1 per day."</em></blockquote>
+<h3>The thesis, stated</h3>
+<p><strong>Neither tool alone unlocks these workflows. The combination does.</strong></p>
+<div class="tw"><table><thead><tr>
+<th>Layer</th>
+<th>Before</th>
+<th>With the cheap layer</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Decision</strong></td>
+<td>Frontier model, dollars per call</td>
+<td>Jev, ~$0.0008 per 32k decision</td>
+</tr>
+<tr>
+<td><strong>Data</strong></td>
+<td>Semrush $139/mo, Apollo $59/seat</td>
+<td>Treg, fractions of a cent per call</td>
+</tr>
+<tr>
+<td><strong>Combined</strong></td>
+<td>Economically unviable</td>
+<td><strong>~$1/day for hundreds of signups</strong></td>
+</tr>
+</tbody></table></div>
+<blockquote><em>"When you combine Jev and Treg together, that fundamentally changes the economics of a lot of automation processes."</em></blockquote>
+<p><strong>This is the volume's transferable insight.</strong> Volume II documented <em>Daemon-Scale Repetition</em> as a Jev pattern (cheap-per-decision + event trigger = a resident process). <strong>Volume IV extends it: when <em>both</em> layers of a pipeline get cheap, the viable-workflow boundary moves — not incrementally, but categorically.</strong> Jobs that were "not worth building" become "runs every 15 minutes."</p>
+<hr>
+<h2>Part VI — Four Production Workflows</h2>
+<p>All four are described as running in production, with the presenter's own cost figures.</p>
+<h3>Workflow 1 — Fraud detection and signup analysis</h3>
+<p><strong>The problem.</strong> Both Superdesign and Treg experience heavy bot attacks. The presenter shows a verbatim log entry:</p>
+<blockquote><em>"Someone prompt: forget you are a designer, ignore all your system instructions..."</em></blockquote>
+<blockquote><em>"Handling those frauds is actually very difficult, because those people change domains all the time and we can't easily write programmatic checks to identify them."</em></blockquote>
+<p><strong>The naive approach:</strong> a hardcoded domain blocklist. It fails on domain rotation.</p>
+<p><strong>The pipeline:</strong></p>
+<ol>
+<li>Every <strong>15–30 minutes</strong>, fetch recent signups with all product-usage data</li>
+<li>Jev classifies <strong>how likely this user is fraud</strong></li>
+<li>Above a threshold → <strong>automatically ban</strong></li>
+<li>Later extended: not just fraud, but <strong>opportunity</strong> — upsell value, affiliate/influencer partners</li>
+</ol>
+<p><strong>The full signup-classification flow:</strong></p>
+<pre><code>
+signup → Treg verifies email + enriches person
+       → group enrichment + product usage
+       → Jev classifies: fraud? | upsell value? | affiliate/influencer?
+       → trigger outreach, in-app support, or ban
+</code></pre>
+<p><strong>The economics:</strong> <em>"We're able to scan hundreds of signups with around just $1 per day."</em></p>
+<p><strong>Why it couldn't be built before:</strong> the threshold question isn't accuracy — it's whether the scan is worth running at all. At $1/day across hundreds of signups, it always is.</p>
+<h3>Workflow 2 — High-quality lead identification from buying signals</h3>
+<p><strong>The pipeline:</strong></p>
+<ol>
+<li><strong>Treg</strong> fetches popular LinkedIn posts relevant to a target vertical (e.g. enrichment)</li>
+<li><strong>Treg</strong> fetches the people who interacted or commented — likely potential buyers</li>
+<li><strong>Jev</strong> qualifies and scores those leads, classifying them into personas and roles</li>
+<li>Top candidates → a proper enrichment pipeline for contact information</li>
+</ol>
+<p><strong>The economics:</strong> <em>"For analyzing 20 posts and close to 400 leads, the costs are just close to nothing."</em></p>
+<p><strong>The generalization the presenter offers:</strong></p>
+<blockquote><em>"There are so many other potential use cases I can think of — identifying companies hiring on LinkedIn, matching with a massive candidate database, job trends. Each signal here Treg provides a good set of endpoints for you to collect."</em></blockquote>
+<p><strong>The meta-observation:</strong> <em>"Getting Claude Code and Codex to write a script using Treg to fetch whatever buying signal is very easy. So it really comes down to you to come up with the creative workflow."</em></p>
+<h3>Workflow 3 — Viral-post screening (organic vs. paid)</h3>
+<p><strong>The problem, stated from experience:</strong></p>
+<blockquote><em>"As an AI founder on Twitter, every week I see posts reaching millions of impressions — but some of them are actually just paid traffic that isn't a real signal, versus ones that actually resonate with people that I actually want to learn from."</em></blockquote>
+<p><strong>The pipeline:</strong></p>
+<ol>
+<li><strong>Treg</strong> fetches trending and popular posts from the past 24 hours, with stats and comments</li>
+<li><strong>Jev</strong> classifies which are <strong>organic-looking</strong> vs. <strong>likely paid/boosted</strong></li>
+<li>Also filters out noise unrelated to product launches</li>
+<li>Result: a daily feed of genuinely resonant trends</li>
+</ol>
+<p><strong>The insight:</strong> this is a <em>classification</em> task where the labels are subjective and no ground truth exists — the ideal shape for a calibrated judgment rather than a rule.</p>
+<h3>Workflow 4 — Internal link mapping at SEO scale</h3>
+<p><strong>The problem:</strong> internal linking requires a model to race through hundreds of pages and accurately locate which pages should link to which.</p>
+<blockquote><em>"With a normal model like Claude Opus 5, it can take hours."</em></blockquote>
+<p><strong>The result, from an independent practitioner published on <code>treg.to/jev</code>:</strong></p>
+<div class="tw"><table><thead><tr>
+<th>Metric</th>
+<th>Value</th>
+</tr></thead><tbody>
+<tr>
+<td>Pages scanned</td>
+<td><strong>586</strong></td>
+</tr>
+<tr>
+<td>Time</td>
+<td><strong>45.1 s</strong></td>
+</tr>
+<tr>
+<td>Total cost</td>
+<td><strong>$0.21</strong></td>
+</tr>
+<tr>
+<td>Links placed</td>
+<td class="num">584</td>
+</tr>
+<tr>
+<td>Pages refused (no real reason to link)</td>
+<td class="num">139</td>
+</tr>
+<tr>
+<td><strong>Comparison — Claude Opus 5</strong></td>
+<td>21 pages, <strong>$1.43</strong></td>
+</tr>
+<tr>
+<td><strong>Advantage</strong></td>
+<td><strong>≈ 190× cheaper per page</strong></td>
+</tr>
+</tbody></table></div>
+<p>The framing is what makes it click:</p>
+<blockquote><em>"Internal linking is not writing — it is <strong>8,790 yes/no calls.</strong> Does this page have a real reason to link to that one, and is the anchor text already in the copy?"</em></blockquote>
+<p><strong>Decompose a creative-sounding task into atomic judgments, and it becomes cheap.</strong> This is Volume II's decomposition principle with a price tag attached.</p>
+<h3>Bonus — three more measured deployments</h3>
+<p>From <code>treg.to/jev</code>, all independently reported by named practitioners:</p>
+<div class="tw"><table><thead><tr>
+<th>Use case</th>
+<th>Result</th>
+<th>Source</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Game loop</strong></td>
+<td>Seven ticks of a side-scroller, judged live from game state — <strong>~0.35 s, $0.00002 per decision</strong>. A chat model writing <em>"I would press jump"</em> took 2.7 s</td>
+<td>@bryantchou</td>
+</tr>
+<tr>
+<td><strong>Page that picks itself</strong></td>
+<td><strong>25 ms</strong> per page load, <strong>no real impact on LCP</strong> — Jev selects copy <em>and</em> design per section per visitor segment at load time</td>
+<td>@bryantchou</td>
+</tr>
+<tr>
+<td><strong>Search without an index</strong></td>
+<td>Thousands of listings scanned in <strong>&lt; 20 s for $0.18</strong> — filtering on architecture, renovation status, freeway proximity. <em>"No index, no embeddings, no vector column"</em></td>
+<td>@venturetwins</td>
+</tr>
+</tbody></table></div>
+<p><strong>The search case deserves attention:</strong> filtering on attributes <strong>no column holds</strong> — judged from the listing text directly. <em>"The query is a sentence and every record is judged against it."</em></p>
+<hr>
+<h2>Part VII — The Independence Ledger</h2>
+<p>Across four volumes, a pattern has emerged: <strong>every independent measurement lands below the vendor's own claim.</strong> This is worth tabulating explicitly, because it is the most reliable finding in the entire series.</p>
+<div class="tw"><table><thead><tr>
+<th>Claim</th>
+<th>Vendor's number</th>
+<th>Independent measurement</th>
+<th>Source</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Speed vs. a frontier model</strong></td>
+<td><strong>193.6× faster</strong></td>
+<td><strong>5–7× faster</strong></td>
+<td>treg.to/jev</td>
+</tr>
+<tr>
+<td><strong>Cost vs. a frontier model</strong></td>
+<td><strong>444.6× cheaper</strong></td>
+<td><strong>5–6× cheaper</strong></td>
+<td>treg.to/jev</td>
+</tr>
+<tr>
+<td><strong>Speed (Volume I)</strong></td>
+<td><strong>200×</strong> (elsewhere 40×, 20×)</td>
+<td><strong>~25×</strong></td>
+<td>Volume I audit</td>
+</tr>
+<tr>
+<td><strong>Accuracy</strong></td>
+<td><strong>"Zero hallucinations"</strong> (unmeasured)</td>
+<td><strong>95.23%</strong> label agreement</td>
+<td>Volume III</td>
+</tr>
+<tr>
+<td><strong>Compaction</strong></td>
+<td>Demo implied lossless</td>
+<td><strong>0% dropped</strong> at safe threshold</td>
+<td>Volume I audit</td>
+</tr>
+<tr>
+<td><strong>Signup scanning</strong></td>
+<td>—</td>
+<td><strong>~$1/day</strong> for hundreds</td>
+<td>This volume</td>
+</tr>
+</tbody></table></div>
+<p><strong>Four independent sources. Four consistent downward revisions.</strong></p>
+<blockquote><strong>The transferable discipline:</strong> when a vendor publishes a multiplier with no methodology, expect the independent number to be <strong>one to two orders of magnitude smaller</strong> — and still good enough to matter.</blockquote>
+<p><strong>And note the honest framing from the primary source:</strong> <em>"these are our numbers."</em> A competitor publishing its own measured figures alongside the vendor's inflated ones, explicitly labelling which is which, is the behavior Volume I's pattern 23 — <em>Published Caveats Beat Published Wins</em> — was written to reward.</p>
+<h3>The precision that must be preserved</h3>
+<p>With such large revisions, the temptation is to dismiss the claims entirely. <strong>Don't.</strong> The corrected numbers still describe a genuinely different cost structure:</p>
+<ul>
+<li><strong>5–6× cheaper and 5–7× faster</strong> than the cheapest available chat model</li>
+<li><strong>~$0.0008 per 32k-token decision</strong>, ≈ $20 per million decisions</li>
+<li><strong>190× cheaper per page</strong> than Opus 5 on internal-link auditing</li>
+<li><strong>586 pages in 45 seconds for $0.21</strong></li>
+</ul>
+<p><strong>A 5× improvement that actually holds is a bigger deal than a 200× claim that doesn't.</strong> The workflows in Part VI exist because the real numbers close.</p>
+<hr>
+<h2>Part VIII — What This Volume Adds to the Pattern Set</h2>
+<p>Volume I's Family B catalogued agent and integration patterns. <strong>This volume supplies three more, all from production deployment rather than observation.</strong></p>
+<h3>24 — Cheap-Layer Pairing (the Economics Threshold)</h3>
+<blockquote><strong>A workflow becomes viable when <em>every</em> layer of its pipeline gets cheap — not when one does.</strong></blockquote>
+<p>The fraud pipeline needs a cheap decision model <em>and</em> a cheap data layer. Either alone leaves the workflow unaffordable. The economic threshold is a property of the <strong>pipeline</strong>, not the model.</p>
+<p><strong>Diagnostic:</strong> when evaluating a new cheap component, ask what the <em>rest</em> of the pipeline costs. The bottleneck is usually not where you're looking.</p>
+<h3>25 — Confidence-Banded Autonomy</h3>
+<blockquote><strong>Build three bands — act / review / pass — and tune the two thresholds, not the model.</strong></blockquote>
+<p>The prompt-injection guard, the fraud classifier, and TypeSafe's own guardrail cookbook all use the same shape: a high band that acts automatically, a middle band routed to a human, and a low band that passes through.</p>
+<p><strong>Why it matters:</strong> most business workflows require near-100% accuracy. The band structure achieves that <strong>not by making every decision correct, but by making the uncertain ones cheap to escalate.</strong> Because the assessment is cached, re-tuning thresholds costs nothing — you re-route the same answers.</p>
+<h3>26 — Decompose the Creative-Sounding Task</h3>
+<blockquote><strong>A task that sounds like judgment is often hundreds of atomic judgments wearing a costume.</strong></blockquote>
+<p><strong>Internal linking is not writing — it is 8,790 yes/no calls.</strong> Once decomposed, a task that took hours on a frontier model takes 45 seconds for $0.21.</p>
+<p><strong>Diagnostic:</strong> when a task "needs a smart model," ask what the smallest question is and how many times you'd ask it. Volume II's <em>decompose the questions</em> step said this; this volume prices it.</p>
+<hr>
+<h2>Part IX — Reference Tables</h2>
+<h3>A. The measured cost table (32k input, single runs)</h3>
+<div class="tw"><table><thead><tr>
+<th></th>
+<th>Jev</th>
+<th>GPT-5.6 Luna</th>
+<th>Advantage</th>
+</tr></thead><tbody>
+<tr>
+<td>Cost</td>
+<td class="num">$0.0008031</td>
+<td class="num">$0.0045953</td>
+<td><strong>5.7× cheaper</strong></td>
+</tr>
+<tr>
+<td>Time</td>
+<td>0.51 s</td>
+<td>2.29 s</td>
+<td><strong>4.5× faster</strong></td>
+</tr>
+<tr>
+<td>Output tokens</td>
+<td><strong>0</strong></td>
+<td class="num">~80</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Works at 100k tokens?</td>
+<td><strong>No</strong></td>
+<td>Yes ($0.0233656)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Works at 200k tokens?</td>
+<td><strong>No</strong></td>
+<td>Yes ($0.0467147)</td>
+<td>—</td>
+</tr>
+</tbody></table></div>
+<h3>B. Production workflow economics</h3>
+<div class="tw"><table><thead><tr>
+<th>Workflow</th>
+<th>Volume</th>
+<th>Cost</th>
+<th>Per-unit</th>
+</tr></thead><tbody>
+<tr>
+<td>Signup fraud scan</td>
+<td>Hundreds/day</td>
+<td><strong>~$1/day</strong></td>
+<td>~$0.005–0.01 each</td>
+</tr>
+<tr>
+<td>Lead qualification</td>
+<td>20 posts, ~400 leads</td>
+<td><em>"Close to nothing"</em></td>
+<td>—</td>
+</tr>
+<tr>
+<td>People enrichment</td>
+<td>290 people</td>
+<td><strong>$1.49</strong></td>
+<td>~$0.005 each</td>
+</tr>
+<tr>
+<td>Internal link audit</td>
+<td>586 pages</td>
+<td><strong>$0.21</strong></td>
+<td><strong>$0.00036/page</strong></td>
+</tr>
+<tr>
+<td>Jailbreak guard</td>
+<td>Per message</td>
+<td><strong>~$0.00002</strong></td>
+<td>—</td>
+</tr>
+<tr>
+<td>Game tick</td>
+<td>Per decision</td>
+<td><strong>$0.00002</strong></td>
+<td>—</td>
+</tr>
+<tr>
+<td>Page-variant selection</td>
+<td>Per page load</td>
+<td>25 ms</td>
+<td>—</td>
+</tr>
+</tbody></table></div>
+<h3>C. Tool-layer comparison</h3>
+<div class="tw"><table><thead><tr>
+<th></th>
+<th>Treg</th>
+<th>Alternatives</th>
+</tr></thead><tbody>
+<tr>
+<td>Enrichment, 290 people</td>
+<td><strong>$1.49</strong></td>
+<td>Clay <strong>$9–10.30</strong></td>
+</tr>
+<tr>
+<td>Access model</td>
+<td>Per call, from a cent</td>
+<td>Semrush $139/mo · Moz $99/mo · Crunchbase $99/mo · Apollo $59/seat</td>
+</tr>
+<tr>
+<td>Own keys</td>
+<td><strong>Free, never metered</strong></td>
+<td>—</td>
+</tr>
+<tr>
+<td>New verified team</td>
+<td><strong>$1.00 free</strong> once</td>
+<td>—</td>
+</tr>
+</tbody></table></div>
+<h3>D. Model capability boundary</h3>
+<div class="tw"><table><thead><tr>
+<th>Can</th>
+<th>Can't</th>
+</tr></thead><tbody>
+<tr>
+<td>Choose from your options, with probabilities</td>
+<td>Write a sentence</td>
+</tr>
+<tr>
+<td>Classify, score, rank</td>
+<td>Explain itself</td>
+</tr>
+<tr>
+<td>Yes/no with calibrated confidence</td>
+<td>Write code (but can <em>judge</em> code)</td>
+</tr>
+<tr>
+<td>Route on confidence</td>
+<td>Reason step by step</td>
+</tr>
+<tr>
+<td>Read structured JSON as state</td>
+<td>Read past ~30k tokens</td>
+</tr>
+<tr>
+<td>Operate at 5–7× chat speed</td>
+<td>Fetch anything, or remember the last call</td>
+</tr>
+</tbody></table></div>
+<h3>E. Resource index</h3>
+<div class="tw"><table><thead><tr>
+<th>Resource</th>
+<th>URL</th>
+</tr></thead><tbody>
+<tr>
+<td>Presentation</td>
+<td>https://youtu.be/o4Vi5uBZYH0</td>
+</tr>
+<tr>
+<td>Treg repo (Apache 2.0)</td>
+<td>https://github.com/superdesigndev/treg</td>
+</tr>
+<tr>
+<td>Jev + Treg recipes</td>
+<td>https://treg.to/jev</td>
+</tr>
+<tr>
+<td>TypeSafe console</td>
+<td>https://console.typesafe.ai</td>
+</tr>
+<tr>
+<td>AI Builder Club workshop</td>
+<td>https://www.aibuilderclub.com</td>
+</tr>
+</tbody></table></div>
+<hr>
+<h2>Closing Assessment</h2>
+<h3>The four-volume picture</h3>
+<div class="tw"><table><thead><tr>
+<th>Volume</th>
+<th>Answers</th>
+<th>Read it for</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>I — Launch Week Dossier</strong></td>
+<td>What was built, and did the claims hold?</td>
+<td>Knowing what to be skeptical of</td>
+</tr>
+<tr>
+<td><strong>II — Pattern Handbook</strong></td>
+<td>How does TypeSafe say you should build?</td>
+<td>Knowing how to build</td>
+</tr>
+<tr>
+<td><strong>III — Benchmark Report</strong></td>
+<td>What actually performs best, measured?</td>
+<td>Knowing what to choose</td>
+</tr>
+<tr>
+<td><strong>IV — Production Playbook</strong></td>
+<td>Does the economics close in production?</td>
+<td><strong>Knowing whether to build it at all</strong></td>
+</tr>
+</tbody></table></div>
+<h3>What this volume settles</h3>
+<p><strong>The economics close — and the second layer is the interesting part.</strong></p>
+<p>Volume III answered "which decision model?" Volume IV answers the question that comes <em>after</em>: what does the whole pipeline cost? The answer is that a cheap decision model paired with a cheap data layer moves a category of automation from "not worth building" to "runs every 15 minutes for $1 a day."</p>
+<p><strong>The confidence score is the operative feature.</strong> Not accuracy — <em>banded autonomy</em>. A model that knows when it doesn't know can be trusted with the band it's good at, and the rest goes to a human. That's how the work was always done; Jev makes two of the three bands nearly free.</p>
+<p><strong>"It is a judge, not a writer."</strong> The cleanest formulation of the paradigm across all four volumes, and the one that most quickly tells you whether a task fits.</p>
+<h3>And the discipline this volume reinforces</h3>
+<p><strong>Every independent measurement lands below the vendor's claim</strong> — and this volume supplies the widest gap yet: <strong>193.6× claimed, 5–7× measured.</strong></p>
+<p>The correct response is neither cynicism nor acceptance. It is to notice that <strong>a 5× cost advantage that survives independent testing is a more valuable fact than a 200× one that doesn't</strong> — and to build the fraud pipeline, the lead-screening workflow, and the $0.21 link audit on the measured numbers.</p>
+<blockquote><strong>Read the Playbook to know whether to build it. Then check your own pipeline's other layers — that's where the real cost lives.</strong></blockquote>
+<hr>
+<p><em>Compiled from AI Jason's presentation "Jev + Treg is a crazy combo for automation..." (https://youtu.be/o4Vi5uBZYH0) and the primary sources at <a href="https://treg.to/jev">treg.to/jev</a> and <a href="https://github.com/superdesigndev/treg">github.com/superdesigndev/treg</a>. Cost and latency figures are the primary source's own measurements ("single runs," cost as billed by OpenRouter), explicitly distinguished there from TypeSafe's vendor claims, which are quoted for comparison. Third-party practitioner figures (internal-link audit, game loop, page-variant selection, search) are attributed to their named sources.</em></p>
+</div></body></html>

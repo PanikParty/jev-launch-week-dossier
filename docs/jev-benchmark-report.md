@@ -7,7 +7,7 @@
 **Harness:** [jev-arena](https://github.com/theaiautomators/jev-arena) (MIT, independent, unaffiliated with TypeSafe)
 **Run:** `20260927-205440-6350b9`, 27–28 September 2026 · Windows RTX 5090 (32 GB) · serial calls
 
-**Companion volumes:** [The Jev Launch Week Dossier](jev-launch-week-dossier.md) · [The Jev Design Pattern Handbook](jev-design-patterns-handbook.md)
+**Companion volumes:** [Launch Week Dossier](jev-launch-week-dossier.md) · [Pattern Handbook](jev-design-patterns-handbook.md) · [Production Playbook](jev-production-playbook.md)
 
 ---
 
@@ -682,7 +682,11 @@ And the harness's own honest verdict, which is better than any summary:
 | **II — Design Pattern Handbook** | How does TypeSafe say you should build? | Knowing how to build |
 | **III — Benchmark Report** | What actually performs best, measured? | Knowing what to choose |
 
-> **Read II to learn how to build. Read III to choose. Read I to know what to believe.**
+> **Read II to learn how to build. Read III to choose. Read IV to cost it. Read I to know what to believe.**
+
+### Where Volume IV picks up
+
+This volume stops at the model boundary — per-decision accuracy, latency, and memory. **Volume IV asks what the whole pipeline costs** and finds that the decisive layer is frequently not the model at all. Its measured figures (5–6× cheaper, 5–7× faster than the cheapest chat model) sit alongside a claim correction even wider than the one this volume documents.
 
 ---
 

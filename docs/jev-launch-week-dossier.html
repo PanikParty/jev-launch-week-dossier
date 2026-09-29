@@ -61,7 +61,7 @@ nav.vol .lbl{color:var(--dim);border:0;background:none;padding-left:0}
 @media print{nav.vol{display:none}}
 </style></head>
 <body><div class="wrap">
-<nav class="vol"><span class="lbl">Jev volumes:</span><span class="cur">📕 Launch Week Dossier</span><a href="jev-design-patterns-handbook.html">📘 Pattern Handbook</a><a href="jev-benchmark-report.html">📊 Benchmark Report</a><a href="../">🌐 Home</a></nav>
+<nav class="vol"><span class="lbl">Jev volumes:</span><span class="cur">📕 Dossier</span><a href="jev-design-patterns-handbook.html">📘 Patterns</a><a href="jev-benchmark-report.html">📊 Benchmarks</a><a href="jev-production-playbook.html">🔧 Playbook</a><a href="../">🌐 Home</a></nav>
 <h1>The Jev Launch Week Dossier</h1>
 <h2>A Memorial Record of the "10 Wild Builds" and the Design Patterns They Reveal</h2>
 <p><strong>Compiled:</strong> September 28, 2026</p>
@@ -69,7 +69,7 @@ nav.vol .lbl{color:var(--dim);border:0;background:none;padding-left:0}
 <p><strong>Source URL:</strong> https://youtu.be/X4Lqj54sw4I</p>
 <p><strong>Subject:</strong> TypeSafe's Jev — a "System One" decision model</p>
 <p><strong>Launch window documented:</strong> September 15 – 21, 2026 (six days)</p>
-<p><strong>Companion volumes:</strong> <a href="jev-design-patterns-handbook.md">The Jev Design Pattern Handbook</a> — the vendor's official pattern set: 3 primitives, 10 decision shapes, 4 design patterns. · <a href="jev-benchmark-report.md">The Jev Benchmark Report</a> — independent measurement of Jev against 12 local decision models.</p>
+<p><strong>Companion volumes:</strong> <a href="jev-design-patterns-handbook.md">Pattern Handbook</a> — the vendor's official pattern set. · <a href="jev-benchmark-report.md">Benchmark Report</a> — independent measurement vs 12 local models. · <a href="jev-production-playbook.md">Production Playbook</a> — deployment economics and whether the numbers close.</p>
 <hr>
 <h2>Preface</h2>
 <p>On September 15, 2026, a company called TypeSafe emerged from two years of stealth with $40 million in funding and one strange idea: a model that cannot write a sentence — <strong>by design</strong>. Within six days, developers had bolted it onto everything from a flight search engine to Super Mario to an air traffic control tower.</p>
@@ -943,33 +943,39 @@ nav.vol .lbl{color:var(--dim);border:0;background:none;padding-left:0}
 <p><em>Document compiled from the Cloud Codes presentation "10 Wild Things You Can Build With Jev" (https://youtu.be/X4Lqj54sw4I). All quotes, figures, and caveats are as reported in that presentation. Independent measurements are identified as such; company-stated figures are labelled throughout.</em></p>
 <hr>
 <h2>See also</h2>
-<p>This dossier is Volume I of three. Each answers a different question.</p>
+<p>This dossier is Volume I of four. Each answers a different question.</p>
 <div class="tw"><table><thead><tr>
 <th></th>
-<th>Volume I (this)</th>
-<th><a href="jev-design-patterns-handbook.md">Volume II — Handbook</a></th>
-<th><a href="jev-benchmark-report.md">Volume III — Benchmark Report</a></th>
+<th>I (this)</th>
+<th><a href="jev-design-patterns-handbook.md">II — Patterns</a></th>
+<th><a href="jev-benchmark-report.md">III — Benchmarks</a></th>
+<th><a href="jev-production-playbook.md">IV — Playbook</a></th>
 </tr></thead><tbody>
 <tr>
 <td><strong>Question</strong></td>
 <td>What did they build?</td>
 <td>How should you build?</td>
-<td><strong>What actually performs best?</strong></td>
+<td>What performs best?</td>
+<td><strong>Does the economics close?</strong></td>
 </tr>
 <tr>
 <td><strong>Authority</strong></td>
 <td>Third-party observation</td>
 <td>Vendor documentation</td>
-<td><strong>Independent measurement</strong></td>
+<td>Independent measurement</td>
+<td><strong>Practitioner deployment</strong></td>
 </tr>
 <tr>
 <td><strong>Tone</strong></td>
 <td>Auditing claims</td>
 <td>Teaching usage</td>
-<td><strong>Measuring</strong></td>
+<td>Measuring</td>
+<td><strong>Costing</strong></td>
 </tr>
 </tbody></table></div>
 <p><strong>Volume II</strong> documents the vendor's own named pattern set: the three primitives (Choice, Score, Noul), the ten decision shapes, and the four official design patterns.</p>
 <p><strong>Volume III is the independent test this dossier said was missing.</strong> It validates the broad verdict — the mechanism is sound, the marketing overreached — but the numbers are now measured rather than asserted. Its most important finding for this volume: Volume I's <em>Format ≠ Judgment</em> pattern turned out to be the organizing insight of the whole benchmark, and the measured accuracy (~95% against real answer keys) supersedes the ~68% agreement figure reported here.</p>
-<blockquote><strong>Read Volume II to learn how to build. Read Volume III to choose. Read this dossier to know what to believe.</strong></blockquote>
+<p><strong>Volume IV</strong> answers the question that decides whether any of it ships. Its finding is that the economics close — but the decisive layer is often <strong>not</strong> the model. A cheap decision model paired with a cheap data layer moves a workflow from "not worth building" to "runs every 15 minutes for $1 a day."</p>
+<p>It also carries <strong>the widest claim correction in the series</strong>: TypeSafe's "193.6× faster, 444.6× cheaper" was independently measured at <strong>5–7× faster and 5–6× cheaper</strong>. Volume I's audit pattern <em>Company Grades Own Homework</em> now has a fourth confirmation.</p>
+<blockquote><strong>Read II to learn how to build. Read III to choose. Read IV to know whether to build it. Read this dossier to know what to believe.</strong></blockquote>
 </div></body></html>

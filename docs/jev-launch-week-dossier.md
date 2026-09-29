@@ -7,7 +7,7 @@
 **Subject:** TypeSafe's Jev — a "System One" decision model
 **Launch window documented:** September 15 – 21, 2026 (six days)
 
-**Companion volumes:** [The Jev Design Pattern Handbook](jev-design-patterns-handbook.md) — the vendor's official pattern set: 3 primitives, 10 decision shapes, 4 design patterns. · [The Jev Benchmark Report](jev-benchmark-report.md) — independent measurement of Jev against 12 local decision models.
+**Companion volumes:** [Pattern Handbook](jev-design-patterns-handbook.md) — the vendor's official pattern set. · [Benchmark Report](jev-benchmark-report.md) — independent measurement vs 12 local models. · [Production Playbook](jev-production-playbook.md) — deployment economics and whether the numbers close.
 
 ---
 
@@ -570,16 +570,20 @@ The mechanism is genuinely new and useful. The benchmark claims are not proven b
 
 ## See also
 
-This dossier is Volume I of three. Each answers a different question.
+This dossier is Volume I of four. Each answers a different question.
 
-| | Volume I (this) | [Volume II — Handbook](jev-design-patterns-handbook.md) | [Volume III — Benchmark Report](jev-benchmark-report.md) |
-|---|---|---|---|
-| **Question** | What did they build? | How should you build? | **What actually performs best?** |
-| **Authority** | Third-party observation | Vendor documentation | **Independent measurement** |
-| **Tone** | Auditing claims | Teaching usage | **Measuring** |
+| | I (this) | [II — Patterns](jev-design-patterns-handbook.md) | [III — Benchmarks](jev-benchmark-report.md) | [IV — Playbook](jev-production-playbook.md) |
+|---|---|---|---|---|
+| **Question** | What did they build? | How should you build? | What performs best? | **Does the economics close?** |
+| **Authority** | Third-party observation | Vendor documentation | Independent measurement | **Practitioner deployment** |
+| **Tone** | Auditing claims | Teaching usage | Measuring | **Costing** |
 
 **Volume II** documents the vendor's own named pattern set: the three primitives (Choice, Score, Noul), the ten decision shapes, and the four official design patterns.
 
 **Volume III is the independent test this dossier said was missing.** It validates the broad verdict — the mechanism is sound, the marketing overreached — but the numbers are now measured rather than asserted. Its most important finding for this volume: Volume I's *Format ≠ Judgment* pattern turned out to be the organizing insight of the whole benchmark, and the measured accuracy (~95% against real answer keys) supersedes the ~68% agreement figure reported here.
 
-> **Read Volume II to learn how to build. Read Volume III to choose. Read this dossier to know what to believe.**
+**Volume IV** answers the question that decides whether any of it ships. Its finding is that the economics close — but the decisive layer is often **not** the model. A cheap decision model paired with a cheap data layer moves a workflow from "not worth building" to "runs every 15 minutes for $1 a day."
+
+It also carries **the widest claim correction in the series**: TypeSafe's "193.6× faster, 444.6× cheaper" was independently measured at **5–7× faster and 5–6× cheaper**. Volume I's audit pattern *Company Grades Own Homework* now has a fourth confirmation.
+
+> **Read II to learn how to build. Read III to choose. Read IV to know whether to build it. Read this dossier to know what to believe.**

@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>The Jev Papers — Launch Week Builds, Design Patterns &amp; Independent Benchmarks</title>
-<meta name="description" content="Three volumes on TypeSafe Jev: the ten wildest community builds from launch week, the vendor's official pattern set, and independent benchmark measurement against 12 local decision models.">
+<title>The Jev Papers — Builds, Patterns, Benchmarks &amp; Production Economics</title>
+<meta name="description" content="Four volumes on TypeSafe Jev: the ten wildest community builds, the vendor's official pattern set, independent benchmark measurement against 12 local models, and production deployment economics.">
 <meta property="og:title" content="The Jev Papers">
-<meta property="og:description" content="10 wild builds. 4 official design patterns. Jev vs 12 local models, independently measured. Three volumes — plus an honest audit of which vendor claims survived contact with anyone outside the company.">
+<meta property="og:description" content="10 wild builds. 4 official design patterns. Jev vs 12 local models, measured. Real production economics. Four volumes — plus a running audit of which vendor claims survived contact with anyone outside the company.">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="The Jev Papers">
@@ -60,7 +60,7 @@ h1{-webkit-text-fill-color:#111;background:none;color:#111}h2,.card .tag{color:#
 <body>
 <div class="wrap">
 
-  <p class="eyebrow">Three volumes</p>
+  <p class="eyebrow">Four volumes</p>
   <h1>The Jev Papers</h1>
   <p class="lede">
     On <strong>September 15, 2026</strong>, TypeSafe emerged from two years of stealth with one
@@ -70,11 +70,12 @@ h1{-webkit-text-fill-color:#111;background:none;color:#111}h2,.card .tag{color:#
   </p>
 
   <div class="stats">
-    <span class="chip"><b>3</b> volumes</span>
+    <span class="chip"><b>4</b> volumes</span>
     <span class="chip"><b>30</b> patterns</span>
     <span class="chip"><b>10</b> wild builds</span>
     <span class="chip"><b>4</b> official patterns</span>
-    <span class="chip"><b>69</b> tables</span>
+    <span class="chip"><b>85</b> tables</span>
+    <span class="chip"><b>29</b> patterns</span>
     <span class="chip"><b>13</b> models measured</span>
     <span class="chip">MIT licensed</span>
   </div>
@@ -149,6 +150,30 @@ h1{-webkit-text-fill-color:#111;background:none;color:#111}h2,.card .tag{color:#
     <div class="mini"><div class="n">8×</div><div class="l">Local SLOWER, long input</div></div>
   </div>
 
+  <h2 style="margin-top:2.4em">Volume IV — Does the economics close?</h2>
+
+  <a class="card" href="docs/jev-production-playbook.html">
+    <p class="tag">🔧 The Jev Production Playbook</p>
+    <p class="desc">
+      Deployment economics from a team running Jev in production alongside Treg, an "OpenRouter for
+      agent tools". Four shipped workflows with real cost figures — and the finding that the decisive
+      layer is often not the model. It also carries the widest claim correction in the series:
+      TypeSafe's "193.6× faster, 444.6× cheaper" measures out at 5–7× and 5–6×.
+    </p>
+    <p class="meta">
+      Source: <em>AI Jason — Jev + Treg is a crazy combo for automation</em> +
+      <a href="https://treg.to/jev" style="color:var(--acc)">treg.to/jev</a> · 9 parts · 16 tables
+    </p>
+    <span class="arrow">Read Volume IV →</span>
+  </a>
+
+  <div class="grid">
+    <div class="mini"><div class="n">~$1/day</div><div class="l">Hundreds of signups scanned</div></div>
+    <div class="mini"><div class="n">$0.21</div><div class="l">586-page link audit</div></div>
+    <div class="mini"><div class="n">190×</div><div class="l">Cheaper than Opus 5</div></div>
+    <div class="mini"><div class="n">193.6× → 5–7×</div><div class="l">Claim vs measured</div></div>
+  </div>
+
   <h2 style="margin-top:2.4em">How the volumes relate</h2>
 
   <p style="color:#c9d1d9">
@@ -160,32 +185,36 @@ h1{-webkit-text-fill-color:#111;background:none;color:#111}h2,.card .tag{color:#
   </p>
 
   <p style="color:#c9d1d9">
-    Volume III closes the loop. Its independent, frozen-protocol measurements <em>test</em>
+    Volume III closes the measurement loop. Its independent, frozen-protocol runs <em>test</em>
     the claims Volume I could only audit, and they confirm Volume I's central diagnostic:
     <em>Format ≠ Judgment</em> turned out to be the organizing insight of the entire benchmark.
-    Volume III also supersedes several Volume I figures — measured accuracy of ~95% against
-    real answer keys replaces the ~68% agreement-with-a-panel number, and the OpenJev figure
-    revises down to 81.70% on a much larger, harder suite.
+    Measured accuracy of ~95% against real answer keys replaces the ~68% agreement-with-a-panel
+    number, and the OpenJev figure revises down to 81.70% on a much larger, harder suite.
+
+    Volume IV asks the question that decides whether any of it ships: what does the whole
+    <em>pipeline</em> cost? Its answer is that a cheap decision model paired with a cheap data
+    layer moves automation from "not worth building" to "runs every 15 minutes for $1 a day" —
+    and that the decisive layer is frequently not the model at all.
   </p>
 
   <p style="color:#c9d1d9">
     What none of them do is settle the vendor's <em>performance</em> marketing on its own terms.
     Volume II is a fair account of the documented design vocabulary, not evidence the benchmarks
-    hold. Volume III is evidence — and it says the mechanism is sound while the aggregate rank
-    hides large per-task inversions. Volume I's measurement patterns
+    hold. Volumes III and IV are evidence — and in both, <strong>every independent measurement
+    lands below the vendor's claim</strong>. Volume I's measurement patterns
     (<em>Format ≠ Judgment</em>, <em>Company Grades Own Homework</em>,
     <em>Dramatized Mock-Up as Evidence</em>) remain the lens for reading all of it.
   </p>
 
   <blockquote style="margin:1.4em 0;padding:.9em 1.3em;border-left:3px solid var(--acc);
   background:linear-gradient(90deg,#1f6feb1a,transparent);border-radius:0 8px 8px 0;color:#c9d1d9">
-    <strong>Read Volume II to learn how to build. Read Volume III to choose.
-    Read Volume I to know what to believe.</strong>
+    <strong>Read II to learn how to build. Read III to choose. Read IV to know whether to
+    build it. Read I to know what to believe.</strong>
   </blockquote>
 
   <h2 style="margin-top:2.4em">Other formats</h2>
   <p style="color:#c9d1d9;font-size:.95rem">
-    All three volumes are available as Markdown and as self-contained HTML —
+    All four volumes are available as Markdown and as self-contained HTML —
     no CDN, no external assets. Open any HTML file directly, or <code style="background:#21262d;
     padding:.1em .4em;border-radius:4px;color:#ffa657">Ctrl+P</code> → <em>Save as PDF</em>
     for an archival copy.
@@ -194,6 +223,7 @@ h1{-webkit-text-fill-color:#111;background:none;color:#111}h2,.card .tag{color:#
     <a href="docs/jev-launch-week-dossier.md" style="color:var(--acc)">Volume I markdown</a> ·
     <a href="docs/jev-design-patterns-handbook.md" style="color:var(--acc)">Volume II markdown</a> ·
     <a href="docs/jev-benchmark-report.md" style="color:var(--acc)">Volume III markdown</a> ·
+    <a href="docs/jev-production-playbook.md" style="color:var(--acc)">Volume IV markdown</a> ·
     <a href="https://github.com/PanikParty/jev-launch-week-dossier" style="color:var(--acc)">Repository</a>
   </p>
 

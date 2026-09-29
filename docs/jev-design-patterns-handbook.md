@@ -6,7 +6,7 @@
 **Source URL:** https://youtu.be/LzweTaOzvVo
 **Primary documentation:** docs.typesafe.ai — [Introduction](https://docs.typesafe.ai/introduction) · [Primitives](https://docs.typesafe.ai/primitives) · [Patterns](https://docs.typesafe.ai/patterns) · [Confidence](https://docs.typesafe.ai/confidence)
 
-**Companion volumes:** [The Jev Launch Week Dossier](jev-launch-week-dossier.md) — the ten community builds and the 21 patterns they reveal. · [The Jev Benchmark Report](jev-benchmark-report.md) — independent measurement: which decision models actually perform best.
+**Companion volumes:** [Launch Week Dossier](jev-launch-week-dossier.md) · [Benchmark Report](jev-benchmark-report.md) · [Production Playbook](jev-production-playbook.md).
 
 ---
 
@@ -904,12 +904,21 @@ It is not, and cannot be, independent evidence that the vendor's *performance* c
 
 **[The Jev Benchmark Report](jev-benchmark-report.md)** — Volume III. Independent measurement of Jev against 12 local decision models. It tests this volume's patterns in production conditions and reports where they hold:
 
+**[The Jev Production Playbook](jev-production-playbook.md)** — Volume IV. Deployment economics from a team running Jev in production. It supplies the missing half of this volume: **what each pattern costs.**
+
+- **Confidence-Gated Routing** — deployed as a three-band policy (act / review / pass) at ~$0.00002 per message, with thresholds you tune rather than the model
+- **Speculative Fan-Out** — the "four hazards in one call" guardrail, and the ≈$20-per-million-decisions figure that makes it viable
+- **Composite Scoring** — the rubric is where routing policy lives; a single `focus` key flipped a ticket from billing to technical
+- **Decomposition** — *"internal linking is not writing, it is 8,790 yes/no calls"*: 586 pages for $0.21 in 45 seconds
+
+It also adds three patterns this volume lacked: **Cheap-Layer Pairing**, **Confidence-Banded Autonomy**, and **Decompose the Creative-Sounding Task**.
+
 - **Speculative Fan-Out** is confirmed — batching 13 questions is 12.2× cheaper and 10.0× faster with identical answers
 - **Confidence-Gated Routing** is validated by the *option-order fragility* finding: one model swung from 21% to 72% on reversed options, so thresholds must be validated per model, not adopted across models
 - **Composite Scoring's** decomposition principle is what makes the benchmark interpretable at all — the aggregate rank hides per-task inversions
 - **Intent Routing's** "act vs. speak" distinction is exactly what separates Jev from Winnow in the support-workflow test
 
-> **Read this volume to learn how to build. Read Volume III to choose.**
+> **Read this volume to learn how to build. Read Volume III to choose. Read Volume IV to cost it.**
 
 ---
 
